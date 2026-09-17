@@ -354,12 +354,15 @@ function updateSeason(change) {
 
 function finishCurrent() {
     if (!currentWatching) return;
+    
     // İzlenenler arşivine ekle
     watchedHistory.unshift(currentWatching);
     localStorage.setItem('watched_history', JSON.stringify(watchedHistory));
 
+    // Aktif izleneni temizle
     currentWatching = null;
     localStorage.removeItem('current_watching');
+    
     renderWatchlist();
 }
 
