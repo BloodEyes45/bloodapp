@@ -292,15 +292,17 @@ function renderVault() {
     });
 }
 
-// İZLEME LİSTESİ (WATCHLIST) MANTIĞI
+// İZLEME LİSTESİ VE ARŞİV (WATCHLIST & HISTORY)
 const watchTitle = document.getElementById('watch-title');
 const watchType = document.getElementById('watch-type');
 const addWatchBtn = document.getElementById('add-watch-btn');
 const watchlistEl = document.getElementById('watchlist');
+const watchedHistoryListEl = document.getElementById('watched-history-list');
 const currentWatchingContent = document.getElementById('current-watching-content');
 const currentTypeBadge = document.getElementById('current-type-badge');
 
 let watchlist = JSON.parse(localStorage.getItem('watchlist')) || [];
+let watchedHistory = JSON.parse(localStorage.getItem('watched_history')) || [];
 let currentWatching = JSON.parse(localStorage.getItem('current_watching')) || null;
 
 addWatchBtn.addEventListener('click', () => {
@@ -321,7 +323,6 @@ function setAsCurrent(id) {
     const item = watchlist.find(w => w.id === id);
     if (!item) return;
     
-    // Eğer eskiden izlenen varsa listeye geri at
     if (currentWatching) {
         watchlist.push(currentWatching);
     }
@@ -346,12 +347,17 @@ function updateSeason(change) {
     if (!currentWatching) return;
     currentWatching.season += change;
     if (currentWatching.season < 1) currentWatching.season = 1;
-    currentWatching.episode = 1; // Sezon değişince bölümü 1 yap
+    currentWatching.episode = 1;
     localStorage.setItem('current_watching', JSON.stringify(currentWatching));
     renderWatchlist();
 }
 
 function finishCurrent() {
+    if (!currentWatching) return;
+    // İzlenenler arşivine ekle
+    watchedHistory.unshift(currentWatching);
+    localStorage.setItem('watched_history', JSON.stringify(watchedHistory));
+
     currentWatching = null;
     localStorage.removeItem('current_watching');
     renderWatchlist();
@@ -363,11 +369,17 @@ function deleteWatchItem(id) {
     renderWatchlist();
 }
 
+function deleteHistoryItem(id) {
+    watchedHistory = watchedHistory.filter(w => w.id !== id);
+    localStorage.setItem('watched_history', JSON.stringify(watchedHistory));
+    renderWatchlist();
+}
+
 function renderWatchlist() {
-    // 1. Şu an izlenen kartını doldur
+    // 1. Şu an izlenen kartı
     if (!currentWatching) {
         currentTypeBadge.textContent = 'Boşta';
-        currentWatchingContent.innerHTML = `<p style="font-size: 0.85rem; color: var(--text-muted);">Şu an aktif izlenen bir içerik yok. Aşağıdaki listeden "İzle" butonuna tıkla.</p>`;
+        currentWatchingContent.innerHTML = `<p style="font-size: 0.85rem; color: var(--text-muted);">Şu an aktif izlenen bir içerik yok. Aşağıdaki listeden "Şu An İzle" butonuna tıkla.</p>`;
     } else {
         currentTypeBadge.textContent = currentWatching.type;
         if (currentWatching.type === 'Film') {
@@ -381,7 +393,6 @@ function renderWatchlist() {
                 </div>
             `;
         } else {
-            // Dizi ise Sezon / Bölüm yönetimi
             currentWatchingContent.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
@@ -408,28 +419,46 @@ function renderWatchlist() {
         }
     }
 
-    // 2. İzlenecekler listesini doldur
+    // 2. İzlenecekler listesi
     watchlistEl.innerHTML = '';
     if (watchlist.length === 0) {
         watchlistEl.innerHTML = '<li style="text-align:center; color: var(--text-muted); font-size: 0.8rem;">İzlenecek liste boş.</li>';
-        return;
+    } else {
+        watchlist.forEach(w => {
+            const li = document.createElement('li');
+            li.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: var(--bg-color); padding: 12px; border-radius: 10px;";
+            li.innerHTML = `
+                <div>
+                    <strong style="font-size:0.85rem; display:block;">${w.title}</strong>
+                    <span class="t-acc-tag">${w.type}</span>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <button onclick="setAsCurrent(${w.id})" class="mini-add-btn">Şu An İzle</button>
+                    <button onclick="deleteWatchItem(${w.id})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+            watchlistEl.appendChild(li);
+        });
     }
 
-    watchlist.forEach(w => {
-        const li = document.createElement('li');
-        li.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: var(--bg-color); padding: 12px; border-radius: 10px;";
-        li.innerHTML = `
-            <div>
-                <strong style="font-size:0.85rem; display:block;">${w.title}</strong>
-                <span class="t-acc-tag">${w.type}</span>
-            </div>
-            <div style="display: flex; gap: 8px; align-items: center;">
-                <button onclick="setAsCurrent(${w.id})" class="mini-add-btn">Şu An İzle</button>
-                <button onclick="deleteWatchItem(${w.id})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
-            </div>
-        `;
-        watchlistEl.appendChild(li);
-    });
+    // 3. İzlenenler Arşivi (Geçmiş)
+    watchedHistoryListEl.innerHTML = '';
+    if (watchedHistory.length === 0) {
+        watchedHistoryListEl.innerHTML = '<li style="text-align:center; color: var(--text-muted); font-size: 0.8rem;">Henüz tamamlanan içerik yok.</li>';
+    } else {
+        watchedHistory.forEach(h => {
+            const li = document.createElement('li');
+            li.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: var(--bg-color); padding: 12px; border-radius: 10px; border-left: 4px solid var(--income-color);";
+            li.innerHTML = `
+                <div>
+                    <strong style="font-size:0.85rem; display:block; color:var(--text-color);">${h.title}</strong>
+                    <span style="font-size:0.75rem; color:var(--income-color);">Tamamlandı (${h.type})</span>
+                </div>
+                <button onclick="deleteHistoryItem(${h.id})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+            `;
+            watchedHistoryListEl.appendChild(li);
+        });
+    }
 }
 
 // JSON YEDEKLEME VE GERİ YÜKLEME
@@ -438,6 +467,7 @@ function exportData() {
         transactions: transactions,
         vault_items: vaultItems,
         watchlist: watchlist,
+        watched_history: watchedHistory,
         current_watching: currentWatching,
         date: new Date().toISOString()
     };
@@ -461,11 +491,13 @@ function importData(event) {
                 transactions = json.transactions;
                 vaultItems = json.vault_items;
                 if (json.watchlist) watchlist = json.watchlist;
+                if (json.watched_history) watchedHistory = json.watched_history;
                 if (json.current_watching) currentWatching = json.current_watching;
 
                 localStorage.setItem('transactions', JSON.stringify(transactions));
                 localStorage.setItem('vault_items', JSON.stringify(vaultItems));
                 localStorage.setItem('watchlist', JSON.stringify(watchlist));
+                localStorage.setItem('watched_history', JSON.stringify(watchedHistory));
                 localStorage.setItem('current_watching', JSON.stringify(currentWatching));
 
                 updateUI();
