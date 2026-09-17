@@ -65,10 +65,18 @@ body {
     max-width: 320px;
 }
 
-.lock-icon {
-    font-size: 2.5rem;
-    color: var(--accent-color);
-    margin-bottom: 15px;
+.logo-badge-large {
+    width: 60px;
+    height: 60px;
+    background: var(--accent-gradient);
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 15px auto;
+    font-size: 1.6rem;
+    color: white;
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
 }
 
 .lock-box h2 { font-size: 1.2rem; margin-bottom: 5px; }
@@ -120,14 +128,24 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 18px 20px;
     background-color: var(--card-bg);
     border-bottom: 1px solid var(--card-border);
 }
 
 .logo-area { display: flex; align-items: center; gap: 10px; }
-.brand-icon { color: var(--accent-color); font-size: 1.3rem; }
-.app-header h1 { font-size: 1.1rem; font-weight: 600; }
+.mini-logo {
+    width: 32px;
+    height: 32px;
+    background: var(--accent-gradient);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+    color: white;
+}
+.app-header h1 { font-size: 1.05rem; font-weight: 600; }
 
 /* Main İçerik & Sekmeler */
 .main-content {
@@ -192,6 +210,13 @@ body {
 .acc-info span { font-size: 0.7rem; color: var(--text-muted); display: block; }
 .acc-info h4 { font-size: 0.85rem; font-weight: 700; margin-top: 3px; }
 
+/* Grafik Kartı */
+.chart-card { display: flex; flex-direction: column; align-items: center; }
+.chart-container { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; font-size: 0.75rem; color: var(--text-muted); }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
 .section-header { display: flex; justify-content: space-between; align-items: center; }
 .section-header h3 { font-size: 0.95rem; color: var(--text-muted); }
 .mini-add-btn { background-color: rgba(99, 102, 241, 0.15); color: var(--accent-color); border: 1px solid rgba(99, 102, 241, 0.3); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
@@ -200,7 +225,7 @@ body {
 .ai-chat-card { display: flex; flex-direction: column; height: 100%; padding: 15px !important; }
 .ai-header-info { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 600; color: var(--accent-color); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--card-border); }
 .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; max-height: calc(100vh - 280px); padding-right: 5px; }
-.chat-msg { padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; max-width: 85%; line-height: 1.4; }
+.chat-msg { padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; max-width: 85%; line-height: 1.4; word-break: break-word; }
 .chat-msg.ai { background-color: var(--bg-color); color: var(--text-color); align-self: flex-start; border-left: 3px solid var(--accent-color); }
 .chat-msg.user { background-color: var(--accent-color); color: white; align-self: flex-end; }
 .chat-input-area { display: flex; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--card-border); }
@@ -247,7 +272,7 @@ body {
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 
 .type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
-.type-btn { flex: 1; padding: 10px; border: 1px solid var(--card-border); background-color: var(--bg-color); color: var(--text-muted); border-radius: 10px; cursor: pointer; font-weight: 600; }
+.type-btn { flex: 1; padding: 10px; border: 1px solid var(--card-border); background-color: var(--bg-color); color: var(--text-muted); border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
 .type-btn.active[data-type="income"] { background-color: var(--income-color); color: white; border-color: var(--income-color); }
 .type-btn.active[data-type="expense"] { background-color: var(--expense-color); color: white; border-color: var(--expense-color); }
 
