@@ -1,5 +1,5 @@
 :root {
-    --card-bg: rgba(19, 28, 46, 0.85);
+    --card-bg: rgba(19, 28, 46, 0.82);
     --card-border: rgba(30, 41, 59, 0.8);
     --text-color: #f1f5f9;
     --text-muted: #94a3b8;
@@ -12,10 +12,10 @@
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
 body {
-    /* Logonun renklerine uygun animasyonlu modern arka plan */
-    background: linear-gradient(125deg, #070913, #130f26, #061124);
-    background-size: 400% 400%;
-    animation: bgAnimation 15s ease infinite;
+    /* GIF KULLANILMIYOR: Tamamen saf CSS animasyonlu akıcı arka plan */
+    background: linear-gradient(135deg, #05070e, #0c0a1d, #040e1a, #110d26);
+    background-size: 300% 300%;
+    animation: cosmicFlow 18s ease infinite;
     color: var(--text-color);
     display: flex;
     justify-content: center;
@@ -25,42 +25,41 @@ body {
     position: relative;
 }
 
-/* Arka plan akış animasyonu */
-@keyframes bgAnimation {
+@keyframes cosmicFlow {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
 
-/* Şık arka plan parıltı efektleri (Gece Mavisi / Mor Işıklar) */
+/* Arka planda süzülen yumuşak neon parıltılar */
 body::before, body::after {
     content: '';
     position: fixed;
-    width: 300px;
-    height: 300px;
+    width: 350px;
+    height: 350px;
     border-radius: 50%;
-    filter: blur(80px);
+    filter: blur(90px);
     z-index: -1;
-    opacity: 0.4;
-    animation: floatGlow 10s infinite alternate ease-in-out;
+    opacity: 0.35;
+    animation: neonPulse 12s infinite alternate ease-in-out;
 }
 
 body::before {
-    top: -50px;
-    left: -50px;
-    background: rgba(99, 102, 241, 0.4);
+    top: -80px;
+    left: -80px;
+    background: rgba(99, 102, 241, 0.5);
 }
 
 body::after {
-    bottom: -50px;
-    right: -50px;
-    background: rgba(168, 85, 247, 0.3);
-    animation-delay: -5s;
+    bottom: -80px;
+    right: -80px;
+    background: rgba(168, 85, 247, 0.4);
+    animation-delay: -6s;
 }
 
-@keyframes floatGlow {
-    0% { transform: translateY(0) scale(1); }
-    100% { transform: translateY(40px) scale(1.15); }
+@keyframes neonPulse {
+    0% { transform: translateY(0) scale(1); opacity: 0.25; }
+    100% { transform: translateY(50px) scale(1.2); opacity: 0.45; }
 }
 
 .app-container { width: 100%; max-width: 480px; min-height: 100vh; display: flex; flex-direction: column; position: relative; z-index: 1; }
@@ -72,8 +71,8 @@ body::after {
     border-radius: 18px;
     overflow: hidden;
     margin: 0 auto 15px auto;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.12);
 }
 .logo-badge-img img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -89,7 +88,7 @@ body::after {
 .mini-logo-img img { width: 100%; height: 100%; object-fit: cover; }
 
 /* Şifre Kilidi Ekranı (0604) */
-.lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(7, 9, 19, 0.88); backdrop-filter: blur(16px); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; transition: opacity 0.3s ease; }
+.lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 7, 14, 0.88); backdrop-filter: blur(16px); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; transition: opacity 0.3s ease; }
 .lock-screen.unlocked { opacity: 0; pointer-events: none; }
 .lock-box { text-align: center; width: 100%; max-width: 320px; }
 .lock-box h2 { font-size: 1.2rem; margin-bottom: 5px; }
@@ -132,7 +131,7 @@ body::after {
 .preview-header h3 { font-size: 0.9rem; color: var(--text-muted); }
 .preview-header span { font-size: 1rem; font-weight: 700; color: var(--income-color); }
 .mini-accounts-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding-top: 10px; border-top: 1px solid var(--card-border); }
-.mini-acc { background: rgba(7, 9, 19, 0.6); padding: 8px; border-radius: 8px; text-align: center; }
+.mini-acc { background: rgba(5, 7, 14, 0.6); padding: 8px; border-radius: 8px; text-align: center; }
 .mini-acc span { font-size: 0.65rem; color: var(--text-muted); display: block; }
 .mini-acc b { font-size: 0.8rem; font-weight: 600; margin-top: 2px; display: block; }
 
@@ -156,10 +155,15 @@ body::after {
 .chart-card { display: flex; flex-direction: column; align-items: center; }
 .chart-container { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
 .chart-legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; font-size: 0.75rem; color: var(--text-muted); }
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 
 /* Watchlist Stilleri */
 .current-watching-card { background: linear-gradient(135deg, rgba(19, 28, 46, 0.9), rgba(30, 27, 75, 0.9)); border: 1px solid var(--accent-color); backdrop-filter: blur(8px); }
-.current-content-box { background: rgba(7, 9, 19, 0.6); padding: 15px; border-radius: 12px; margin-top: 5px; display: flex; flex-direction: column; gap: 10px; }
+.current-content-box { background: rgba(5, 7, 14, 0.6); padding: 15px; border-radius: 12px; margin-top: 5px; display: flex; flex-direction: column; gap: 10px; }
+.season-selector { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 8px; }
+.season-btns { display: flex; gap: 8px; }
+.season-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-color); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
 .section-header { display: flex; justify-content: space-between; align-items: center; }
 .section-header h3 { font-size: 0.95rem; color: var(--text-muted); }
@@ -179,19 +183,19 @@ body::after {
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 
 .type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
-.type-btn { flex: 1; padding: 10px; border: 1px solid var(--card-border); background-color: rgba(7, 9, 19, 0.6); color: var(--text-muted); border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+.type-btn { flex: 1; padding: 10px; border: 1px solid var(--card-border); background-color: rgba(5, 7, 14, 0.6); color: var(--text-muted); border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
 .type-btn.active[data-type="income"] { background-color: var(--income-color); color: white; border-color: var(--income-color); }
 .type-btn.active[data-type="expense"] { background-color: var(--expense-color); color: white; border-color: var(--expense-color); }
 
 .input-group { margin-bottom: 15px; }
 .input-group label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
-.input-group input, .input-group select { width: 100%; padding: 12px; background-color: rgba(7, 9, 19, 0.6); border: 1px solid var(--card-border); border-radius: 10px; color: var(--text-color); font-size: 0.95rem; }
+.input-group input, .input-group select { width: 100%; padding: 12px; background-color: rgba(5, 7, 14, 0.6); border: 1px solid var(--card-border); border-radius: 10px; color: var(--text-color); font-size: 0.95rem; }
 
-.submit-btn { width: 100%; padding: 14px; background: var(--accent-gradient); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+.submit-bin { width: 100%; padding: 14px; background: var(--accent-gradient); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; }
 
 .card { background-color: var(--card-bg); padding: 18px; border-radius: 16px; border: 1px solid var(--card-border); backdrop-filter: blur(8px); }
 #transaction-list { list-style: none; display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; margin-top: 10px; }
-.transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background-color: rgba(7, 9, 19, 0.6); border-radius: 12px; border-left: 4px solid transparent; }
+.transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background-color: rgba(5, 7, 14, 0.6); border-radius: 12px; border-left: 4px solid transparent; }
 .transaction-item.income { border-left-color: var(--income-color); }
 .transaction-item.expense { border-left-color: var(--expense-color); }
 
