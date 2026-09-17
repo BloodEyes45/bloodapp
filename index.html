@@ -8,7 +8,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="LureAsistan">
-    <!-- SVG Data URI Logo ile iPhone ve Tarayıcı Simgesi -->
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%236366f1%22/><text x=%2250%%22 y=%2255%%22 font-size=%2250%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>LS</text></svg>">
     <link rel="manifest" href="manifest.json">
     
@@ -17,7 +16,7 @@
 </head>
 <body>
 
-    <!-- Şifre Kilidi Ekranı -->
+    <!-- Şifre Kilidi Ekranı (0604) -->
     <div id="lock-screen" class="lock-screen">
         <div class="lock-box">
             <div class="logo-badge-large"><i class="fa-solid fa-cube"></i></div>
@@ -59,7 +58,7 @@
         <!-- ANA İÇERİK ALANLARI (SEKMELER) -->
         <main class="main-content">
 
-            <!-- TAB 1: ANA SAYFA (ÖZET & WIDGETLAR) -->
+            <!-- TAB 1: ANA SAYFA (ÖZET) -->
             <section id="tab-home" class="tab-content active">
                 <div class="welcome-card">
                     <div class="welcome-info">
@@ -99,7 +98,6 @@
                     </div>
                 </div>
 
-                <!-- Yedekleme ve Ayarlar Kartı -->
                 <div class="card">
                     <h3 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-muted);">Veri ve Sistem Yönetimi</h3>
                     <div style="display: flex; gap: 10px;">
@@ -143,7 +141,6 @@
                     </div>
                 </div>
 
-                <!-- Grafik Görselleştirme Kartı -->
                 <div class="card chart-card">
                     <h3 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-muted);">Kategori Dağılımı</h3>
                     <div class="chart-container">
@@ -158,9 +155,7 @@
                 </div>
 
                 <div class="card history-card">
-                    <ul id="transaction-list">
-                        <!-- Dinamik -->
-                    </ul>
+                    <ul id="transaction-list"></ul>
                 </div>
             </section>
 
@@ -182,28 +177,43 @@
 
                 <div class="card" style="margin-top: 15px;">
                     <h3 style="margin-bottom: 12px; color: var(--text-muted);">Güvenli Kasa</h3>
-                    <ul id="vault-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
-                        <!-- Dinamik -->
-                    </ul>
+                    <ul id="vault-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px;"></ul>
                 </div>
             </section>
 
-            <!-- TAB 4: AI ASİSTAN -->
-            <section id="tab-ai" class="tab-content" style="height: calc(100vh - 160px);">
-                <div class="card ai-chat-card">
-                    <div class="ai-header-info">
-                        <i class="fa-solid fa-sparkles"></i>
-                        <span>Lure AI Asistan</span>
+            <!-- TAB 4: İZLEME LİSTESİ (WATCHLIST) -->
+            <section id="tab-watchlist" class="tab-content">
+                <!-- Şu An İzlenen Aktif Kart -->
+                <div class="card current-watching-card">
+                    <div class="preview-header">
+                        <h3><i class="fa-solid fa-clapperboard" style="color: var(--accent-color);"></i> Şu An İzlenen</h3>
+                        <span id="current-type-badge" class="t-acc-tag">Film / Dizi Yok</span>
                     </div>
-                    <div id="chat-messages" class="chat-messages">
-                        <div class="chat-msg ai">
-                            Selam Semih! Ben Lure AI Asistanım. Bütçeni analiz edebilir, kasandaki bilgileri yorumlayabilirim. Bugün ne yapmak istersin?
-                        </div>
+                    <div id="current-watching-content" class="current-content-box">
+                        <p style="font-size: 0.85rem; color: var(--text-muted);">Şu an izlenen bir içerik seçilmedi. Aşağıdaki listeden "Şu An İzle" butonuna tıkla.</p>
                     </div>
-                    <div class="chat-input-area">
-                        <input type="text" id="chat-input" placeholder="Bir şeyler yaz...">
-                        <button id="send-chat-btn"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+
+                <!-- Yeni İçerik Ekleme -->
+                <div class="card">
+                    <h3 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-muted);">Listeye Yeni Ekle</h3>
+                    <div class="input-group">
+                        <input type="text" id="watch-title" placeholder="Film veya Dizi Adı (Örn: Suits)">
                     </div>
+                    <div class="input-group">
+                        <label>Tür Seçin</label>
+                        <select id="watch-type">
+                            <option value="Dizi">Dizi</option>
+                            <option value="Film">Film</option>
+                        </select>
+                    </div>
+                    <button id="add-watch-btn" class="submit-btn" style="margin-top: 5px;">Listeye Ekle</button>
+                </div>
+
+                <!-- İzlenecekler Listesi -->
+                <div class="card" style="margin-top: 5px;">
+                    <h3 style="margin-bottom: 12px; color: var(--text-muted);">İzlenecekler Listesi</h3>
+                    <ul id="watchlist" style="list-style: none; display: flex; flex-direction: column; gap: 10px;"></ul>
                 </div>
             </section>
 
@@ -252,7 +262,7 @@
             </div>
         </div>
 
-        <!-- ALT NAVİGASYON ÇUBUĞU -->
+        <!-- ALT NAVİGASYON ÇUBUĞU (4'LÜ) -->
         <nav class="bottom-nav">
             <button class="nav-item active" onclick="switchTab('tab-home')" data-title="Ana Sayfa" id="nav-home">
                 <i class="fa-solid fa-house"></i>
@@ -266,9 +276,9 @@
                 <i class="fa-solid fa-vault"></i>
                 <span>Kasa</span>
             </button>
-            <button class="nav-item" onclick="switchTab('tab-ai')" data-title="Yapay Zeka Asistan" id="nav-ai">
-                <i class="fa-solid fa-robot"></i>
-                <span>AI Asistan</span>
+            <button class="nav-item" onclick="switchTab('tab-watchlist')" data-title="İzleme Listesi" id="nav-watchlist">
+                <i class="fa-solid fa-film"></i>
+                <span>İzle</span>
             </button>
         </nav>
 
