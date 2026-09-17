@@ -9,6 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="LureAsistan">
     
+    <!-- iPhone ve Tarayıcı İçin Özel Logo -->
     <link rel="apple-touch-icon" href="https://i.hizliresim.com/ebrr6uci.jpg">
     <link rel="icon" type="image/jpeg" href="https://i.hizliresim.com/ebrr6uci.jpg">
     
@@ -19,6 +20,7 @@
 </head>
 <body>
 
+    <!-- Şifre Kilidi Ekranı (0604) -->
     <div id="lock-screen" class="lock-screen">
         <div class="lock-box">
             <div class="logo-badge-img"><img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="Logo"></div>
@@ -49,6 +51,7 @@
 
     <div class="app-container">
         
+        <!-- ÜST KISIM -->
         <header class="app-header">
             <div class="logo-area">
                 <div class="mini-logo-img"><img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="Logo"></div>
@@ -56,8 +59,10 @@
             </div>
         </header>
 
+        <!-- ANA İÇERİK ALANLARI (SEKMELER) -->
         <main class="main-content">
 
+            <!-- TAB 1: ANA SAYFA (ÖZET) -->
             <section id="tab-home" class="tab-content active">
                 <div class="welcome-card">
                     <div class="welcome-info">
@@ -109,6 +114,7 @@
                 </div>
             </section>
 
+            <!-- TAB 2: CÜZDAN & GELİR/GİDER -->
             <section id="tab-wallet" class="tab-content">
                 <div class="wealth-overview">
                     <small>Toplam Varlık</small>
@@ -117,21 +123,21 @@
 
                 <div class="accounts-grid">
                     <div class="account-card akbank">
-                        <div class="acc-icon">🟥</div>
+                        <div class="acc-icon-img"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJ6C0l8k5gVq5z6b7c8d9e0f1g2h3i4j5k6l&s" alt="Akbank" onerror="this.src='https://cdn-icons-png.flaticon.com/128/2830/2830284.png'"></div>
                         <div class="acc-info">
                             <span>Akbank</span>
                             <h4 id="akbank-balance">0.00 TL</h4>
                         </div>
                     </div>
                     <div class="account-card ziraat">
-                        <div class="acc-icon">🟦</div>
+                        <div class="acc-icon-img"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1s2t3u4v5w6x7y8z9a0b1c2d3e4f5g6h7i8&s" alt="Ziraat" onerror="this.src='https://cdn-icons-png.flaticon.com/128/2830/2830284.png'"></div>
                         <div class="acc-info">
                             <span>Ziraat</span>
                             <h4 id="ziraat-balance">0.00 TL</h4>
                         </div>
                     </div>
                     <div class="account-card nakit">
-                        <div class="acc-icon">💵</div>
+                        <div class="acc-icon-img" style="background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; border-radius: 8px;"><i class="fa-solid fa-money-bill-wave" style="color: var(--income-color);"></i></div>
                         <div class="acc-info">
                             <span>Nakit</span>
                             <h4 id="nakit-balance">0.00 TL</h4>
@@ -157,6 +163,7 @@
                 </div>
             </section>
 
+            <!-- TAB 3: KASA (GİZLEME MODU İLE) -->
             <section id="tab-vault" class="tab-content">
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -178,6 +185,7 @@
                 </div>
             </section>
 
+            <!-- TAB 4: İZLEME LİSTESİ (WATCHLIST) -->
             <section id="tab-watchlist" class="tab-content">
                 <div class="card current-watching-card">
                     <div class="preview-header">
@@ -217,6 +225,7 @@
 
         </main>
 
+        <!-- İŞLEM EKLEME MODALI -->
         <div id="transaction-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -259,6 +268,7 @@
             </div>
         </div>
 
+        <!-- ALT NAVİGASYON ÇUBUĞU -->
         <nav class="bottom-nav">
             <button class="nav-item active" onclick="switchTab('tab-home')" data-title="Ana Sayfa" id="nav-home">
                 <i class="fa-solid fa-house"></i>
