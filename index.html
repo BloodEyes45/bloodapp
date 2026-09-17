@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CepteBütçe</title>
+    
+    <!-- iPhone PWA Ayarları -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CepteBütçe">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="manifest" href="manifest.json">
+    
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome İkonları İçin -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Üst Bilgi / Başlık -->
+        <header class="app-header">
+            <h1>CepteBütçe</h1>
+            <button id="menu-btn" class="icon-btn"><i class="fa-solid fa-bars"></i></button>
+        </header>
+
+        <!-- Yan Menü (İleride yeni özellikler eklendiğinde kullanılacak) -->
+        <div id="side-menu" class="side-menu">
+            <div class="menu-header">
+                <h3>Menü</h3>
+                <button id="close-menu" class="icon-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <ul>
+                <li class="active"><i class="fa-solid fa-wallet"></i> Gelir - Gider</li>
+                <!-- İleride eklenecek özellikler buraya gelecek -->
+            </ul>
+        </div>
+        <div id="menu-overlay" class="menu-overlay"></div>
+
+        <!-- Ana İçerik / Dashboard -->
+        <main class="main-content">
+            <!-- Özet Kartı -->
+            <div class="balance-card">
+                <p>Toplam Bakiye</p>
+                <h2 id="total-balance">0.00 TL</h2>
+                <div class="summary-row">
+                    <div class="income-box">
+                        <span>Gelir</span>
+                        <p id="total-income">0.00 TL</p>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="expense-box">
+                        <span>Gider</span>
+                        <p id="total-expense">0.00 TL</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- İşlem Ekleme Formu -->
+            <div class="card form-card">
+                <h3>Yeni İşlem Ekle</h3>
+                <form id="transaction-form">
+                    <div class="type-selector">
+                        <button type="button" class="type-btn active" data-type="income">Gelir</button>
+                        <button type="button" class="type-btn" data-type="expense">Gider</button>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="description" placeholder="Açıklama (Örn: Maaş, Market)" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="number" id="amount" step="0.01" placeholder="Tutar (TL)" required>
+                    </div>
+                    <button type="submit" class="submit-btn">Ekle</button>
+                </form>
+            </div>
+
+            <!-- İşlem Geçmişi -->
+            <div class="card history-card">
+                <h3>Son İşlemler</h3>
+                <ul id="transaction-list">
+                    <!-- Dinamik olarak dolacak -->
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
