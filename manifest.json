@@ -1,14 +1,14 @@
 {
-  "name": "CepteBütçe",
-  "short_name": "Bütçe",
+  "name": "LureSystems Asistan",
+  "short_name": "LureAsistan",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
+  "background_color": "#090d16",
+  "theme_color": "#131c2e",
   "icons": [
     {
-      "src": "icon.png",
-      "sizes": "512x512",
+      "src": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAAFpSURBVHja7NvNbcMgEAZgu7sW0sAOUk6n3XSSUvLfl0Aio/n444tQ1Hn8mE0qf7/j+z2L7/v6y8HnK+9/+/3+6fI/fv/e+P3v/WufG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0GfG0H/f8E6/wEAAAD//wMAq03X4Fv/C1oAAAAASUVORK5CYII=",
+      "sizes": "192x192",
       "type": "image/png"
     }
   ]
