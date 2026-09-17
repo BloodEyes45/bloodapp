@@ -1,5 +1,5 @@
-// ŞİFRE KİLİDİ
-const correctPin = localStorage.getItem('app_pin') || '1234';
+// ŞİFRE KİLİDİ (0604)
+const correctPin = '0604';
 let enteredPin = '';
 const lockScreen = document.getElementById('lock-screen');
 const pinDots = document.querySelectorAll('.pin-dots .dot');
@@ -54,9 +54,10 @@ function switchTab(tabId) {
     } else if (tabId === 'tab-wallet') {
         document.getElementById('nav-wallet').classList.add('active');
         headerTitle.textContent = 'Cüzdan & Bütçe';
+        drawExpenseChart();
     } else if (tabId === 'tab-vault') {
         document.getElementById('nav-vault').classList.add('active');
-        headerTitle.textContent = 'Kasa & Linkler';
+        headerTitle.textContent = 'Güvenli Kasa';
     } else if (tabId === 'tab-ai') {
         document.getElementById('nav-ai').classList.add('active');
         headerTitle.textContent = 'AI Asistan';
@@ -72,7 +73,7 @@ function updateClockAndDate() {
 setInterval(updateClockAndDate, 1000);
 updateClockAndDate();
 
-// CÜZDAN MANTIĞI
+// CÜZDAN & KATEGORİ MANTIĞI
 const akbankBalanceEl = document.getElementById('akbank-balance');
 const ziraatBalanceEl = document.getElementById('ziraat-balance');
 const nakitBalanceEl = document.getElementById('nakit-balance');
@@ -87,6 +88,7 @@ const transactionForm = document.getElementById('transaction-form');
 const descriptionInput = document.getElementById('description');
 const amountInput = document.getElementById('amount');
 const accountSelect = document.getElementById('account-select');
+const categorySelect = document.getElementById('category-select');
 const transactionList = document.getElementById('transaction-list');
 const typeBtns = document.querySelectorAll('.type-btn');
 
@@ -118,7 +120,8 @@ transactionForm.addEventListener('submit', (e) => {
         description: descriptionInput.value,
         amount: parseFloat(amountInput.value),
         type: currentType,
-        account: accountSelect.value
+        account: accountSelect.value,
+        category: categorySelect.value
     });
 
     saveAndAppUpdate();
@@ -135,6 +138,7 @@ function deleteTransaction(id) {
 function saveAndAppUpdate() {
     localStorage.setItem('transactions', JSON.stringify(transactions));
     updateUI();
+    drawExpenseChart();
 }
 
 function updateUI() {
@@ -156,7 +160,7 @@ function updateUI() {
         li.innerHTML = `
             <div class="t-info">
                 <strong>${t.description}</strong>
-                <span>${new Date(t.id).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}</span>
+                <span>${t.category} • ${new Date(t.id).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}</span>
             </div>
             <div class="t-right">
                 <span class="t-acc-tag">${t.account}</span>
@@ -180,12 +184,72 @@ function updateUI() {
     homeGrandTotalEl.textContent = grandTotal.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + ' TL';
 }
 
-// KASA MANTIĞI (IBAN & LİNKLER)
+// KATEGORİ BAZLI GİDER GRAFİĞİ (HTML5 Canvas Pasta Grafik)
+function drawExpenseChart() {
+    const canvas = document.getElementById('expenseChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Sadece giderleri kategorilerine göre topla
+    const expenses = transactions.filter(t => t.type === 'expense');
+    const categoryTotals = {};
+    let totalExpense = 0;
+
+    expenses.forEach(e => {
+        categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount;
+        totalExpense += e.amount;
+    });
+
+    const legendEl = document.getElementById('chart-legend');
+    legendEl.innerHTML = '';
+
+    if (totalExpense === 0) {
+        ctx.fillStyle = '#334155';
+        ctx.beginPath();
+        ctx.arc(100, 100, 70, 0, 2 * Math.PI);
+        ctx.fill();
+        legendEl.innerHTML = '<span style="color:var(--text-muted)">Henüz gider verisi yok.</span>';
+        return;
+    }
+
+    const colors = ['#f43f5e', '#3b82f6', '#10b981', '#f59e0b', '#a855f7', '#06b6d4'];
+    let startAngle = 0;
+    let colorIndex = 0;
+
+    Object.keys(categoryTotals).forEach(cat => {
+        const amount = categoryTotals[cat];
+        const sliceAngle = (amount / totalExpense) * (2 * Math.PI);
+        const color = colors[colorIndex % colors.length];
+
+        // Pasta Dilimi Çiz
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.moveTo(100, 100);
+        ctx.arc(100, 100, 75, startAngle, startAngle + sliceAngle);
+        ctx.closePath();
+        ctx.fill();
+
+        startAngle += sliceAngle;
+
+        // Lejant Ekle
+        const percentage = ((amount / totalExpense) * 100).toFixed(0);
+        const item = document.createElement('div');
+        item.classList.add('legend-item');
+        item.innerHTML = `<span class="legend-dot" style="background:${color}"></span> ${cat}: %${percentage}`;
+        legendEl.appendChild(item);
+
+        colorIndex++;
+    });
+}
+
+// GÜVENLİ KASA & MASKELEME MİMARİSİ
 const vaultTitle = document.getElementById('vault-title');
 const vaultContent = document.getElementById('vault-content');
 const addVaultBtn = document.getElementById('add-vault-btn');
 const vaultList = document.getElementById('vault-list');
 let vaultItems = JSON.parse(localStorage.getItem('vault_items')) || [];
+let isMasked = false;
 
 addVaultBtn.addEventListener('click', () => {
     if (!vaultTitle.value || !vaultContent.value) return;
@@ -202,6 +266,13 @@ function deleteVaultItem(id) {
     renderVault();
 }
 
+function toggleMaskMode() {
+    isMasked = !isMasked;
+    const btn = document.getElementById('mask-mode-btn');
+    btn.innerHTML = isMasked ? '<i class="fa-solid fa-eye"></i> Göster' : '<i class="fa-solid fa-eye-slash"></i> Maskele';
+    renderVault();
+}
+
 function renderVault() {
     vaultList.innerHTML = '';
     if (vaultItems.length === 0) {
@@ -209,12 +280,13 @@ function renderVault() {
         return;
     }
     vaultItems.forEach(v => {
+        const displayContent = isMasked ? '••••••••••••••••' : v.content;
         const li = document.createElement('li');
         li.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: var(--bg-color); padding: 12px; border-radius: 10px;";
         li.innerHTML = `
             <div>
                 <strong style="font-size:0.85rem; display:block;">${v.title}</strong>
-                <span style="font-size:0.75rem; color:var(--text-muted); word-break:break-all;">${v.content}</span>
+                <span style="font-size:0.75rem; color:var(--text-muted); word-break:break-all;">${displayContent}</span>
             </div>
             <button onclick="deleteVaultItem(${v.id})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
         `;
@@ -222,43 +294,122 @@ function renderVault() {
     });
 }
 
-// AI ASİSTAN MANTIĞI
+// JSON YEDEKLEME VE GERİ YÜKLEME
+function exportData() {
+    const backupData = {
+        transactions: transactions,
+        vault_items: vaultItems,
+        date: new Date().toISOString()
+    };
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `luresystems_backup_${Date.now()}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+}
+
+function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const json = JSON.parse(e.target.result);
+            if (json.transactions && json.vault_items) {
+                transactions = json.transactions;
+                vaultItems = json.vault_items;
+                localStorage.setItem('transactions', JSON.stringify(transactions));
+                localStorage.setItem('vault_items', JSON.stringify(vaultItems));
+                updateUI();
+                renderVault();
+                alert('Yedek başarıyla yüklendi!');
+            } else {
+                alert('Geçersiz yedek dosyası formatı!');
+            }
+        } catch (err) {
+            alert('Dosya okunurken hata oluştu!');
+        }
+    };
+    reader.readAsText(file);
+}
+
+// GERÇEK GEMINI API ENTEGRASYONU
 const chatInput = document.getElementById('chat-input');
 const sendChatBtn = document.getElementById('send-chat-btn');
 const chatMessages = document.getElementById('chat-messages');
 
-sendChatBtn.addEventListener('click', handleUserMessage);
-chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserMessage(); });
+sendChatBtn.addEventListener('click', handleAiMessage);
+chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleAiMessage(); });
 
-function handleUserMessage() {
+async function handleAiMessage() {
     const text = chatInput.value.trim();
     if (!text) return;
 
     appendMessage(text, 'user');
     chatInput.value = '';
 
-    // Basit ve akıllı asistan yanıt simülasyonu / bağlam okuma
-    setTimeout(() => {
-        let reply = "Bunu not aldım Semih, harika gidiyorsun!";
-        const lower = text.toLowerCase();
+    // Kullanıcının bütçe durumunu ve kasasını yapay zekaya bağlam olarak verelim
+    const totalWealth = grandTotalEl.textContent;
+    const systemPrompt = `Sen Semih'in (LureSystems geliştiricisi) kişisel dijital asistanısın. Kullanıcının toplam varlığı: ${totalWealth}. Samimi, teknoloji odaklı ve kısa yanıtlar ver.`;
+
+    const loadingId = appendMessage('Düşünüyor...', 'ai loading');
+
+    try {
+        // Gerçek Gemini API İsteği (Public Gemini API Endpoint)
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSy... (API Anahtarını buraya ekleyebilirsin)`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [
+                    { role: "user", parts: [{ text: systemPrompt + "\nSoru: " + text }] }
+                ]
+            })
+        });
+
+        // Not: Eğer API anahtarı girilmemişse veya demo modunda çalışıyorsa akıllı fallback yanıt üretir
+        removeMessage(loadingId);
         
-        if (lower.includes('bütçe') || lower.includes('para') || lower.includes('ne kadar')) {
-            const total = homeGrandTotalEl.textContent;
-            reply = `Toplam varlığın şu an ${total}. Akbank, Ziraat ve Nakit hesaplarını cüzdan sekmesinden detaylı takip edebilirsin.`;
-        } else if (lower.includes('merhaba') || lower.includes('selam')) {
-            reply = "Selam Semih! Sana nasıl yardımcı olabilirim?";
+        if (!response.ok) {
+            throw new Error('API yanıt vermedi');
         }
 
+        const data = await response.json();
+        const reply = data.candidates[0].content.parts[0].text;
         appendMessage(reply, 'ai');
-    }, 600);
+
+    } catch (error) {
+        removeMessage(loadingId);
+        // Akıllı Yerel Fallback / Asistan Yanıtı
+        let fallbackReply = "Seni dinliyorum Semih! Kodlama veya bütçe konusunda nasıl yardımcı olabilirim?";
+        const lower = text.toLowerCase();
+        if (lower.includes('bütçe') || lower.includes('para')) {
+            fallbackReply = `Toplam varlığın şu an ${totalWealth}. Finansal durumun gayet stabil görünyor!`;
+        } else if (lower.includes('merhaba') || lower.includes('selam')) {
+            p = "Selam patron! LureSystems altyapısı çalışıyor.";
+            fallbackReply = p;
+        }
+        appendMessage(fallbackReply, 'ai');
+    }
 }
 
 function appendMessage(text, sender) {
     const div = document.createElement('div');
-    div.classList.add('chat-msg', sender);
+    div.classList.add('chat-msg');
+    if (sender.includes('user')) div.classList.add('user');
+    else div.classList.add('ai');
+    
+    if (sender.includes('loading')) div.id = 'loading-msg';
     div.textContent = text;
     chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div.id || (div.id = 'msg-' + Date.now());
+}
+
+function removeMessage(id) {
+    const el = document.getElementById(id);
+    if (el) el.remove();
 }
 
 updateUI();
