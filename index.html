@@ -9,9 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="LureAsistan">
     
-    <!-- iPhone ve Tarayıcı İçin Özel Logo -->
     <link rel="apple-touch-icon" href="https://i.hizliresim.com/ebrr6uci.jpg">
-    <link rel="apple-touch-icon-precomposed" href="https://i.hizliresim.com/ebrr6uci.jpg">
     <link rel="icon" type="image/jpeg" href="https://i.hizliresim.com/ebrr6uci.jpg">
     
     <link rel="manifest" href="manifest.json">
@@ -21,7 +19,6 @@
 </head>
 <body>
 
-    <!-- Şifre Kilidi Ekranı (0604) -->
     <div id="lock-screen" class="lock-screen">
         <div class="lock-box">
             <div class="logo-badge-img"><img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="Logo"></div>
@@ -52,7 +49,6 @@
 
     <div class="app-container">
         
-        <!-- ÜST KISIM -->
         <header class="app-header">
             <div class="logo-area">
                 <div class="mini-logo-img"><img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="Logo"></div>
@@ -60,10 +56,8 @@
             </div>
         </header>
 
-        <!-- ANA İÇERİK ALANLARI (SEKMELER) -->
         <main class="main-content">
 
-            <!-- TAB 1: ANA SAYFA (ÖZET) -->
             <section id="tab-home" class="tab-content active">
                 <div class="welcome-card">
                     <div class="welcome-info">
@@ -115,7 +109,6 @@
                 </div>
             </section>
 
-            <!-- TAB 2: CÜZDAN & GELİR/GİDER -->
             <section id="tab-wallet" class="tab-content">
                 <div class="wealth-overview">
                     <small>Toplam Varlık</small>
@@ -164,7 +157,6 @@
                 </div>
             </section>
 
-            <!-- TAB 3: KASA (GİZLEME MODU İLE) -->
             <section id="tab-vault" class="tab-content">
                 <div class="card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
@@ -186,7 +178,6 @@
                 </div>
             </section>
 
-            <!-- TAB 4: İZLEME LİSTESİ (WATCHLIST) -->
             <section id="tab-watchlist" class="tab-content">
                 <div class="card current-watching-card">
                     <div class="preview-header">
@@ -226,7 +217,6 @@
 
         </main>
 
-        <!-- İŞLEM EKLEME MODALI -->
         <div id="transaction-modal" class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -269,7 +259,6 @@
             </div>
         </div>
 
-        <!-- ALT NAVİGASYON ÇUBUĞU -->
         <nav class="bottom-nav">
             <button class="nav-item active" onclick="switchTab('tab-home')" data-title="Ana Sayfa" id="nav-home">
                 <i class="fa-solid fa-house"></i>
