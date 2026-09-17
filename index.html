@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Semih Asistan</title>
+    <title>LureSystems Asistan</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Semih Asistan">
-    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="apple-mobile-web-app-title" content="LureAsistan">
+    <!-- SVG Data URI Logo ile iPhone ve Tarayıcı Simgesi -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%236366f1%22/><text x=%2250%%22 y=%2255%%22 font-size=%2250%22 font-weight=%22bold%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>LS</text></svg>">
     <link rel="manifest" href="manifest.json">
     
     <link rel="stylesheet" href="style.css">
@@ -19,9 +20,9 @@
     <!-- Şifre Kilidi Ekranı -->
     <div id="lock-screen" class="lock-screen">
         <div class="lock-box">
-            <i class="fa-solid fa-shield-halved lock-icon"></i>
-            <h2>Güvenlik Kilidi</h2>
-            <p>Devam etmek için 4 haneli şifreni gir (Varsayılan: 1234)</p>
+            <div class="logo-badge-large"><i class="fa-solid fa-cube"></i></div>
+            <h2>LureSystems</h2>
+            <p>Ana ekranda işlem yapmak için şifreyi gir</p>
             <div class="pin-dots">
                 <span class="dot"></span>
                 <span class="dot"></span>
@@ -50,7 +51,7 @@
         <!-- ÜST KISIM -->
         <header class="app-header">
             <div class="logo-area">
-                <i class="fa-solid fa-cube brand-icon"></i>
+                <div class="mini-logo"><i class="fa-solid fa-cube"></i></div>
                 <h1 id="header-title">Ana Sayfa</h1>
             </div>
         </header>
@@ -64,12 +65,11 @@
                     <div class="welcome-info">
                         <span id="live-date" class="welcome-tag">Yükleniyor...</span>
                         <h2>Hoş geldin, Semih</h2>
-                        <p class="mood-text">Bugün nasılsın? Harika bir gün seni bekliyor ✨</p>
+                        <p class="mood-text">Bugün de harika gidiyorsun ✨</p>
                     </div>
                     <div class="live-clock" id="live-clock">00:00</div>
                 </div>
 
-                <!-- Hava Durumu (Soma) -->
                 <div class="info-widgets-row">
                     <div class="info-widget weather-widget">
                         <i class="fa-solid fa-cloud-sun"></i>
@@ -87,7 +87,6 @@
                     </div>
                 </div>
 
-                <!-- Finans Kısa Özet Kartı -->
                 <div class="card summary-preview-card" onclick="switchTab('tab-wallet')" style="cursor: pointer;">
                     <div class="preview-header">
                         <h3>Toplam Varlık Durumu</h3>
@@ -100,10 +99,16 @@
                     </div>
                 </div>
 
-                <div class="card" style="text-align: center; padding: 20px;">
-                    <i class="fa-solid fa-robot" style="font-size: 2rem; color: var(--accent-color); margin-bottom: 10px;"></i>
-                    <h3 style="font-size: 1rem; margin-bottom: 5px;">Yapay Zeka Asistanı Hazır</h3>
-                    <p style="font-size: 0.8rem; color: var(--text-muted);">Bütçeni sormak veya sohbet etmek için alttaki AI Asistan sekmesine tıklayabilirsin.</p>
+                <!-- Yedekleme ve Ayarlar Kartı -->
+                <div class="card">
+                    <h3 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-muted);">Veri ve Sistem Yönetimi</h3>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="exportData()" class="type-btn" style="flex: 1; font-size: 0.8rem;"><i class="fa-solid fa-download"></i> Yedek İndir</button>
+                        <label class="type-btn" style="flex: 1; font-size: 0.8rem; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
+                            <i class="fa-solid fa-upload"></i> Yedek Yükle
+                            <input type="file" id="import-file" style="display: none;" onchange="importData(event)">
+                        </label>
+                    </div>
                 </div>
             </section>
 
@@ -138,6 +143,15 @@
                     </div>
                 </div>
 
+                <!-- Grafik Görselleştirme Kartı -->
+                <div class="card chart-card">
+                    <h3 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-muted);">Kategori Dağılımı</h3>
+                    <div class="chart-container">
+                        <canvas id="expenseChart" width="200" height="200"></canvas>
+                        <div id="chart-legend" class="chart-legend"></div>
+                    </div>
+                </div>
+
                 <div class="section-header">
                     <h3>İşlem Geçmişi</h3>
                     <button id="add-tx-btn" class="mini-add-btn"><i class="fa-solid fa-plus"></i> İşlem Ekle</button>
@@ -150,37 +164,40 @@
                 </div>
             </section>
 
-            <!-- TAB 3: KASA (IBAN & LİNKLER) -->
+            <!-- TAB 3: KASA (GİZLEME MODU İLE) -->
             <section id="tab-vault" class="tab-content">
                 <div class="card">
-                    <h3>Yeni Kasa Kaydı Ekle</h3>
-                    <div class="input-group" style="margin-top: 10px;">
-                        <input type="text" id="vault-title" placeholder="Başlık (Örn: İş Bankası IBAN, GitHub Linki)">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <h3 style="font-size: 0.9rem; color: var(--text-muted);">Kasa Kaydı Ekle</h3>
+                        <button onclick="toggleMaskMode()" id="mask-mode-btn" class="mini-add-btn"><i class="fa-solid fa-eye-slash"></i> Maskele</button>
                     </div>
                     <div class="input-group">
-                        <input type="text" id="vault-content" placeholder="İçerik (IBAN, Link veya Şifre)">
+                        <input type="text" id="vault-title" placeholder="Başlık (Örn: Ziraat IBAN, Şifre)">
+                    </div>
+                    <div class="input-group">
+                        <input type="text" id="vault-content" placeholder="İçerik (Hassas Bilgi)">
                     </div>
                     <button id="add-vault-btn" class="submit-btn" style="margin-top: 5px;">Kayıt Ekle</button>
                 </div>
 
                 <div class="card" style="margin-top: 15px;">
-                    <h3 style="margin-bottom: 12px; color: var(--text-muted);">Kayıtlı Bilgilerim</h3>
+                    <h3 style="margin-bottom: 12px; color: var(--text-muted);">Güvenli Kasa</h3>
                     <ul id="vault-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px;">
                         <!-- Dinamik -->
                     </ul>
                 </div>
             </section>
 
-            <!-- TAB 4: AI ASİSTAN (YAPAY ZEKA) -->
+            <!-- TAB 4: AI ASİSTAN -->
             <section id="tab-ai" class="tab-content" style="height: calc(100vh - 160px);">
                 <div class="card ai-chat-card">
                     <div class="ai-header-info">
                         <i class="fa-solid fa-sparkles"></i>
-                        <span>Gemini Asistan</span>
+                        <span>Lure AI Asistan</span>
                     </div>
                     <div id="chat-messages" class="chat-messages">
                         <div class="chat-msg ai">
-                            Selam Semih! Ben senin kişisel asistanınım. Bütçen hakkında bilgi alabilir, sorular sorabilir veya sohbet edebilirsin. Bugün sana nasıl yardımcı olabilirim?
+                            Selam Semih! Ben Lure AI Asistanım. Bütçeni analiz edebilir, kasandaki bilgileri yorumlayabilirim. Bugün ne yapmak istersin?
                         </div>
                     </div>
                     <div class="chat-input-area">
@@ -213,8 +230,18 @@
                         </select>
                     </div>
                     <div class="input-group">
+                        <label>Kategori</label>
+                        <select id="category-select" required>
+                            <option value="Genel">Genel</option>
+                            <option value="Yemek & Market">Yemek & Market</option>
+                            <option value="Fatura & Abonelik">Fatura & Abonelik</option>
+                            <option value="Yazılım & Sunucu">Yazılım & Sunucu</option>
+                            <option value="Eğlence">Eğlence</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
                         <label>Açıklama</label>
-                        <input type="text" id="description" placeholder="Örn: Maaş, Market" required>
+                        <input type="text" id="description" placeholder="Örn: Maaş, Steam Oyunu" required>
                     </div>
                     <div class="input-group">
                         <label>Tutar (TL)</label>
@@ -225,7 +252,7 @@
             </div>
         </div>
 
-        <!-- ALT NAVİGASYON ÇUBUĞU (4'LÜ SİMGELER) -->
+        <!-- ALT NAVİGASYON ÇUBUĞU -->
         <nav class="bottom-nav">
             <button class="nav-item active" onclick="switchTab('tab-home')" data-title="Ana Sayfa" id="nav-home">
                 <i class="fa-solid fa-house"></i>
