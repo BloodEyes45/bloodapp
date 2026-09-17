@@ -1,30 +1,57 @@
 :root {
-    --bg-color: #090d16;
-    --card-bg: #131c2e;
-    --card-border: #1e293b;
+    --card-bg: rgba(19, 28, 46, 0.85);
+    --card-border: rgba(30, 41, 59, 0.8);
     --text-color: #f1f5f9;
     --text-muted: #94a3b8;
     --accent-color: #6366f1;
-    --accent-gradient: linear-gradient(135deg, #6366f1, #a855f7);
+    --accent-gradient: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(168, 85, 247, 0.9));
     --income-color: #10b981;
     --expense-color: #f43f5e;
-    
-    --akbank-color: #e11d48;
-    --ziraat-color: #0284c7;
-    --nakit-color: #10b981;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-body { background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; padding-bottom: 80px; }
+body {
+    /* Hareketli Arka Plan Duvar Kağıdı */
+    background: url('wallpaper.mp4') no-repeat center center fixed;
+    background-size: cover;
+    background-color: #090d16;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    padding-bottom: 80px;
+    min-height: 100vh;
+}
 
 .app-container { width: 100%; max-width: 480px; min-height: 100vh; display: flex; flex-direction: column; position: relative; }
 
+/* Logo Konteynerleri Düzeltmesi */
+.logo-badge-img {
+    width: 65px;
+    height: 65px;
+    border-radius: 18px;
+    overflow: hidden;
+    margin: 0 auto 15px auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+.logo-badge-img img { width: 100%; height: 100%; object-fit: cover; }
+
+.mini-logo-img {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.mini-logo-img img { width: 100%; height: 100%; object-fit: cover; }
+
 /* Şifre Kilidi Ekranı (0604) */
-.lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-color); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; transition: opacity 0.3s ease; }
+.lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9, 13, 22, 0.92); backdrop-filter: blur(12px); z-index: 9999; display: flex; justify-content: center; align-items: center; padding: 20px; transition: opacity 0.3s ease; }
 .lock-screen.unlocked { opacity: 0; pointer-events: none; }
 .lock-box { text-align: center; width: 100%; max-width: 320px; }
-.logo-badge-large { width: 60px; height: 60px; background: var(--accent-gradient); border-radius: 18px; display: flex; justify-content: center; align-items: center; margin: 0 auto 15px auto; font-size: 1.6rem; color: white; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4); }
 .lock-box h2 { font-size: 1.2rem; margin-bottom: 5px; }
 .lock-box p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 25px; }
 
@@ -33,13 +60,12 @@ body { background-color: var(--bg-color); color: var(--text-color); display: fle
 .pin-dots .dot.filled { background-color: var(--accent-color); }
 
 .pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-.pin-pad button { background-color: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-color); font-size: 1.2rem; font-weight: 600; padding: 16px; border-radius: 50%; aspect-ratio: 1; cursor: pointer; display: flex; justify-content: center; align-items: center; margin: 0 auto; width: 65px; }
+.pin-pad button { background-color: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-color); font-size: 1.2rem; font-weight: 600; padding: 16px; border-radius: 50%; aspect-ratio: 1; cursor: pointer; display: flex; justify-content: center; align-items: center; margin: 0 auto; width: 65px; backdrop-filter: blur(5px); }
 .pin-pad button:active { background-color: rgba(99, 102, 241, 0.3); }
 
 /* Header */
-.app-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; background-color: var(--card-bg); border-bottom: 1px solid var(--card-border); }
+.app-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; background-color: var(--card-bg); border-bottom: 1px solid var(--card-border); backdrop-filter: blur(10px); }
 .logo-area { display: flex; align-items: center; gap: 10px; }
-.mini-logo { width: 32px; height: 32px; background: var(--accent-gradient); border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 0.9rem; color: white; }
 .app-header h1 { font-size: 1.05rem; font-weight: 600; }
 
 /* Main İçerik & Sekmeler */
@@ -56,7 +82,7 @@ body { background-color: var(--bg-color); color: var(--text-color); display: fle
 
 /* Widget Satırı */
 .info-widgets-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.info-widget { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 15px; border-radius: 16px; display: flex; align-items: center; gap: 12px; }
+.info-widget { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 15px; border-radius: 16px; display: flex; align-items: center; gap: 12px; backdrop-filter: blur(8px); }
 .info-widget i { font-size: 1.5rem; color: var(--accent-color); }
 .info-widget span { font-size: 0.9rem; font-weight: 700; display: block; }
 .info-widget small { font-size: 0.7rem; color: var(--text-muted); }
@@ -66,26 +92,23 @@ body { background-color: var(--bg-color); color: var(--text-color); display: fle
 .preview-header h3 { font-size: 0.9rem; color: var(--text-muted); }
 .preview-header span { font-size: 1rem; font-weight: 700; color: var(--income-color); }
 .mini-accounts-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding-top: 10px; border-top: 1px solid var(--card-border); }
-.mini-acc { background: var(--bg-color); padding: 8px; border-radius: 8px; text-align: center; }
+.mini-acc { background: rgba(9, 13, 22, 0.6); padding: 8px; border-radius: 8px; text-align: center; }
 .mini-acc span { font-size: 0.65rem; color: var(--text-muted); display: block; }
 .mini-acc b { font-size: 0.8rem; font-weight: 600; margin-top: 2px; display: block; }
 
 /* Cüzdan Sekmesi */
-.wealth-overview { background: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 16px; text-align: center; }
+.wealth-overview { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 16px; text-align: center; backdrop-filter: blur(8px); }
 .wealth-overview small { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
 .wealth-overview h2 { font-size: 1.8rem; font-weight: 700; margin-top: 4px; color: var(--income-color); }
 
 .accounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.account-card { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 14px 10px; border-radius: 14px; display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; }
+.account-card { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 14px 10px; border-radius: 14px; display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; backdrop-filter: blur(8px); }
 .account-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
-.account-card.akbank::before { background-color: var(--akbank-color); }
-.account-card.ziraat::before { background-color: var(--ziraat-color); }
-.account-card.nakit::before { background-color: var(--nakit-color); }
+.account-card.akbank::before { background-color: #e11d48; }
+.account-card.ziraat::before { background-color: #0284c7; }
+.account-card.nakit::before { background-color: #10b981; }
 
 .acc-icon { font-size: 1.1rem; }
-.account-card.akbank .acc-icon { color: var(--akbank-color); }
-.account-card.ziraat .acc-icon { color: var(--ziraat-color); }
-.account-card.nakit .acc-icon { color: var(--nakit-color); }
 .acc-info span { font-size: 0.7rem; color: var(--text-muted); display: block; }
 .acc-info h4 { font-size: 0.85rem; font-weight: 700; margin-top: 3px; }
 
@@ -97,18 +120,18 @@ body { background-color: var(--bg-color); color: var(--text-color); display: fle
 .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
 
 /* Watchlist Stilleri */
-.current-watching-card { background: linear-gradient(135deg, #131c2e, #1e1b4b); border: 1px solid var(--accent-color); }
-.current-content-box { background: var(--bg-color); padding: 15px; border-radius: 12px; margin-top: 5px; display: flex; flex-direction: column; gap: 10px; }
+.current-watching-card { background: linear-gradient(135deg, rgba(19, 28, 46, 0.9), rgba(30, 27, 75, 0.9)); border: 1px solid var(--accent-color); backdrop-filter: blur(8px); }
+.current-content-box { background: rgba(9, 13, 22, 0.6); padding: 15px; border-radius: 12px; margin-top: 5px; display: flex; flex-direction: column; gap: 10px; }
 .season-selector { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 8px; }
 .season-btns { display: flex; gap: 8px; }
 .season-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-color); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
 .section-header { display: flex; justify-content: space-between; align-items: center; }
 .section-header h3 { font-size: 0.95rem; color: var(--text-muted); }
-.mini-add-btn { background-color: rgba(99, 102, 241, 0.15); color: var(--accent-color); border: 1px solid rgba(99, 102, 241, 0.3); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+.mini-add-btn { background-color: rgba(99, 102, 241, 0.2); color: var(--accent-color); border: 1px solid rgba(99, 102, 241, 0.4); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
 
 /* Alt Navigasyon Çubuğu */
-.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background-color: var(--card-bg); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 900; }
+.bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background-color: var(--card-bg); border-top: 1px solid var(--card-border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 900; backdrop-filter: blur(15px); }
 .nav-item { background: none; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; font-size: 0.7rem; flex: 1; }
 .nav-item i { font-size: 1.2rem; }
 .nav-item.active { color: var(--accent-color); }
@@ -116,24 +139,24 @@ body { background-color: var(--bg-color); color: var(--text-color); display: fle
 /* Modal & Form */
 .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 1001; display: flex; justify-content: center; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
 .modal.open { opacity: 1; pointer-events: auto; }
-.modal-content { background-color: var(--card-bg); width: 100%; max-width: 480px; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 25px; border: 1px solid var(--card-border); transform: translateY(100%); transition: transform 0.3s ease; }
+.modal-content { background-color: var(--card-bg); width: 100%; max-width: 480px; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 25px; border: 1px solid var(--card-border); transform: translateY(100%); transition: transform 0.3s ease; backdrop-filter: blur(15px); }
 .modal.open .modal-content { transform: translateY(0); }
 .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 
 .type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
-.type-btn { flex: 1; padding: 10px; border: 1px solid var(--card-border); background-color: var(--bg-color); color: var(--text-muted); border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+.type-btn { flex: 1; padding: 10px; border: 1px solid var(--card-border); background-color: rgba(9, 13, 22, 0.6); color: var(--text-muted); border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
 .type-btn.active[data-type="income"] { background-color: var(--income-color); color: white; border-color: var(--income-color); }
 .type-btn.active[data-type="expense"] { background-color: var(--expense-color); color: white; border-color: var(--expense-color); }
 
 .input-group { margin-bottom: 15px; }
 .input-group label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
-.input-group input, .input-group select { width: 100%; padding: 12px; background-color: var(--bg-color); border: 1px solid var(--card-border); border-radius: 10px; color: var(--text-color); font-size: 0.95rem; }
+.input-group input, .input-group select { width: 100%; padding: 12px; background-color: rgba(9, 13, 22, 0.6); border: 1px solid var(--card-border); border-radius: 10px; color: var(--text-color); font-size: 0.95rem; }
 
 .submit-btn { width: 100%; padding: 14px; background: var(--accent-gradient); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; }
 
-.card { background-color: var(--card-bg); padding: 18px; border-radius: 16px; border: 1px solid var(--card-border); }
+.card { background-color: var(--card-bg); padding: 18px; border-radius: 16px; border: 1px solid var(--card-border); backdrop-filter: blur(8px); }
 #transaction-list { list-style: none; display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; margin-top: 10px; }
-.transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background-color: var(--bg-color); border-radius: 12px; border-left: 4px solid transparent; }
+.transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background-color: rgba(9, 13, 22, 0.6); border-radius: 12px; border-left: 4px solid transparent; }
 .transaction-item.income { border-left-color: var(--income-color); }
 .transaction-item.expense { border-left-color: var(--expense-color); }
 
