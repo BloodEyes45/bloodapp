@@ -156,6 +156,16 @@ function updateUI() {
         else if (t.account === 'Ziraat') ziraatTotal += netAmount;
         else if (t.account === 'Nakit') nakitTotal += netAmount;
 
+        // Hesap etiketlerine şık logolar
+        let accTagHtml = t.account;
+        if (t.account === 'Akbank') {
+            accTagHtml = `<span style="display:inline-flex; align-items:center; gap:4px;"><img src="https://cdn-icons-png.flaticon.com/128/2830/2830284.png" style="width:12px; height:12px; object-fit:contain;"> Akbank</span>`;
+        } else if (t.account === 'Ziraat') {
+            accTagHtml = `<span style="display:inline-flex; align-items:center; gap:4px;"><img src="https://cdn-icons-png.flaticon.com/128/2830/2830284.png" style="width:12px; height:12px; object-fit:contain; filter: hue-rotate(180deg);"> Ziraat</span>`;
+        } else {
+            accTagHtml = `<span style="display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-money-bill-wave" style="color:var(--income-color)"></i> Nakit</span>`;
+        }
+
         const li = document.createElement('li');
         li.classList.add('transaction-item', t.type);
         li.innerHTML = `
@@ -164,7 +174,7 @@ function updateUI() {
                 <span>${t.category} • ${new Date(t.id).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' })}</span>
             </div>
             <div class="t-right">
-                <span class="t-acc-tag">${t.account}</span>
+                <span class="t-acc-tag">${accTagHtml}</span>
                 <span class="t-amount ${t.type}">${t.type === 'income' ? '+' : '-'}${t.amount.toLocaleString('tr-TR', {minimumFractionDigits: 2})} TL</span>
                 <button class="delete-btn" onclick="deleteTransaction(${t.id})"><i class="fa-solid fa-trash"></i></button>
             </div>
@@ -280,10 +290,10 @@ function renderVault() {
     vaultItems.forEach(v => {
         const displayContent = isMasked ? '••••••••••••••••' : v.content;
         const li = document.createElement('li');
-        li.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: var(--bg-color); padding: 12px; border-radius: 10px;";
+        li.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: #0b111e; padding: 12px; border-radius: 10px;";
         li.innerHTML = `
             <div>
-                <strong style="font-size:0.85rem; display:block;">${v.title}</strong>
+                <strong style="font-size:0.85rem; display:block; color:var(--text-color);">${v.title}</strong>
                 <span style="font-size:0.75rem; color:var(--text-muted); word-break:break-all;">${displayContent}</span>
             </div>
             <button onclick="deleteVaultItem(${v.id})" style="background:none; border:none; color:var(--text-muted); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
@@ -354,15 +364,11 @@ function updateSeason(change) {
 
 function finishCurrent() {
     if (!currentWatching) return;
-    
-    // İzlenenler arşivine ekle
     watchedHistory.unshift(currentWatching);
     localStorage.setItem('watched_history', JSON.stringify(watchedHistory));
 
-    // Aktif izleneni temizle
     currentWatching = null;
     localStorage.removeItem('current_watching');
-    
     renderWatchlist();
 }
 
@@ -379,7 +385,6 @@ function deleteHistoryItem(id) {
 }
 
 function renderWatchlist() {
-    // 1. Şu an izlenen kartı
     if (!currentWatching) {
         currentTypeBadge.textContent = 'Boşta';
         currentWatchingContent.innerHTML = `<p style="font-size: 0.85rem; color: var(--text-muted);">Şu an aktif izlenen bir içerik yok. Aşağıdaki listeden "Şu An İzle" butonuna tıkla.</p>`;
@@ -389,7 +394,7 @@ function renderWatchlist() {
             currentWatchingContent.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <h4 style="font-size: 1rem; font-weight: 700;">${currentWatching.title}</h4>
+                        <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-color);">${currentWatching.title}</h4>
                         <span style="font-size: 0.75rem; color: var(--income-color);">▶ Film İzleniyor</span>
                     </div>
                     <button onclick="finishCurrent()" class="mini-add-btn" style="background-color: rgba(16, 185, 129, 0.2); color: var(--income-color); border-color: var(--income-color);">İzlendi Bitti ✓</button>
@@ -399,7 +404,7 @@ function renderWatchlist() {
             currentWatchingContent.innerHTML = `
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div>
-                        <h4 style="font-size: 1rem; font-weight: 700;">${currentWatching.title}</h4>
+                        <h4 style="font-size: 1rem; font-weight: 700; color: var(--text-color);">${currentWatching.title}</h4>
                         <span style="font-size: 0.8rem; color: var(--accent-color);">Sezon ${currentWatching.season} • Bölüm ${currentWatching.episode}</span>
                     </div>
                     <button onclick="finishCurrent()" class="mini-add-btn" style="background-color: rgba(16, 185, 129, 0.2); color: var(--income-color); border-color: var(--income-color);">Bitir ✓</button>
@@ -408,13 +413,13 @@ function renderWatchlist() {
                     <span style="font-size: 0.75rem; color: var(--text-muted);">Sezon:</span>
                     <div class="season-btns">
                         <button class="season-btn" onclick="updateSeason(-1)">-</button>
-                        <span style="line-height: 32px; font-weight: bold;">${currentWatching.season}</span>
+                        <span style="line-height: 32px; font-weight: bold; color: var(--text-color);">${currentWatching.season}</span>
                         <button class="season-btn" onclick="updateSeason(1)">+</button>
                     </div>
                     <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 10px;">Bölüm:</span>
                     <div class="season-btns">
                         <button class="season-btn" onclick="updateEpisode(-1)">-</button>
-                        <span style="line-height: 32px; font-weight: bold;">${currentWatching.episode}</span>
+                        <span style="line-height: 32px; font-weight: bold; color: var(--text-color);">${currentWatching.episode}</span>
                         <button class="season-btn" onclick="updateEpisode(1)">+</button>
                     </div>
                 </div>
@@ -422,17 +427,16 @@ function renderWatchlist() {
         }
     }
 
-    // 2. İzlenecekler listesi
     watchlistEl.innerHTML = '';
     if (watchlist.length === 0) {
         watchlistEl.innerHTML = '<li style="text-align:center; color: var(--text-muted); font-size: 0.8rem;">İzlenecek liste boş.</li>';
     } else {
         watchlist.forEach(w => {
             const li = document.createElement('li');
-            li.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: var(--bg-color); padding: 12px; border-radius: 10px;";
+            li.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: #0b111e; padding: 12px; border-radius: 10px;";
             li.innerHTML = `
                 <div>
-                    <strong style="font-size:0.85rem; display:block;">${w.title}</strong>
+                    <strong style="font-size:0.85rem; display:block; color:var(--text-color);">${w.title}</strong>
                     <span class="t-acc-tag">${w.type}</span>
                 </div>
                 <div style="display: flex; gap: 8px; align-items: center;">
@@ -444,14 +448,13 @@ function renderWatchlist() {
         });
     }
 
-    // 3. İzlenenler Arşivi (Geçmiş)
     watchedHistoryListEl.innerHTML = '';
     if (watchedHistory.length === 0) {
         watchedHistoryListEl.innerHTML = '<li style="text-align:center; color: var(--text-muted); font-size: 0.8rem;">Henüz tamamlanan içerik yok.</li>';
     } else {
         watchedHistory.forEach(h => {
             const li = document.createElement('li');
-            li.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: var(--bg-color); padding: 12px; border-radius: 10px; border-left: 4px solid var(--income-color);";
+            li.style.cssText = "display: flex; justify-content: space-between; align-items: center; background: #0b111e; padding: 12px; border-radius: 10px; border-left: 4px solid var(--income-color);";
             li.innerHTML = `
                 <div>
                     <strong style="font-size:0.85rem; display:block; color:var(--text-color);">${h.title}</strong>
