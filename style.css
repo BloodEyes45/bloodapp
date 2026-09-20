@@ -1,12 +1,13 @@
 :root {
-    --bg-color: #0b0f19;
-    --card-bg: #131b2e;
-    --text-color: #f1f5f9;
-    --text-muted: #94a3b8;
+    --bg-color: #070913;
+    --card-bg: #111827;
+    --card-border: #1f293d;
+    --text-color: #f3f4f6;
+    --text-muted: #9ca3af;
     --accent: #6366f1;
-    --accent-hover: #4f46e5;
+    --accent-glow: rgba(99, 102, 241, 0.25);
     --success: #10b981;
-    --border: #1e293b;
+    --success-glow: rgba(16, 185, 129, 0.2);
 }
 
 * {
@@ -20,10 +21,11 @@
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    padding: 16px;
-    padding-bottom: 90px;
+    padding: 20px 16px;
+    padding-bottom: 95px;
     display: flex;
     justify-content: center;
+    min-height: 100vh;
 }
 
 .app-container {
@@ -31,104 +33,142 @@ body {
     max-width: 480px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
 }
 
-/* Header */
-header {
-    text-align: left;
-    padding: 8px 4px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 4px;
-}
-
-.brand-area {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 6px;
-}
-
-.brand-logo {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-    object-fit: cover;
-    border: 1px solid var(--border);
-}
-
-.header-titles h1 {
-    font-size: 1.15rem;
-    font-weight: 700;
-}
-
-.header-titles p {
-    font-size: 0.78rem;
-    color: var(--success);
-    margin-top: 2px;
-}
-
-header > p {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    margin-top: 4px;
-}
-
-/* Tabs System */
+/* Tabs System & Animations */
 .tab-content {
     display: none;
     flex-direction: column;
     gap: 16px;
+    animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .tab-content.active {
     display: flex;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Home Hero Section */
+.home-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-top: 20px;
+    gap: 16px;
+}
+
+.brand-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.hero-logo {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.hero-title {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #ffffff 30%, #9ca3af 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-weather {
+    font-size: 0.95rem;
+    color: var(--success);
+    font-weight: 500;
+}
+
+.hero-datetime {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.home-score-card {
+    width: 100%;
+    margin-top: 10px;
+    background: linear-gradient(145deg, #111827, #0d1322);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+/* Section Header */
+.section-header {
+    margin-bottom: 4px;
+}
+
+.section-header h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.section-header p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
 /* Cards */
 .card {
     background-color: var(--card-bg);
-    border-radius: 14px;
-    padding: 16px;
-    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
 }
 
 .card h3 {
-    font-size: 0.95rem;
-    margin-bottom: 8px;
+    font-size: 0.88rem;
+    margin-bottom: 10px;
     color: var(--text-muted);
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.section-desc {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-bottom: 12px;
+    letter-spacing: 0.8px;
 }
 
 /* Progress Bar */
 .progress-bar-container {
     width: 100%;
-    height: 10px;
-    background-color: var(--border);
-    border-radius: 5px;
+    height: 12px;
+    background-color: var(--bg-color);
+    border-radius: 6px;
     overflow: hidden;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    border: 1px solid var(--card-border);
 }
 
 .progress-bar {
     width: 0%;
     height: 100%;
     background: linear-gradient(90deg, #4f46e5, var(--success));
-    transition: width 0.4s ease;
+    border-radius: 6px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 12px var(--success-glow);
 }
 
-#progress-text {
-    font-size: 0.85rem;
+#progress-text-home, #progress-text {
+    font-size: 0.9rem;
     color: var(--text-muted);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 /* Habit List Items */
@@ -141,31 +181,35 @@ header > p {
 
 .habit-item {
     background-color: var(--bg-color);
-    padding: 12px 14px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    transition: all 0.2s ease;
+    transition: all 0.25s ease;
+}
+
+.habit-item:active {
+    transform: scale(0.98);
 }
 
 .habit-item.completed {
     border-color: rgba(16, 185, 129, 0.4);
-    background-color: rgba(16, 185, 129, 0.03);
+    background-color: rgba(16, 185, 129, 0.04);
 }
 
 .habit-info {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
     cursor: pointer;
     flex: 1;
 }
 
 .habit-checkbox {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     accent-color: var(--success);
     cursor: pointer;
 }
@@ -173,11 +217,11 @@ header > p {
 .habit-text-wrap {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
 }
 
 .habit-title {
-    font-size: 0.92rem;
+    font-size: 0.95rem;
     font-weight: 500;
 }
 
@@ -187,7 +231,7 @@ header > p {
 }
 
 .habit-streak-badge {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: #f59e0b;
     font-weight: 600;
 }
@@ -200,21 +244,23 @@ header > p {
 }
 
 .water-btn {
-    background-color: var(--border);
+    background-color: var(--card-bg);
     color: var(--text-color);
-    border: none;
-    border-radius: 6px;
-    padding: 4px 8px;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 6px 10px;
     font-size: 0.75rem;
     font-weight: 600;
     cursor: pointer;
+    transition: background 0.2s;
 }
 
 .water-btn:active {
     background-color: var(--accent);
+    border-color: var(--accent);
 }
 
-/* Stats & Reset List */
+/* Stats List */
 .stats-list {
     display: flex;
     flex-direction: column;
@@ -223,88 +269,12 @@ header > p {
 
 .stat-row {
     background-color: var(--bg-color);
-    padding: 10px 14px;
-    border-radius: 8px;
+    padding: 12px 16px;
+    border-radius: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid var(--border);
-    font-size: 0.88rem;
-}
-
-.reset-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-
-.reset-list li {
-    background-color: var(--bg-color);
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-}
-
-/* Brain Dump Notes */
-.note-input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 12px;
-}
-
-.note-input-group textarea {
-    background-color: var(--bg-color);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px;
-    color: var(--text-color);
-    font-size: 0.9rem;
-    resize: vertical;
-    min-height: 80px;
-}
-
-.note-input-group textarea:focus {
-    outline: none;
-    border-color: var(--accent);
-}
-
-#save-note-btn {
-    background-color: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.notes-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.note-card {
-    background-color: var(--bg-color);
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    font-size: 0.85rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 8px;
-}
-
-.note-delete-btn {
-    background: none;
-    border: none;
-    color: #ef4444;
-    cursor: pointer;
+    border: 1px solid var(--card-border);
     font-size: 0.9rem;
 }
 
@@ -314,12 +284,13 @@ header > p {
     bottom: 0;
     left: 0;
     right: 0;
-    background-color: rgba(19, 27, 46, 0.95);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid var(--border);
+    background-color: rgba(11, 15, 27, 0.9);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--card-border);
     display: flex;
     justify-content: space-around;
-    padding: 10px 0;
+    padding: 10px 0 20px 0;
     z-index: 1000;
 }
 
@@ -329,10 +300,11 @@ header > p {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
+    gap: 4px;
     color: var(--text-muted);
     cursor: pointer;
     flex: 1;
+    transition: color 0.2s;
 }
 
 .nav-item.active {
@@ -340,10 +312,10 @@ header > p {
 }
 
 .nav-icon {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
 }
 
 .nav-label {
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     font-weight: 600;
 }
