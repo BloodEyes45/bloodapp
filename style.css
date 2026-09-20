@@ -1,260 +1,306 @@
 :root {
-    --card-bg: #131c2e;
-    --card-border: #1e293b;
+    --bg-color: #0b0f19;
+    --card-bg: #131b2e;
     --text-color: #f1f5f9;
     --text-muted: #94a3b8;
-    --accent-color: #6366f1;
-    --accent-gradient: linear-gradient(135deg, #6366f1, #a855f7);
-    --income-color: #10b981;
-    --expense-color: #f43f5e;
+    --accent: #6366f1;
+    --accent-hover: #4f46e5;
+    --success: #10b981;
+    --border: #1e293b;
+    --badge-locked: #334155;
 }
 
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     -webkit-tap-highlight-color: transparent;
 }
 
-html, body {
-    background-color: #05070e;
+body {
+    background-color: var(--bg-color);
     color: var(--text-color);
-    width: 100%;
-    min-height: 100vh;
+    padding: 16px;
+    padding-bottom: 90px; /* Alt bar için boşluk */
     display: flex;
     justify-content: center;
-    overflow-x: hidden;
 }
 
-body {
-    /* Akıcı, şık animasyonlu kozmik arka plan */
-    background: linear-gradient(135deg, #05070e, #0c0a1d, #040e1a, #110d26);
-    background-size: 300% 300%;
-    animation: cosmicFlow 18s ease infinite;
-    padding-bottom: 90px;
-    position: relative;
+.app-container {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-@keyframes cosmicFlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+/* Header */
+header {
+    text-align: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
 }
 
-/* Arka plan neon parıltıları */
-body::before, body::after {
-    content: '';
-    position: fixed;
-    width: 350px;
-    height: 350px;
-    border-radius: 50%;
-    filter: blur(90px);
-    z-index: -1;
-    opacity: 0.35;
-    animation: neonPulse 12s infinite alternate ease-in-out;
-}
-
-body::before { top: -80px; left: -80px; background: rgba(99, 102, 241, 0.5); }
-body::after { bottom: -80px; right: -80px; background: rgba(168, 85, 247, 0.4); animation-delay: -6s; }
-
-@keyframes neonPulse {
-    0% { transform: translateY(0) scale(1); opacity: 0.25; }
-    100% { transform: translateY(50px) scale(1.2); opacity: 0.45; }
-}
-
-.app-container { 
-    width: 100%; 
-    max-width: 480px; 
-    min-height: 100vh; 
-    display: flex; 
-    flex-direction: column; 
-    position: relative; 
-    z-index: 1; 
-    background-color: transparent;
-}
-
-/* Logo Konteynerleri */
-.logo-badge-img {
-    width: 65px;
-    height: 65px;
-    border-radius: 18px;
-    overflow: hidden;
-    margin: 0 auto 15px auto;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.12);
-    background-color: #131c2e;
-}
-.logo-badge-img img { width: 100%; height: 100%; object-fit: cover; }
-
-.mini-logo-img {
-    width: 32px;
-    height: 32px;
-    border-radius: 9px;
-    overflow: hidden;
+.brand-area {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #131c2e;
+    gap: 10px;
+    margin-bottom: 4px;
 }
-.mini-logo-img img { width: 100%; height: 100%; object-fit: cover; }
 
-/* Şifre Kilidi Ekranı (0604) */
-.lock-screen { 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background-color: #05070e; 
-    backdrop-filter: blur(16px); 
-    z-index: 9999; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    padding: 20px; 
-    transition: opacity 0.3s ease; 
+.brand-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid var(--border);
 }
-.lock-screen.unlocked { opacity: 0; pointer-events: none; }
-.lock-box { text-align: center; width: 100%; max-width: 320px; }
-.lock-box h2 { font-size: 1.2rem; margin-bottom: 5px; color: var(--text-color); }
-.lock-box p { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 25px; }
 
-.pin-dots { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
-.pin-dots .dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--accent-color); transition: 0.2s; }
-.pin-dots .dot.filled { background-color: var(--accent-color); box-shadow: 0 0 10px var(--accent-color); }
-
-.pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-.pin-pad button { background-color: #131c2e; border: 1px solid var(--card-border); color: var(--text-color); font-size: 1.2rem; font-weight: 600; padding: 16px; border-radius: 50%; aspect-ratio: 1; cursor: pointer; display: flex; justify-content: center; align-items: center; margin: 0 auto; width: 65px; transition: 0.2s; }
-.pin-pad button:active { background-color: rgba(99, 102, 241, 0.4); transform: scale(0.95); }
-
-/* Header (Üst Bar Kesin Koyu) */
-.app-header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 18px 20px; 
-    background-color: #131c2e; 
-    border-bottom: 1px solid var(--card-border); 
-    position: sticky;
-    top: 0;
-    z-index: 800;
+header h1 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
-.logo-area { display: flex; align-items: center; gap: 10px; }
-.app-header h1 { font-size: 1.05rem; font-weight: 600; color: var(--text-color); }
 
-/* Main İçerik & Sekmeler */
-.main-content { padding: 20px; display: flex; flex-direction: column; gap: 20px; flex: 1; }
-.tab-content { display: none; flex-direction: column; gap: 20px; }
-.tab-content.active { display: flex; }
-
-/* Ana Sayfa Karşılama Kartı */
-.welcome-card { background: var(--accent-gradient); padding: 22px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3); color: white; }
-.welcome-tag { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; font-weight: 600; display: block; margin-bottom: 4px; }
-.welcome-card h2 { font-size: 1.2rem; font-weight: 700; }
-.mood-text { font-size: 0.8rem; opacity: 0.9; margin-top: 4px; }
-.live-clock { font-size: 1.4rem; font-weight: 700; background: rgba(0, 0, 0, 0.2); padding: 10px 12px; border-radius: 12px; text-align: center; }
-
-/* Widget Satırı */
-.info-widgets-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.info-widget { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 15px; border-radius: 16px; display: flex; align-items: center; gap: 12px; }
-.info-widget i { font-size: 1.5rem; color: var(--accent-color); }
-.info-widget span { font-size: 0.9rem; font-weight: 700; display: block; color: var(--text-color); }
-.info-widget small { font-size: 0.7rem; color: var(--text-muted); }
-
-/* Finans Kısa Özet */
-.preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.preview-header h3 { font-size: 0.9rem; color: var(--text-muted); }
-.preview-header span { font-size: 1rem; font-weight: 700; color: var(--income-color); }
-.mini-accounts-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding-top: 10px; border-top: 1px solid var(--card-border); }
-.mini-acc { background: #0b111e; padding: 8px; border-radius: 8px; text-align: center; }
-.mini-acc span { font-size: 0.65rem; color: var(--text-muted); display: block; }
-.mini-acc b { font-size: 0.8rem; font-weight: 600; margin-top: 2px; display: block; color: var(--text-color); }
-
-/* Cüzdan Sekmesi */
-.wealth-overview { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 20px; border-radius: 16px; text-align: center; }
-.wealth-overview small { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
-.wealth-overview h2 { font-size: 1.8rem; font-weight: 700; margin-top: 4px; color: var(--income-color); }
-
-.accounts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.account-card { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 14px 10px; border-radius: 14px; display: flex; flex-direction: column; gap: 10px; position: relative; overflow: hidden; }
-.account-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
-.account-card.akbank::before { background-color: #e11d48; }
-.account-card.ziraat::before { background-color: #0284c7; }
-.account-card.nakit::before { background-color: #10b981; }
-
-.acc-icon { font-size: 1.1rem; }
-.acc-info span { font-size: 0.7rem; color: var(--text-muted); display: block; }
-.acc-info h4 { font-size: 0.85rem; font-weight: 700; margin-top: 3px; color: var(--text-color); }
-
-/* Grafik Kartı */
-.chart-card { display: flex; flex-direction: column; align-items: center; }
-.chart-container { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
-.chart-legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; font-size: 0.75rem; color: var(--text-muted); }
-.legend-item { display: flex; align-items: center; gap: 5px; }
-.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
-
-/* Watchlist Stilleri */
-.current-watching-card { background: linear-gradient(135deg, #131c2e, #1e1b4b); border: 1px solid var(--accent-color); }
-.current-content-box { background: #0b111e; padding: 15px; border-radius: 12px; margin-top: 5px; display: flex; flex-direction: column; gap: 10px; }
-.season-selector { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; background: rgba(255,255,255,0.03); padding: 8px 12px; border-radius: 8px; }
-.season-btns { display: flex; gap: 8px; }
-.season-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-color); width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-
-.section-header { display: flex; justify-content: space-between; align-items: center; }
-.section-header h3 { font-size: 0.95rem; color: var(--text-muted); }
-.mini-add-btn { background-color: rgba(99, 102, 241, 0.2); color: var(--accent-color); border: 1px solid rgba(99, 102, 241, 0.4); padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-
-/* Alt Navigasyon Çubuğu (Kesin Koyu) */
-.bottom-nav { 
-    position: fixed; 
-    bottom: 0; 
-    left: 50%; 
-    transform: translateX(-50%); 
-    width: 100%; 
-    max-width: 480px; 
-    background-color: #131c2e; 
-    border-top: 1px solid var(--card-border); 
-    display: flex; 
-    justify-content: space-around; 
-    padding: 10px 0; 
-    z-index: 900; 
+header p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
 }
-.nav-item { background: none; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; font-size: 0.7rem; flex: 1; }
-.nav-item i { font-size: 1.2rem; }
-.nav-item.active { color: var(--accent-color); }
 
-/* Modal & Form */
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.75); z-index: 1001; display: flex; justify-content: center; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-.modal.open { opacity: 1; pointer-events: auto; }
-.modal-content { background-color: #131c2e; width: 100%; max-width: 480px; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 25px; border: 1px solid var(--card-border); transform: translateY(100%); transition: transform 0.3s ease; }
-.modal.open .modal-content { transform: translateY(0); }
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.modal-header h3 { color: var(--text-color); }
+/* Tabs System */
+.tab-content {
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+}
 
-.type-selector { display: flex; gap: 10px; margin-bottom: 15px; }
-.type-btn { flex: 1; padding: 10px; border: 1px solid var(--card-border); background-color: #0b111e; color: var(--text-muted); border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
-.type-btn.active[data-type="income"] { background-color: var(--income-color); color: white; border-color: var(--income-color); }
-.type-btn.active[data-type="expense"] { background-color: var(--expense-color); color: white; border-color: var(--expense-color); }
+.tab-content.active {
+    display: flex;
+}
 
-.input-group { margin-bottom: 15px; }
-.input-group label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
-.input-group input, .input-group select { width: 100%; padding: 12px; background-color: #0b111e; border: 1px solid var(--card-border); border-radius: 10px; color: var(--text-color); font-size: 0.95rem; }
+/* Cards */
+.card {
+    background-color: var(--card-bg);
+    border-radius: 14px;
+    padding: 16px;
+    border: 1px solid var(--border);
+}
 
-.submit-btn { width: 100%; padding: 14px; background: var(--accent-gradient); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 10px; }
+.card h3 {
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
 
-.card { background-color: var(--card-bg); padding: 18px; border-radius: 16px; border: 1px solid var(--card-border); }
-#transaction-list { list-style: none; display: flex; flex-direction: column; gap: 10px; max-height: 250px; overflow-y: auto; margin-top: 10px; }
-.transaction-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background-color: #0b111e; border-radius: 12px; border-left: 4px solid transparent; }
-.transaction-item.income { border-left-color: var(--income-color); }
-.transaction-item.expense { border-left-color: var(--expense-color); }
+.section-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
 
-.t-info strong { font-size: 0.9rem; display: block; color: var(--text-color); }
-.t-info span { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; display: block; }
-.t-right { display: flex; align-items: center; gap: 10px; }
-.t-acc-tag { font-size: 0.65rem; background: rgba(255, 255, 255, 0.05); padding: 3px 6px; border-radius: 4px; color: var(--text-muted); }
-.t-amount { font-weight: 700; font-size: 0.9rem; }
-.t-amount.income { color: var(--income-color); }
-.t-amount.expense { color: var(--expense-color); }
-.delete-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; padding: 4px; }
-.delete-btn:hover { color: var(--expense-color); }
+/* Progress Bar */
+.progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background-color: var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #4f46e5, var(--success));
+    transition: width 0.4s ease;
+}
+
+#progress-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Habit List Items */
+.habit-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.habit-item {
+    background-color: var(--bg-color);
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+}
+
+.habit-item.completed {
+    border-color: rgba(16, 185, 129, 0.4);
+    background-color: rgba(16, 185, 129, 0.03);
+}
+
+.habit-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    flex: 1;
+}
+
+.habit-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--success);
+    cursor: pointer;
+}
+
+.habit-text-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.habit-title {
+    font-size: 0.92rem;
+    font-weight: 500;
+}
+
+.habit-item.completed .habit-title {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
+.habit-streak-badge {
+    font-size: 0.72rem;
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+/* Water Tracker Specific Controls */
+.water-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.water-btn {
+    background-color: var(--border);
+    color: var(--text-color);
+    border: none;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.water-btn:active {
+    background-color: var(--accent);
+}
+
+/* Stats & Achievements */
+.stats-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-row {
+    background-color: var(--bg-color);
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border);
+    font-size: 0.88rem;
+}
+
+.achievement-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+
+.achievement-card {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0.5;
+}
+
+.achievement-card.unlocked {
+    opacity: 1;
+    border-color: #f59e0b;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), transparent);
+}
+
+.achievement-icon {
+    font-size: 1.8rem;
+}
+
+.achievement-info h4 {
+    font-size: 0.9rem;
+    margin-bottom: 2px;
+}
+
+.achievement-info p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(19, 27, 46, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    z-index: 1000;
+}
+
+.nav-item {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    color: var(--text-muted);
+    cursor: pointer;
+    flex: 1;
+}
+
+.nav-item.active {
+    color: var(--accent);
+}
+
+.nav-icon {
+    font-size: 1.2rem;
+}
+
+.nav-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+}
