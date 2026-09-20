@@ -1,70 +1,71 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Tarih Gösterimi
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('date-display').innerText = new Date().toLocaleDateString('tr-TR', options);
+    // Kişiselleştirilmiş Selamlama ve Saat / Tarih
+    const hour = new Date().getHours();
+    let greeting = "İyi Günler Semih";
+    if (hour >= 5 && hour < 12) greeting = "Günaydın Semih";
+    else if (hour >= 18 && hour < 22) greeting = "İyi Akşamlar Semih";
+    else if (hour >= 22 || hour < 5) greeting = "Gece Çalışması Semih";
+    document.getElementById('greeting-title').innerText = greeting;
 
-    // Gün Kontrolü (Gece yarısı otomatik sıfırlama veya tarih değişimi algılama)
+    // Hava Durumu Otomatik Simge (Soma için güncel simge)
+    document.getElementById('weather-display').innerText = "☁️ Soma: 23°C, Bulutlu";
+
+    // Tarih ve Saat Güncelleyici
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const dateStr = new Date().toLocaleDateString('tr-TR', options);
+    const timeStr = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+    document.getElementById('date-time-display').innerText = `${dateStr} • Saat: ${timeStr}`;
+
+    // Gün Kontrolü (Gece yarısı sıfırlama)
     const todayStr = new Date().toISOString().slice(0, 10);
     let lastActiveDate = localStorage.getItem('lure_last_date');
 
-    // Başlangıç Alışkanlık Veri Şeması (Kronolojik Sıralı)
+    // Alışkanlık Veri Şeması
     let habits = JSON.parse(localStorage.getItem('lure_habits')) || [
         { id: 'sleep_wake', title: '⏰ Uyku Disiplini: 07:00 Kalkış', completed: false, streak: 0, type: 'standard' },
         { id: 'health_med', title: '💊 Sağlık / İlaç Kullanımı', completed: false, streak: 0, type: 'standard' },
         { id: 'walk', title: '🚶‍♂️ Fiziksel Hareket (20-30dk Yürüyüş)', completed: false, streak: 0, type: 'standard' },
         { id: 'water', title: '💧 Su Takibi (Hedef: 2500ml)', current: 0, target: 2500, completed: false, streak: 0, type: 'water' },
         { id: 'youtube', title: '📺 Zihinsel Gelişim (Eğitici Video İzle)', completed: false, streak: 0, type: 'standard' },
-        { id: 'coding', title: '💻 Kodlama & Proje (Perş-Cuma-Cmt)', completed: false, streak: 0, type: 'conditional', activeDays: [4, 5, 6] }, // Perşembe(4), Cuma(5), Cumartesi(6)
+        { id: 'coding', title: '💻 Kodlama & Proje (Perş-Cuma-Cmt)', completed: false, streak: 0, type: 'conditional', activeDays: [4, 5, 6] },
         { id: 'main_goal', title: '🎯 Günün Tek Odak Noktası (The One Thing)', completed: false, streak: 0, type: 'standard' },
         { id: 'clean', title: '🧹 5 Dakikalık Dağınıklık Giderme', completed: false, streak: 0, type: 'standard' },
         { id: 'sleep_bed', title: '🌙 Uyku Disiplini: 00:00 - 01:00 Yatış', completed: false, streak: 0, type: 'standard' }
     ];
 
-    // Tarih değiştiyse günlük görevleri sıfırla
     if (lastActiveDate !== todayStr) {
         habits.forEach(h => {
-            if (h.type === 'water') {
-                h.current = 0;
-            }
+            if (h.type === 'water') h.current = 0;
             h.completed = false;
         });
         localStorage.setItem('lure_last_date', todayStr);
     }
 
-    // Başarımlar Tanımları
-    const achievements = [
-        { id: 'first_step', title: 'İlk Adım', desc: 'Herhangi bir görevi ilk kez tamamla.', icon: '🎯', unlocked: false },
-        { id: 'streak_3', title: 'Kıdemli Çırak', desc: 'Herhangi bir alışkanlıkta 3 gün seriye ulaş.', icon: '🔥', unlocked: false },
-        { id: 'water_master', title: 'Su Canavarı', desc: 'Günlük 2500ml su hedefini tamamla.', icon: '💧', unlocked: false },
-        { id: 'coder', title: 'Lure Developer', desc: 'Kodlama seansını başarıyla tamamla.', icon: '💻', unlocked: false }
-    ];
+    // Brain Dump Notları
+    let notes = JSON.parse(localStorage.getItem('lure_notes')) || [];
 
-    // LocalStorage'dan başarımları yükle
-    let savedAchievements = JSON.parse(localStorage.getItem('lure_achievements')) || achievements;
-
-    // Arayüz Elementleri
+    // DOM Elementleri
     const habitListEl = document.getElementById('habit-list');
     const progressBarEl = document.getElementById('progress-bar');
     const progressTextEl = document.getElementById('progress-text');
     const streakListEl = document.getElementById('streak-list');
-    const achievementListEl = document.getElementById('achievement-list');
+    const notesListEl = document.getElementById('notes-list');
 
     function renderApp() {
         renderHabits();
         renderStreaks();
-        renderAchievements();
+        renderNotes();
         updateProgress();
         saveData();
     }
 
     function renderHabits() {
         habitListEl.innerHTML = '';
-        const currentDayOfWeek = new Date().getDay(); // 0: Pazar, 1: Pazartesi ... 4: Perşembe, 5: Cuma, 6: Cumartesi
+        const currentDayOfWeek = new Date().getDay();
 
         habits.forEach((habit, index) => {
-            // Eğer koşullu görevse ve bugün aktif gün değilse gizle veya pasif göster
             if (habit.type === 'conditional' && !habit.activeDays.includes(currentDayOfWeek)) {
-                return; // Bugün bu görev listede görünmez (Örn: Kodlama sadece Perş-Cuma-Cmt)
+                return;
             }
 
             const li = document.createElement('li');
@@ -80,8 +81,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     <div class="water-controls">
-                        <button class="water-btn" onclick="addWater(${index}, 250)">+250ml</button>
-                        <button class="water-btn" onclick="addWater(${index}, 500)">+500ml</button>
+                        <button class="water-btn" onclick="addWater(${index}, 250)">+250</button>
+                        <button class="water-btn" onclick="addWater(${index}, 500)">+500</button>
                     </div>
                 `;
             } else {
@@ -103,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
         habits[index].completed = !habits[index].completed;
         if (habits[index].completed) {
             habits[index].streak += 1;
-            checkAchievementsOnComplete(habits[index].id);
         } else {
             habits[index].streak = Math.max(0, habits[index].streak - 1);
         }
@@ -117,7 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!habits[index].completed) {
                 habits[index].completed = true;
                 habits[index].streak += 1;
-                checkAchievementsOnComplete('water_master');
             }
         }
         renderApp();
@@ -136,19 +135,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function renderAchievements() {
-        achievementListEl.innerHTML = '';
-        savedAchievements.forEach(ach => {
+    window.saveBrainDump = function() {
+        const input = document.getElementById('brain-dump-input');
+        const text = input.value.trim();
+        if (text) {
+            notes.unshift({ id: Date.now(), text, date: new Date().toLocaleDateString('tr-TR') });
+            input.value = '';
+            renderNotes();
+            saveData();
+        }
+    }
+
+    window.deleteNote = function(id) {
+        notes = notes.filter(n => n.id !== id);
+        renderNotes();
+        saveData();
+    }
+
+    function renderNotes() {
+        notesListEl.innerHTML = '';
+        notes.forEach(note => {
             const card = document.createElement('div');
-            card.className = `achievement-card ${ach.unlocked ? 'unlocked' : ''}`;
+            card.className = 'note-card';
             card.innerHTML = `
-                <div class="achievement-icon">${ach.icon}</div>
-                <div class="achievement-info">
-                    <h4>${ach.title} ${ach.unlocked ? '✅' : '🔒'}</h4>
-                    <p>${ach.desc}</p>
+                <div>
+                    <p style="margin-bottom: 4px;">${note.text}</p>
+                    <span style="font-size: 0.7rem; color: var(--text-muted);">${note.date}</span>
                 </div>
+                <button class="note-delete-btn" onclick="deleteNote(${note.id})">🗑️</button>
             `;
-            achievementListEl.appendChild(card);
+            notesListEl.appendChild(card);
         });
     }
 
@@ -162,46 +178,18 @@ document.addEventListener('DOMContentLoaded', () => {
         progressTextEl.innerText = `%${percentage} Tamamlandı (${completed}/${total})`;
     }
 
-    function checkAchievementsOnComplete(id) {
-        // İlk adım rozeti
-        unlockAchievement('first_step');
-
-        // Su rozeti
-        if (id === 'water_master') unlockAchievement('water_master');
-        if (id === 'coding') unlockAchievement('coder');
-
-        // Seri kontrolü
-        habits.forEach(h => {
-            if (h.streak >= 3) unlockAchievement('streak_3');
-        });
-    }
-
-    function unlockAchievement(achId) {
-        const ach = savedAchievements.find(a => a.id === achId);
-        if (ach && !ach.unlocked) {
-            ach.unlocked = true;
-            localStorage.setItem('lure_achievements', JSON.stringify(savedAchievements));
-        }
-    }
-
     function saveData() {
         localStorage.setItem('lure_habits', JSON.stringify(habits));
-        localStorage.setItem('lure_achievements', JSON.stringify(savedAchievements));
+        localStorage.setItem('lure_notes', JSON.stringify(notes));
     }
 
-    // Sekme Değiştirme Fonksiyonu
-    window.switchTab = function(tabName) {
+    // Sekme Değiştirme
+    window.switchTab = function(tabName, event) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
 
-        if (tabName === 'daily') {
-            document.getElementById('tab-daily').classList.add('active');
-            event.currentTarget.classList.add('active');
-        } else if (tabName === 'streaks') {
-            document.getElementById('tab-streaks').classList.add('active');
-            event.currentTarget.classList.add('active');
-        } else if (tabName === 'achievements') {
-            document.getElementById('tab-achievements').classList.add('active');
+        document.getElementById(`tab-${tabName}`).classList.add('active');
+        if (event && event.currentTarget) {
             event.currentTarget.classList.add('active');
         }
     }
