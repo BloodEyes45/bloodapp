@@ -14,87 +14,72 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- HEADER / DİNAMİK KARŞILAMA -->
-        <header>
-            <div class="brand-area">
-                <img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="LureSystems Logo" class="brand-logo">
-                <div class="header-titles">
-                    <h1 id="greeting-title">Merhaba Semih</h1>
-                    <p id="weather-display">☁️ Soma: Yükleniyor...</p>
+
+        <!-- SEKME 1: ANA SAYFA (SADECE KARŞILAMA VE DİSİPLİN SKORU) -->
+        <section id="tab-home" class="tab-content active">
+            <div class="home-hero">
+                <div class="brand-badge">
+                    <img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="LureSystems Logo" class="hero-logo">
+                    <span>LureSystems Core</span>
+                </div>
+                
+                <h1 id="greeting-title" class="hero-title">Merhaba Semih</h1>
+                <p id="weather-display" class="hero-weather">☁️ Soma: 23°C, Bulutlu</p>
+                <div id="date-time-display" class="hero-datetime">Yükleniyor...</div>
+
+                <!-- Günün Disiplin Skoru Kartı -->
+                <div class="card home-score-card">
+                    <h3>Günün Disiplin Skoru</h3>
+                    <div class="progress-bar-container">
+                        <div id="progress-bar-home" class="progress-bar"></div>
+                    </div>
+                    <span id="progress-text-home">%0 Tamamlandı</span>
                 </div>
             </div>
-            <p id="date-time-display"></p>
-        </header>
+        </section>
 
-        <!-- SEKME 1: GÜNLÜK AKIŞ -->
-        <section id="tab-daily" class="tab-content active">
-            <!-- Genel İlerleme Kartı -->
-            <div class="card summary-card">
-                <h3>Günün Disiplin Skoru</h3>
-                <div class="progress-bar-container">
-                    <div id="progress-bar" class="progress-bar"></div>
-                </div>
-                <span id="progress-text">%0 Tamamlandı</span>
-            </div>
+        <!-- SEKME 2: YAPILACAKLAR (GÜNLÜK AKIŞ) -->
+        <section id="tab-todos" class="tab-content">
+            <header class="section-header">
+                <h2>Günlük Akış</h2>
+                <p>Sabah kalkıştan gece yatışa kadar komuta sende.</p>
+            </header>
 
-            <!-- Günlük Görevler / Alışkanlıklar Listesi -->
             <div class="card">
-                <h3>Günlük Komuta Merkezi</h3>
                 <ul id="habit-list" class="habit-list">
                     <!-- JS ile doldurulacak -->
                 </ul>
             </div>
         </section>
 
-        <!-- SEKME 2: İSTATİSTİKLER & SERİLER -->
+        <!-- SEKME 3: İSTATİSTİKLER -->
         <section id="tab-stats" class="tab-content">
+            <header class="section-header">
+                <h2>İstatistik Merkezi</h2>
+                <p>Zinciri kırma! Alışkanlıklarının seri rekorları.</p>
+            </header>
+
             <div class="card">
-                <h3>🔥 Seri & Zincir Durumu</h3>
-                <p class="section-desc">Zinciri kırma! Alışkanlıklarının aktif seri rekorları.</p>
+                <h3>🔥 Seri Durumları</h3>
                 <div id="streak-list" class="stats-list">
                     <!-- JS ile doldurulacak -->
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>⚡ Acil Odak Resetleme</h3>
-                <p class="section-desc">Disiplinin mi dağıldı? Derin bir nefes al ve şu 3 adımı uygula:</p>
-                <ul class="reset-list">
-                    <li>1️⃣ Telefonu 10 dakika başka bir odaya bırak.</li>
-                    <li>2️⃣ Masadaki gereksiz her şeyi kaldır.</li>
-                    <li>3️⃣ Sadece tek bir göreve (The One Thing) odaklan.</li>
-                </ul>
-            </div>
-        </section>
-
-        <!-- SEKME 3: ZİHİN BOŞALTMA (BRAIN DUMP) -->
-        <section id="tab-notes" class="tab-content">
-            <div class="card">
-                <h3>📝 Hızlı Zihin Boşaltma (Brain Dump)</h3>
-                <p class="section-desc">Aklındaki kod fikirlerini, yapılacakları veya notları buraya kaybetmeden yaz.</p>
-                <div class="note-input-group">
-                    <textarea id="brain-dump-input" placeholder="Aklından geçenleri buraya yaz..."></textarea>
-                    <button id="save-note-btn" onclick="saveBrainDump()">Notu Kaydet</button>
-                </div>
-                <div id="notes-list" class="notes-list">
-                    <!-- Kaydedilen notlar buraya gelecek -->
                 </div>
             </div>
         </section>
 
         <!-- ALT NAVİGASYON (MOBILE BOTTOM BAR) -->
         <nav class="bottom-nav">
-            <button class="nav-item active" onclick="switchTab('daily', event)">
+            <button class="nav-item active" onclick="switchTab('home', event)">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Ana Sayfa</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('todos', event)">
                 <span class="nav-icon">📋</span>
-                <span class="nav-label">Akış</span>
+                <span class="nav-label">Yapılacaklar</span>
             </button>
             <button class="nav-item" onclick="switchTab('stats', event)">
                 <span class="nav-icon">📊</span>
                 <span class="nav-label">İstatistik</span>
-            </button>
-            <button class="nav-item" onclick="switchTab('notes', event)">
-                <span class="nav-icon">📝</span>
-                <span class="nav-label">Notlar</span>
             </button>
         </nav>
     </div>
