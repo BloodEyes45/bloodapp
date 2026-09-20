@@ -7,7 +7,6 @@
     --accent-hover: #4f46e5;
     --success: #10b981;
     --border: #1e293b;
-    --badge-locked: #334155;
 }
 
 * {
@@ -22,7 +21,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     padding: 16px;
-    padding-bottom: 90px; /* Alt bar için boşluk */
+    padding-bottom: 90px;
     display: flex;
     justify-content: center;
 }
@@ -37,8 +36,8 @@ body {
 
 /* Header */
 header {
-    text-align: center;
-    padding: 8px 0;
+    text-align: left;
+    padding: 8px 4px;
     border-bottom: 1px solid var(--border);
     margin-bottom: 4px;
 }
@@ -46,28 +45,33 @@ header {
 .brand-area {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 4px;
+    gap: 12px;
+    margin-bottom: 6px;
 }
 
 .brand-logo {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
     object-fit: cover;
     border: 1px solid var(--border);
 }
 
-header h1 {
-    font-size: 1.3rem;
+.header-titles h1 {
+    font-size: 1.15rem;
     font-weight: 700;
-    letter-spacing: 0.5px;
 }
 
-header p {
-    font-size: 0.8rem;
+.header-titles p {
+    font-size: 0.78rem;
+    color: var(--success);
+    margin-top: 2px;
+}
+
+header > p {
+    font-size: 0.78rem;
     color: var(--text-muted);
+    margin-top: 4px;
 }
 
 /* Tabs System */
@@ -188,7 +192,7 @@ header p {
     font-weight: 600;
 }
 
-/* Water Tracker Specific Controls */
+/* Water Controls */
 .water-controls {
     display: flex;
     align-items: center;
@@ -210,7 +214,7 @@ header p {
     background-color: var(--accent);
 }
 
-/* Stats & Achievements */
+/* Stats & Reset List */
 .stats-list {
     display: flex;
     flex-direction: column;
@@ -228,41 +232,80 @@ header p {
     font-size: 0.88rem;
 }
 
-.achievement-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
+.reset-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
 }
 
-.achievement-card {
+.reset-list li {
+    background-color: var(--bg-color);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+/* Brain Dump Notes */
+.note-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.note-input-group textarea {
     background-color: var(--bg-color);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 12px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    opacity: 0.5;
-}
-
-.achievement-card.unlocked {
-    opacity: 1;
-    border-color: #f59e0b;
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), transparent);
-}
-
-.achievement-icon {
-    font-size: 1.8rem;
-}
-
-.achievement-info h4 {
+    border-radius: 8px;
+    padding: 10px;
+    color: var(--text-color);
     font-size: 0.9rem;
-    margin-bottom: 2px;
+    resize: vertical;
+    min-height: 80px;
 }
 
-.achievement-info p {
-    font-size: 0.75rem;
-    color: var(--text-muted);
+.note-input-group textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+#save-note-btn {
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.notes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.note-card {
+    background-color: var(--bg-color);
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.note-delete-btn {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 0.9rem;
 }
 
 /* Bottom Navigation */
