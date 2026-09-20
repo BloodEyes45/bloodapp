@@ -3,291 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LureSystems Asistan</title>
+    <title>LureSystems - Disiplin Paneli</title>
+    <link rel="stylesheet" href="style.css">
     
+    <!-- Apple / iPhone PWA Meta Etiketleri -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="LureAsistan">
-    
-    <!-- iPhone ve Tarayıcı İçin Özel Logo -->
+    <meta name="apple-mobile-web-app-title" content="LureSystems">
     <link rel="apple-touch-icon" href="https://i.hizliresim.com/ebrr6uci.jpg">
-    <link rel="icon" type="image/jpeg" href="https://i.hizliresim.com/ebrr6uci.jpg">
-    
-    <link rel="manifest" href="manifest.json">
-    
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-    <!-- Şifre Kilidi Ekranı (0604) -->
-    <div id="lock-screen" class="lock-screen">
-        <div class="lock-box">
-            <div class="logo-badge-img"><img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="Logo"></div>
-            <h2>LureSystems</h2>
-            <p>Ana ekranda işlem yapmak için şifreyi gir</p>
-            <div class="pin-dots">
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-                <span class="dot"></span>
-            </div>
-            <div class="pin-pad">
-                <button onclick="pressPin('1')">1</button>
-                <button onclick="pressPin('2')">2</button>
-                <button onclick="pressPin('3')">3</button>
-                <button onclick="pressPin('4')">4</button>
-                <button onclick="pressPin('5')">5</button>
-                <button onclick="pressPin('6')">6</button>
-                <button onclick="pressPin('7')">7</button>
-                <button onclick="pressPin('8')">8</button>
-                <button onclick="pressPin('9')">9</button>
-                <button class="clear" onclick="pressPin('C')">Sil</button>
-                <button onclick="pressPin('0')">0</button>
-                <button class="enter" onclick="pressPin('OK')"><i class="fa-solid fa-arrow-right"></i></button>
-            </div>
-        </div>
-    </div>
-
     <div class="app-container">
-        
-        <!-- ÜST KISIM -->
-        <header class="app-header">
-            <div class="logo-area">
-                <div class="mini-logo-img"><img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="Logo"></div>
-                <h1 id="header-title">Ana Sayfa</h1>
+        <!-- HEADER -->
+        <header>
+            <div class="brand-area">
+                <img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="LureSystems Logo" class="brand-logo">
+                <h1>LureSystems</h1>
             </div>
+            <p id="date-display"></p>
         </header>
 
-        <!-- ANA İÇERİK ALANLARI (SEKMELER) -->
-        <main class="main-content">
-
-            <!-- TAB 1: ANA SAYFA (ÖZET) -->
-            <section id="tab-home" class="tab-content active">
-                <div class="welcome-card">
-                    <div class="welcome-info">
-                        <span id="live-date" class="welcome-tag">Yükleniyor...</span>
-                        <h2>Hoş geldin, Semih</h2>
-                        <p class="mood-text">Bugün de harika gidiyorsun ✨</p>
-                    </div>
-                    <div class="live-clock" id="live-clock">00:00</div>
+        <!-- SEKME 1: GÜNLÜK AKIŞ -->
+        <section id="tab-daily" class="tab-content active">
+            <!-- Genel İlerleme Kartı -->
+            <div class="card summary-card">
+                <h3>Günün Disiplin Skoru</h3>
+                <div class="progress-bar-container">
+                    <div id="progress-bar" class="progress-bar"></div>
                 </div>
-
-                <div class="info-widgets-row">
-                    <div class="info-widget weather-widget">
-                        <i class="fa-solid fa-cloud-sun"></i>
-                        <div>
-                            <span>24°C</span>
-                            <small>Soma, Manisa</small>
-                        </div>
-                    </div>
-                    <div class="info-widget system-widget">
-                        <i class="fa-solid fa-shield-cat" style="color: var(--income-color);"></i>
-                        <div>
-                            <span>LureSystems</span>
-                            <small>Sistem Aktif</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card summary-preview-card" onclick="switchTab('tab-wallet')" style="cursor: pointer;">
-                    <div class="preview-header">
-                        <h3>Toplam Varlık Durumu</h3>
-                        <span id="home-grand-total">0.00 TL</span>
-                    </div>
-                    <div class="mini-accounts-row">
-                        <div class="mini-acc"><span>Akbank</span><b id="home-akbank">0 TL</b></div>
-                        <div class="mini-acc"><span>Ziraat</span><b id="home-ziraat">0 TL</b></div>
-                        <div class="mini-acc"><span>Nakit</span><b id="home-nakit">0 TL</b></div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-muted);">Veri ve Sistem Yönetimi</h3>
-                    <div style="display: flex; gap: 10px;">
-                        <button onclick="exportData()" class="type-btn" style="flex: 1; font-size: 0.8rem;"><i class="fa-solid fa-download"></i> Yedek İndir</button>
-                        <label class="type-btn" style="flex: 1; font-size: 0.8rem; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;">
-                            <i class="fa-solid fa-upload"></i> Yedek Yükle
-                            <input type="file" id="import-file" style="display: none;" onchange="importData(event)">
-                        </label>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 2: CÜZDAN & GELİR/GİDER -->
-            <section id="tab-wallet" class="tab-content">
-                <div class="wealth-overview">
-                    <small>Toplam Varlık</small>
-                    <h2 id="grand-total">0.00 TL</h2>
-                </div>
-
-                <div class="accounts-grid">
-                    <div class="account-card akbank">
-                        <div class="acc-icon-badge" style="background: rgba(225, 29, 72, 0.15); color: #e11d48;"><i class="fa-solid fa-building-columns"></i></div>
-                        <div class="acc-info">
-                            <span>Akbank</span>
-                            <h4 id="akbank-balance">0.00 TL</h4>
-                        </div>
-                    </div>
-                    <div class="account-card ziraat">
-                        <div class="acc-icon-badge" style="background: rgba(2, 132, 199, 0.15); color: #0284c7;"><i class="fa-solid fa-landmark"></i></div>
-                        <div class="acc-info">
-                            <span>Ziraat</span>
-                            <h4 id="ziraat-balance">0.00 TL</h4>
-                        </div>
-                    </div>
-                    <div class="account-card nakit">
-                        <div class="acc-icon-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--income-color);"><i class="fa-solid fa-money-bill-wave"></i></div>
-                        <div class="acc-info">
-                            <span>Nakit</span>
-                            <h4 id="nakit-balance">0.00 TL</h4>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card chart-card">
-                    <h3 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-muted);">Kategori Dağılımı</h3>
-                    <div class="chart-container">
-                        <canvas id="expenseChart" width="200" height="200"></canvas>
-                        <div id="chart-legend" class="chart-legend"></div>
-                    </div>
-                </div>
-
-                <div class="section-header">
-                    <h3>İşlem Geçmişi</h3>
-                    <button id="add-tx-btn" class="mini-add-btn"><i class="fa-solid fa-plus"></i> İşlem Ekle</button>
-                </div>
-
-                <div class="card history-card">
-                    <ul id="transaction-list"></ul>
-                </div>
-            </section>
-
-            <!-- TAB 3: KASA (GİZLEME MODU İLE) -->
-            <section id="tab-vault" class="tab-content">
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                        <h3 style="font-size: 0.9rem; color: var(--text-muted);">Kasa Kaydı Ekle</h3>
-                        <button onclick="toggleMaskMode()" id="mask-mode-btn" class="mini-add-btn"><i class="fa-solid fa-eye-slash"></i> Maskele</button>
-                    </div>
-                    <div class="input-group">
-                        <input type="text" id="vault-title" placeholder="Başlık (Örn: Ziraat IBAN, Şifre)">
-                    </div>
-                    <div class="input-group">
-                        <input type="text" id="vault-content" placeholder="İçerik (Hassas Bilgi)">
-                    </div>
-                    <button id="add-vault-btn" class="submit-btn" style="margin-top: 5px;">Kayıt Ekle</button>
-                </div>
-
-                <div class="card" style="margin-top: 15px;">
-                    <h3 style="margin-bottom: 12px; color: var(--text-muted);">Güvenli Kasa</h3>
-                    <ul id="vault-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px;"></ul>
-                </div>
-            </section>
-
-            <!-- TAB 4: İZLEME LİSTESİ (WATCHLIST) -->
-            <section id="tab-watchlist" class="tab-content">
-                <div class="card current-watching-card">
-                    <div class="preview-header">
-                        <h3><i class="fa-solid fa-clapperboard" style="color: var(--accent-color);"></i> Şu An İzlenen</h3>
-                        <span id="current-type-badge" class="t-acc-tag">Film / Dizi Yok</span>
-                    </div>
-                    <div id="current-watching-content" class="current-content-box">
-                        <p style="font-size: 0.85rem; color: var(--text-muted);">Şu an izlenen bir içerik seçilmedi. Aşağıdaki listeden "Şu An İzle" butonuna tıkla.</p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3 style="margin-bottom: 12px; font-size: 0.9rem; color: var(--text-muted);">Listeye Yeni Ekle</h3>
-                    <div class="input-group">
-                        <input type="text" id="watch-title" placeholder="Film veya Dizi Adı (Örn: Suits)">
-                    </div>
-                    <div class="input-group">
-                        <label>Tür Seçin</label>
-                        <select id="watch-type">
-                            <option value="Dizi">Dizi</option>
-                            <option value="Film">Film</option>
-                        </select>
-                    </div>
-                    <button id="add-watch-btn" class="submit-btn" style="margin-top: 5px;">Listeye Ekle</button>
-                </div>
-
-                <div class="card">
-                    <h3 style="margin-bottom: 12px; color: var(--text-muted);">İzlenecekler Listesi</h3>
-                    <ul id="watchlist" style="list-style: none; display: flex; flex-direction: column; gap: 10px;"></ul>
-                </div>
-
-                <div class="card">
-                    <h3 style="margin-bottom: 12px; color: var(--income-color);"><i class="fa-solid fa-circle-check"></i> İzlenenler Arşivi</h3>
-                    <ul id="watched-history-list" style="list-style: none; display: flex; flex-direction: column; gap: 10px;"></ul>
-                </div>
-            </section>
-
-        </main>
-
-        <!-- İŞLEM EKLEME MODALI -->
-        <div id="transaction-modal" class="modal">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>Yeni İşlem Ekle</h3>
-                    <button id="close-modal" class="icon-btn"><i class="fa-solid fa-xmark"></i></button>
-                </div>
-                <form id="transaction-form">
-                    <div class="type-selector">
-                        <button type="button" class="type-btn active" data-type="income">Gelir</button>
-                        <button type="button" class="type-btn" data-type="expense">Gider</button>
-                    </div>
-                    <div class="input-group">
-                        <label>Hesap Seçin</label>
-                        <select id="account-select" required>
-                            <option value="Akbank">Akbank</option>
-                            <option value="Ziraat">Ziraat</option>
-                            <option value="Nakit">Nakit</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Kategori</label>
-                        <select id="category-select" required>
-                            <option value="Genel">Genel</option>
-                            <option value="Yemek & Market">Yemek & Market</option>
-                            <option value="Fatura & Abonelik">Fatura & Abonelik</option>
-                            <option value="Yazılım & Sunucu">Yazılım & Sunucu</option>
-                            <option value="Eğlence">Eğlence</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Açıklama</label>
-                        <input type="text" id="description" placeholder="Örn: Maaş, Steam Oyunu" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Tutar (TL)</label>
-                        <input type="number" id="amount" step="0.01" placeholder="0.00" required>
-                    </div>
-                    <button type="submit" class="submit-btn">Kaydet</button>
-                </form>
+                <span id="progress-text">%0 Tamamlandı</span>
             </div>
-        </div>
 
-        <!-- ALT NAVİGASYON ÇUBUĞU -->
+            <!-- Günlük Görevler / Alışkanlıklar Listesi -->
+            <div class="card">
+                <h3>Günlük Komuta Merkezi</h3>
+                <ul id="habit-list" class="habit-list">
+                    <!-- Javascript ile doldurulacak -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- SEKME 2: SERİLER & İSTATİSTİKLER -->
+        <section id="tab-streaks" class="tab-content">
+            <div class="card">
+                <h3>🔥 Seri & Zincir Durumu</h3>
+                <p class="section-desc">Zinciri kırma! Her gün tamamladığın alışkanlıklar serini büyütür.</p>
+                <div id="streak-list" class="stats-list">
+                    <!-- JS ile doldurulacak -->
+                </div>
+            </div>
+        </section>
+
+        <!-- SEKME 3: BAŞARIMLAR & ÖDÜLLER -->
+        <section id="tab-achievements" class="tab-content">
+            <div class="card">
+                <h3>🏆 Kupa Odası & Rozetler</h3>
+                <p class="section-desc">Disiplinini korudukça açılan unvanlar ve başarımlar.</p>
+                <div id="achievement-list" class="achievement-grid">
+                    <!-- JS ile doldurulacak -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ALT NAVİGASYON (MOBILE BOTTOM BAR) -->
         <nav class="bottom-nav">
-            <button class="nav-item active" onclick="switchTab('tab-home')" data-title="Ana Sayfa" id="nav-home">
-                <i class="fa-solid fa-house"></i>
-                <span>Özet</span>
+            <button class="nav-item active" onclick="switchTab('daily')">
+                <span class="nav-icon">📋</span>
+                <span class="nav-label">Akış</span>
             </button>
-            <button class="nav-item" onclick="switchTab('tab-wallet')" data-title="Cüzdan" id="nav-wallet">
-                <i class="fa-solid fa-wallet"></i>
-                <span>Cüzdan</span>
+            <button class="nav-item" onclick="switchTab('streaks')">
+                <span class="nav-icon">🔥</span>
+                <span class="nav-label">Seriler</span>
             </button>
-            <button class="nav-item" onclick="switchTab('tab-vault')" data-title="Kasa & Linkler" id="nav-vault">
-                <i class="fa-solid fa-vault"></i>
-                <span>Kasa</span>
-            </button>
-            <button class="nav-item" onclick="switchTab('tab-watchlist')" data-title="İzleme Listesi" id="nav-watchlist">
-                <i class="fa-solid fa-film"></i>
-                <span>İzle</span>
+            <button class="nav-item" onclick="switchTab('achievements')">
+                <span class="nav-icon">🏆</span>
+                <span class="nav-label">Başarımlar</span>
             </button>
         </nav>
-
     </div>
 
     <script src="app.js"></script>
