@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Kişiselleştirilmiş Selamlama ve Saat / Tarih
+    // Kişiselleştirilmiş Selamlama
     const hour = new Date().getHours();
     let greeting = "İyi Günler Semih";
     if (hour >= 5 && hour < 12) greeting = "Günaydın Semih";
@@ -7,14 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (hour >= 22 || hour < 5) greeting = "Gece Çalışması Semih";
     document.getElementById('greeting-title').innerText = greeting;
 
-    // Hava Durumu Otomatik Simge (Soma için güncel simge)
+    // Hava Durumu
     document.getElementById('weather-display').innerText = "☁️ Soma: 23°C, Bulutlu";
 
     // Tarih ve Saat Güncelleyici
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const dateStr = new Date().toLocaleDateString('tr-TR', options);
     const timeStr = new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
-    document.getElementById('date-time-display').innerText = `${dateStr} • Saat: ${timeStr}`;
+    document.getElementById('date-time-display').innerText = `${dateStr} • ${timeStr}`;
 
     // Gün Kontrolü (Gece yarısı sıfırlama)
     const todayStr = new Date().toISOString().slice(0, 10);
@@ -41,20 +41,15 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('lure_last_date', todayStr);
     }
 
-    // Brain Dump Notları
-    let notes = JSON.parse(localStorage.getItem('lure_notes')) || [];
-
     // DOM Elementleri
     const habitListEl = document.getElementById('habit-list');
-    const progressBarEl = document.getElementById('progress-bar');
-    const progressTextEl = document.getElementById('progress-text');
+    const progressBarHomeEl = document.getElementById('progress-bar-home');
+    const progressTextHomeEl = document.getElementById('progress-text-home');
     const streakListEl = document.getElementById('streak-list');
-    const notesListEl = document.getElementById('notes-list');
 
     function renderApp() {
         renderHabits();
         renderStreaks();
-        renderNotes();
         updateProgress();
         saveData();
     }
@@ -135,52 +130,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    window.saveBrainDump = function() {
-        const input = document.getElementById('brain-dump-input');
-        const text = input.value.trim();
-        if (text) {
-            notes.unshift({ id: Date.now(), text, date: new Date().toLocaleDateString('tr-TR') });
-            input.value = '';
-            renderNotes();
-            saveData();
-        }
-    }
-
-    window.deleteNote = function(id) {
-        notes = notes.filter(n => n.id !== id);
-        renderNotes();
-        saveData();
-    }
-
-    function renderNotes() {
-        notesListEl.innerHTML = '';
-        notes.forEach(note => {
-            const card = document.createElement('div');
-            card.className = 'note-card';
-            card.innerHTML = `
-                <div>
-                    <p style="margin-bottom: 4px;">${note.text}</p>
-                    <span style="font-size: 0.7rem; color: var(--text-muted);">${note.date}</span>
-                </div>
-                <button class="note-delete-btn" onclick="deleteNote(${note.id})">🗑️</button>
-            `;
-            notesListEl.appendChild(card);
-        });
-    }
-
     function updateProgress() {
         const activeHabits = habits.filter(h => h.type !== 'conditional' || h.activeDays.includes(new Date().getDay()));
         const total = activeHabits.length;
         const completed = activeHabits.filter(h => h.completed).length;
         const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
 
-        progressBarEl.style.width = percentage + '%';
-        progressTextEl.innerText = `%${percentage} Tamamlandı (${completed}/${total})`;
+        progressBarHomeEl.style.width = percentage + '%';
+        progressTextHomeEl.innerText = `%${percentage} Tamamlandı (${completed}/${total})`;
     }
 
     function saveData() {
         localStorage.setItem('lure_habits', JSON.stringify(habits));
-        localStorage.setItem('lure_notes', JSON.stringify(notes));
     }
 
     // Sekme Değiştirme
