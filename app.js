@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             row.className = 'stat-row';
             row.innerHTML = `
                 <span>${habit.title.split(':')[0]}</span>
-                <span style="font-weight: 600; color: #f59e0b;">🔥 ${habit.streak} Gün</span>
+                <span style="font-weight: 600; color: #fbbf24;">🔥 ${habit.streak} Gün</span>
             `;
             streakListEl.appendChild(row);
         });
@@ -137,14 +137,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
 
         progressBarHomeEl.style.width = percentage + '%';
-        progressTextHomeEl.innerText = `%${percentage} Tamamlandı (${completed}/${total})`;
+        progressTextHomeEl.innerText = `%${percentage}`;
     }
 
     function saveData() {
         localStorage.setItem('lure_habits', JSON.stringify(habits));
     }
 
-    // Sekme Değiştirme
+    // Sekme Değiştirme (Smooth Transition)
     window.switchTab = function(tabName, event) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
