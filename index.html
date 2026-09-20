@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LureSystems - Disiplin Paneli</title>
+    <title>LureSystems - Komuta Merkezi</title>
     <link rel="stylesheet" href="style.css">
     
     <!-- Apple / iPhone PWA Meta Etiketleri -->
@@ -14,13 +14,16 @@
 </head>
 <body>
     <div class="app-container">
-        <!-- HEADER -->
+        <!-- HEADER / DİNAMİK KARŞILAMA -->
         <header>
             <div class="brand-area">
                 <img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="LureSystems Logo" class="brand-logo">
-                <h1>LureSystems</h1>
+                <div class="header-titles">
+                    <h1 id="greeting-title">Merhaba Semih</h1>
+                    <p id="weather-display">☁️ Soma: Yükleniyor...</p>
+                </div>
             </div>
-            <p id="date-display"></p>
+            <p id="date-time-display"></p>
         </header>
 
         <!-- SEKME 1: GÜNLÜK AKIŞ -->
@@ -38,46 +41,60 @@
             <div class="card">
                 <h3>Günlük Komuta Merkezi</h3>
                 <ul id="habit-list" class="habit-list">
-                    <!-- Javascript ile doldurulacak -->
+                    <!-- JS ile doldurulacak -->
                 </ul>
             </div>
         </section>
 
-        <!-- SEKME 2: SERİLER & İSTATİSTİKLER -->
-        <section id="tab-streaks" class="tab-content">
+        <!-- SEKME 2: İSTATİSTİKLER & SERİLER -->
+        <section id="tab-stats" class="tab-content">
             <div class="card">
                 <h3>🔥 Seri & Zincir Durumu</h3>
-                <p class="section-desc">Zinciri kırma! Her gün tamamladığın alışkanlıklar serini büyütür.</p>
+                <p class="section-desc">Zinciri kırma! Alışkanlıklarının aktif seri rekorları.</p>
                 <div id="streak-list" class="stats-list">
                     <!-- JS ile doldurulacak -->
                 </div>
             </div>
+
+            <div class="card">
+                <h3>⚡ Acil Odak Resetleme</h3>
+                <p class="section-desc">Disiplinin mi dağıldı? Derin bir nefes al ve şu 3 adımı uygula:</p>
+                <ul class="reset-list">
+                    <li>1️⃣ Telefonu 10 dakika başka bir odaya bırak.</li>
+                    <li>2️⃣ Masadaki gereksiz her şeyi kaldır.</li>
+                    <li>3️⃣ Sadece tek bir göreve (The One Thing) odaklan.</li>
+                </ul>
+            </div>
         </section>
 
-        <!-- SEKME 3: BAŞARIMLAR & ÖDÜLLER -->
-        <section id="tab-achievements" class="tab-content">
+        <!-- SEKME 3: ZİHİN BOŞALTMA (BRAIN DUMP) -->
+        <section id="tab-notes" class="tab-content">
             <div class="card">
-                <h3>🏆 Kupa Odası & Rozetler</h3>
-                <p class="section-desc">Disiplinini korudukça açılan unvanlar ve başarımlar.</p>
-                <div id="achievement-list" class="achievement-grid">
-                    <!-- JS ile doldurulacak -->
+                <h3>📝 Hızlı Zihin Boşaltma (Brain Dump)</h3>
+                <p class="section-desc">Aklındaki kod fikirlerini, yapılacakları veya notları buraya kaybetmeden yaz.</p>
+                <div class="note-input-group">
+                    <textarea id="brain-dump-input" placeholder="Aklından geçenleri buraya yaz..."></textarea>
+                    <button id="save-note-btn" onclick="saveBrainDump()">Notu Kaydet</button>
+                </div>
+                <div id="notes-list" class="notes-list">
+                    <!-- Kaydedilen notlar buraya gelecek -->
                 </div>
             </div>
         </section>
 
         <!-- ALT NAVİGASYON (MOBILE BOTTOM BAR) -->
         <nav class="bottom-nav">
-            <button class="nav-item active" onclick="switchTab('daily')">
+            <button class="nav-item active" onclick="switchTab('daily', event)">
                 <span class="nav-icon">📋</span>
                 <span class="nav-label">Akış</span>
             </button>
-            <button class="nav-item" onclick="switchTab('streaks')">
-                <span class="nav-icon">🔥</span>
-                <span class="nav-label">Seriler</span>
+            <button class="nav-item" onclick="switchTab('stats', event)">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">İstatistik</span>
             </button>
-            <button class="nav-item" onclick="switchTab('achievements')">
-                <span class="nav-icon">🏆</span>
-                <span class="nav-label">Başarımlar</span>
+            <button class="nav-item" onclick="switchTab('notes', event)">
+                <span class="nav-icon">📝</span>
+                <span class="nav-label">Notlar</span>
             </button>
         </nav>
     </div>
