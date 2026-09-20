@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LureSystems - Komuta Merkezi</title>
+    <title>LureSystems</title>
     <link rel="stylesheet" href="style.css">
     
     <!-- Apple / iPhone PWA Meta Etiketleri -->
@@ -13,27 +13,35 @@
     <link rel="apple-touch-icon" href="https://i.hizliresim.com/ebrr6uci.jpg">
 </head>
 <body>
+    <!-- Arka Plan Atmosferik Işık Efekti -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
     <div class="app-container">
 
-        <!-- SEKME 1: ANA SAYFA (SADECE KARŞILAMA VE DİSİPLİN SKORU) -->
+        <!-- SEKME 1: ANA SAYFA (SADECE KARŞILAMA VE GÜNÜN SKORU) -->
         <section id="tab-home" class="tab-content active">
             <div class="home-hero">
-                <div class="brand-badge">
-                    <img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="LureSystems Logo" class="hero-logo">
+                <div class="brand-pill">
+                    <img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="Logo" class="hero-logo">
                     <span>LureSystems Core</span>
                 </div>
                 
-                <h1 id="greeting-title" class="hero-title">Merhaba Semih</h1>
-                <p id="weather-display" class="hero-weather">☁️ Soma: 23°C, Bulutlu</p>
-                <div id="date-time-display" class="hero-datetime">Yükleniyor...</div>
+                <div class="hero-text-group">
+                    <h1 id="greeting-title" class="hero-title">Merhaba Semih</h1>
+                    <p id="weather-display" class="hero-weather">☁️ Soma: 23°C, Bulutlu</p>
+                    <div id="date-time-display" class="hero-datetime">Yükleniyor...</div>
+                </div>
 
                 <!-- Günün Disiplin Skoru Kartı -->
                 <div class="card home-score-card">
-                    <h3>Günün Disiplin Skoru</h3>
+                    <div class="score-card-header">
+                        <h3>Günün Disiplin Skoru</h3>
+                        <span id="progress-text-home" class="score-percentage">%0</span>
+                    </div>
                     <div class="progress-bar-container">
                         <div id="progress-bar-home" class="progress-bar"></div>
                     </div>
-                    <span id="progress-text-home">%0 Tamamlandı</span>
                 </div>
             </div>
         </section>
@@ -45,7 +53,7 @@
                 <p>Sabah kalkıştan gece yatışa kadar komuta sende.</p>
             </header>
 
-            <div class="card">
+            <div class="card list-card">
                 <ul id="habit-list" class="habit-list">
                     <!-- JS ile doldurulacak -->
                 </ul>
@@ -59,7 +67,7 @@
                 <p>Zinciri kırma! Alışkanlıklarının seri rekorları.</p>
             </header>
 
-            <div class="card">
+            <div class="card stats-card">
                 <h3>🔥 Seri Durumları</h3>
                 <div id="streak-list" class="stats-list">
                     <!-- JS ile doldurulacak -->
