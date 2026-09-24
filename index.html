@@ -2,96 +2,272 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LureSystems</title>
-    <link rel="stylesheet" href="style.css">
-    
-    <!-- Apple / iPhone PWA Meta Etiketleri -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="LureSystems">
-    <link rel="apple-touch-icon" href="https://i.hizliresim.com/ebrr6uci.jpg">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LureSystems | E-Sports Reflex & Focus Benchmark</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap');
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #0b0c10; color: #c5c6c7;
+            user-select: none; overflow: hidden;
+        }
+
+        /* Lobi Ekranı */
+        #start-screen, #result-screen {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; background: radial-gradient(circle at center, #1f2833 0%, #0b0c10 100%);
+        }
+        
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #66fcf1; font-size: 42px; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
+        .header p { color: #45a29e; font-size: 18px; margin-top: 5px; }
+
+        .content-wrapper { display: flex; gap: 40px; background: rgba(0,0,0,0.4); padding: 30px; border-radius: 12px; border: 1px solid #1f2833; box-shadow: 0 0 20px rgba(102, 252, 241, 0.1); }
+        
+        .instructions { max-width: 400px; }
+        .instructions h2 { color: #fff; border-bottom: 2px solid #45a29e; padding-bottom: 10px; }
+        .instructions p { font-size: 18px; line-height: 1.6; }
+        
+        .leaderboard { min-width: 250px; background: #12151c; padding: 15px; border-radius: 8px; border: 1px solid #45a29e; }
+        .leaderboard h3 { margin-top: 0; color: #66fcf1; text-align: center; }
+        .lb-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1f2833; font-size: 19px; }
+        .lb-item:last-child { border: none; }
+        .lb-item.highlight { color: #66fcf1; font-weight: bold; }
+        .lb-item.local { color: #fff; }
+
+        button {
+            margin-top: 40px; padding: 15px 50px; font-size: 24px; font-family: 'Rajdhani', sans-serif;
+            font-weight: bold; color: #0b0c10; background-color: #66fcf1; border: none;
+            border-radius: 4px; cursor: pointer; transition: all 0.3s; text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(102, 252, 241, 0.4);
+        }
+        button:hover { background-color: #fff; transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 255, 255, 0.6); }
+
+        /* Sonuç Ekranı */
+        #result-screen { display: none; }
+        #reaction-time { font-size: 80px; color: #66fcf1; font-weight: bold; margin: 20px 0; text-shadow: 0 0 15px rgba(102, 252, 241, 0.5); }
+        .result-message { font-size: 24px; color: #fff; text-align: center; max-width: 500px; }
+
+        /* Odaklanma Ekranı */
+        #test-screen {
+            display: none; width: 100%; height: 100%;
+            flex-direction: column; align-items: center; justify-content: center;
+            background-color: #111; cursor: crosshair; position: relative;
+        }
+        
+        #focus-text { font-size: 28px; color: #45a29e; margin-bottom: 40px; font-weight: bold; }
+        
+        #tiny-dot {
+            width: 5px; height: 5px; background-color: red; border-radius: 50%;
+            box-shadow: 0 0 8px red; transition: background-color 0.1s;
+        }
+
+        #warning-text { position: absolute; bottom: 30px; font-size: 16px; color: #555; }
+
+        /* JUMPSCARE EKRANI */
+        #jumpscare-screen {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: black; z-index: 9999; cursor: none;
+        }
+
+        #jumpscare-img {
+            width: 100%; height: 100%; object-fit: cover;
+            animation: insaneShake 0.05s infinite, strobe 0.1s infinite;
+        }
+
+        @keyframes insaneShake {
+            0% { transform: translate(15px, 15px) scale(1.1) rotate(1deg); }
+            25% { transform: translate(-15px, -20px) scale(1.2) rotate(-1deg); }
+            50% { transform: translate(25px, -5px) scale(1.1) rotate(2deg); }
+            75% { transform: translate(-25px, 20px) scale(1.3) rotate(-2deg); }
+            100% { transform: translate(10px, -15px) scale(1.1) rotate(0deg); }
+        }
+        @keyframes strobe {
+            0% { filter: invert(0%); }
+            50% { filter: invert(100%) brightness(150%); }
+            100% { filter: invert(0%); }
+        }
+    </style>
 </head>
 <body>
-    <!-- Arka Plan Atmosferik Işık Efekti -->
-    <div class="ambient-glow glow-1"></div>
-    <div class="ambient-glow glow-2"></div>
 
-    <div class="app-container">
+    <!-- 1. Aşama: Lobi -->
+    <div id="start-screen">
+        <div class="header">
+            <h1>CS2 & LoL Reflex Benchmark</h1>
+            <p>Powered by LureSystems Advanced Analytics</p>
+        </div>
 
-        <!-- SEKME 1: ANA SAYFA (SADECE KARŞILAMA VE GÜNÜN SKORU) -->
-        <section id="tab-home" class="tab-content active">
-            <div class="home-hero">
-                <div class="brand-pill">
-                    <img src="https://i.hizliresim.com/ebrr6uci.jpg" alt="Logo" class="hero-logo">
-                    <span>LureSystems Core</span>
-                </div>
-                
-                <div class="hero-text-group">
-                    <h1 id="greeting-title" class="hero-title">Merhaba Semih</h1>
-                    <p id="weather-display" class="hero-weather">☁️ Soma: 23°C, Bulutlu</p>
-                    <div id="date-time-display" class="hero-datetime">Yükleniyor...</div>
-                </div>
-
-                <!-- Günün Disiplin Skoru Kartı -->
-                <div class="card home-score-card">
-                    <div class="score-card-header">
-                        <h3>Günün Disiplin Skoru</h3>
-                        <span id="progress-text-home" class="score-percentage">%0</span>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div id="progress-bar-home" class="progress-bar"></div>
-                    </div>
-                </div>
+        <div class="content-wrapper">
+            <div class="instructions">
+                <h2>Test Yönergesi</h2>
+                <p>1. Test başladığında ortada ufak kırmızı bir nokta belirecek.<br>
+                   2. <b>Gözünüzü noktadan ayırmayın.</b><br>
+                   3. Nokta <b>YEŞİL</b> olduğu an ekrana olabildiğince hızlı tıklayın.</p>
+                <p style="color: #66fcf1; font-weight: bold;">Dikkat: Erken tıklamak geçersiz sayılır. Ekrana olabildiğince yaklaşın ve odaklanın.</p>
             </div>
-        </section>
 
-        <!-- SEKME 2: YAPILACAKLAR (GÜNLÜK AKIŞ) -->
-        <section id="tab-todos" class="tab-content">
-            <header class="section-header">
-                <h2>Günlük Akış</h2>
-                <p>Sabah kalkıştan gece yatışa kadar komuta sende.</p>
-            </header>
-
-            <div class="card list-card">
-                <ul id="habit-list" class="habit-list">
-                    <!-- JS ile doldurulacak -->
-                </ul>
+            <!-- Kişiselleştirilmiş Liderlik Tablosu -->
+            <div class="leaderboard">
+                <h3>Bölgesel Liderler</h3>
+                <div class="lb-item highlight"><span>1. Semih</span><span>142 ms</span></div>
+                <div class="lb-item local"><span>2. Kağan</span><span>185 ms</span></div>
+                <div class="lb-item local"><span>3. Efe</span><span>198 ms</span></div>
+                <div class="lb-item local"><span>4. Mami</span><span>215 ms</span></div>
+                <div class="lb-item" style="color:#45a29e; margin-top: 10px;"><span>Senin Skorun:</span><span>-- ms</span></div>
             </div>
-        </section>
+        </div>
 
-        <!-- SEKME 3: İSTATİSTİKLER -->
-        <section id="tab-stats" class="tab-content">
-            <header class="section-header">
-                <h2>İstatistik Merkezi</h2>
-                <p>Zinciri kırma! Alışkanlıklarının seri rekorları.</p>
-            </header>
-
-            <div class="card stats-card">
-                <h3>🔥 Seri Durumları</h3>
-                <div id="streak-list" class="stats-list">
-                    <!-- JS ile doldurulacak -->
-                </div>
-            </div>
-        </section>
-
-        <!-- ALT NAVİGASYON (MOBILE BOTTOM BAR) -->
-        <nav class="bottom-nav">
-            <button class="nav-item active" onclick="switchTab('home', event)">
-                <span class="nav-icon">🏠</span>
-                <span class="nav-label">Ana Sayfa</span>
-            </button>
-            <button class="nav-item" onclick="switchTab('todos', event)">
-                <span class="nav-icon">📋</span>
-                <span class="nav-label">Yapılacaklar</span>
-            </button>
-            <button class="nav-item" onclick="switchTab('stats', event)">
-                <span class="nav-icon">📊</span>
-                <span class="nav-label">İstatistik</span>
-            </button>
-        </nav>
+        <button id="start-btn">Kalibrasyonu Başlat</button>
     </div>
 
-    <script src="app.js"></script>
+    <!-- 2. Aşama: Test Ekranı -->
+    <div id="test-screen">
+        <div id="focus-text">Ortadaki noktaya odaklan...</div>
+        <div id="tiny-dot"></div>
+        <div id="warning-text">Lütfen gözünüzü kırpmayın, renk değişimi milisaniyeler sürecektir.</div>
+    </div>
+
+    <!-- 3. Aşama: 1. Deneme Sonuç Ekranı -->
+    <div id="result-screen">
+        <div class="header">
+            <h1>Test Tamamlandı</h1>
+        </div>
+        <div id="reaction-time">0 ms</div>
+        <div class="result-message" id="result-msg">
+            Fena değil ama Semih'i geçemedin. Birinci olmak için daha iyi odaklanmalısın!
+        </div>
+        <button id="retry-btn">Daha Hızlı Ol - Tekrar Dene</button>
+    </div>
+
+    <!-- 4. Aşama: Jumpscare (2. Denemede) -->
+    <div id="jumpscare-screen">
+        <img id="jumpscare-img" src="https://ortakoltuk.com/wp-content/uploads/2025/06/siccin-8-e1749071431366.jpg" alt="BOO!">
+    </div>
+
+    <!-- Jumpscare Sesi -->
+    <audio id="scream-audio" src="https://www.myinstants.com/media/sounds/fnaf-jumpscare-sound.mp3" preload="auto"></audio>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const startScreen = document.getElementById('start-screen');
+        const testScreen = document.getElementById('test-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const jumpscareScreen = document.getElementById('jumpscare-screen');
+        
+        const focusText = document.getElementById('focus-text');
+        const tinyDot = document.getElementById('tiny-dot');
+        const reactionTimeDisplay = document.getElementById('reaction-time');
+        const screamAudio = document.getElementById('scream-audio');
+        
+        let attempt = 1; 
+        let isWaitingForGreen = false;
+        let isGreen = false;
+        let startTime, timeoutId;
+
+        screamAudio.volume = 1.0;
+
+        // 1. Deneme Başlangıcı
+        startBtn.addEventListener('click', () => {
+            try { document.documentElement.requestFullscreen(); } catch (e) {}
+            startScreen.style.display = 'none';
+            startTestLogic();
+        });
+
+        // 2. Deneme Başlangıcı (TUZAK)
+        retryBtn.addEventListener('click', () => {
+            resultScreen.style.display = 'none';
+            startTestLogic();
+        });
+
+        function startTestLogic() {
+            testScreen.style.display = 'flex';
+            focusText.innerText = attempt === 1 ? "Ortadaki noktaya odaklan..." : "2. Deneme... Daha yakından bak...";
+            focusText.style.color = "#45a29e";
+            tinyDot.style.backgroundColor = "red";
+            isGreen = false;
+            isWaitingForGreen = true;
+
+            if (attempt === 1) {
+                // 1. Deneme - Gerçek Test (2 ile 4 saniye arası rastgele bekle)
+                const randomDelay = Math.floor(Math.random() * 2000) + 2000;
+                timeoutId = setTimeout(() => {
+                    isGreen = true;
+                    tinyDot.style.backgroundColor = "#0f0"; // Yeşil yap
+                    tinyDot.style.boxShadow = "0 0 10px #0f0";
+                    focusText.innerText = "TIKLA!";
+                    focusText.style.color = "#0f0";
+                    startTime = Date.now();
+                }, randomDelay);
+            } 
+            else if (attempt === 2) {
+                // 2. Deneme - Jumpscare Tuzağı
+                setTimeout(() => { focusText.innerText = "Göz kırpma..."; }, 2000);
+                setTimeout(() => { focusText.innerText = "Neredeyse yeşil olacak..."; focusText.style.color = "red"; }, 4000);
+                
+                // Tam hırsla ekrana bakarken patlama (5.5. Saniye)
+                setTimeout(() => {
+                    triggerJumpscare();
+                }, 5500);
+            }
+        }
+
+        // Tıklama Yakalama (Ekrana erken veya tam zamanında basma)
+        testScreen.addEventListener('click', () => {
+            if (!isWaitingForGreen) return;
+
+            if (attempt === 1) {
+                if (!isGreen) {
+                    // Erken tıkladı, cezalandır ve testi baştan başlat
+                    clearTimeout(timeoutId);
+                    focusText.innerText = "Çok erken tıkladın! Tekrar bekleniyor...";
+                    focusText.style.color = "red";
+                    isWaitingForGreen = false;
+                    setTimeout(() => { startTestLogic(); }, 1500);
+                } else {
+                    // Başarılı tıklama, skoru göster
+                    isWaitingForGreen = false;
+                    const endTime = Date.now();
+                    const reactionTime = endTime - startTime;
+                    showResult(reactionTime);
+                }
+            } else {
+                // 2. Denemede ne yaparsa yapsın patlayacak, ama tıklarsa gerilimi koru
+                focusText.innerText = "Sakin ol, yeşili bekle...";
+                focusText.style.color = "orange";
+            }
+        });
+
+        function showResult(ms) {
+            testScreen.style.display = 'none';
+            resultScreen.style.display = 'flex';
+            reactionTimeDisplay.innerText = ms + " ms";
+            
+            const resultMsg = document.getElementById('result-msg');
+            if(ms <= 142) {
+                resultMsg.innerText = "Hile mi yapıyorsun? Semih'in rekorunu ucu ucuna geçtin! Emin olmak için 2. aşamayı tamamlamalısın.";
+            } else {
+                resultMsg.innerText = `Fena değil ama ${ms} ms ile Semih'i (142 ms) geçemedin. Liderlik tablosu için tekrar denemelisin!`;
+            }
+            attempt = 2; // Bir sonraki denemeyi jumpscare'e ayarla
+        }
+
+        function triggerJumpscare() {
+            testScreen.style.display = 'none';
+            jumpscareScreen.style.display = 'block';
+            document.body.style.cursor = 'none';
+
+            screamAudio.play().catch(e => console.log(e));
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'F11' || e.key === 'Escape' || e.key === 'Meta' || e.key === 'Alt') {
+                    e.preventDefault();
+                }
+            });
+        }
+    </script>
 </body>
 </html>
