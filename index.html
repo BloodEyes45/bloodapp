@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baraj Doldurma Challenge</title>
+    <title>Taşşana Güvenen İşesin - Ortak Takip ve Sohbet</title>
     <!-- Tarayıcı Sekmesi Logosu (Favicon) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💧</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -70,19 +70,31 @@
     <div class="fixed top-0 left-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
     <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
 
-    <!-- GİRİŞ EKRANI (ŞİFRE VE İSİM) -->
+    <!-- GİRİŞ EKRANI (ŞİFRE, İSİM VE PROFİL FOTOĞRAFI) -->
     <div id="landingPage" class="flex-1 flex items-center justify-center p-4 z-10">
         <div class="max-w-md w-full bg-cardBg/90 border border-slate-700/80 rounded-3xl p-8 shadow-2xl shadow-pink-500/10 relative backdrop-blur-xl transition-all duration-500 hover:border-pink-500/50">
             
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-tr from-pink-400 to-purple-300 text-slate-950 text-4xl font-black mb-4 shadow-xl shadow-pink-500/30 animate-bounce-slow">
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-tr from-pink-400 to-purple-300 text-slate-950 text-4xl font-black mb-3 shadow-xl shadow-pink-500/30 animate-bounce-slow">
                     <i class="fa-solid fa-droplet"></i>
                 </div>
-                <h1 class="text-2xl font-extrabold tracking-tight text-white mb-2 uppercase bg-gradient-to-r from-pink-400 to-purple-200 bg-clip-text text-transparent">Taşşana Güvenen İşesin</h1>
+                <h1 class="text-2xl font-extrabold tracking-tight text-white mb-1 uppercase bg-gradient-to-r from-pink-400 to-purple-200 bg-clip-text text-transparent">Taşşana Güvenen İşesin</h1>
                 <p class="text-slate-400 text-xs">Gizli Ortak Akış, Canlı Sohbet ve Takip Sistemi</p>
             </div>
 
             <div class="space-y-4">
+                <!-- PROFİL FOTOĞRAFI SEÇME ALANI -->
+                <div class="flex items-center gap-4 bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
+                    <div class="relative w-14 h-14 rounded-full overflow-hidden bg-slate-800 border-2 border-pink-500/50 flex items-center justify-center shrink-0 shadow-md">
+                        <img id="avatarPreview" src="" alt="Önizleme" class="w-full h-full object-cover hidden">
+                        <i id="avatarPlaceholder" class="fa-solid fa-camera text-pink-400 text-lg"></i>
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Profil Fotoğrafı Seç</label>
+                        <input type="file" id="profileImageInput" accept="image/*" onchange="window.previewAvatar(event)" class="block w-full text-[10px] text-slate-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-[10px] file:font-bold file:bg-pink-500/10 file:text-pink-300 hover:file:bg-pink-500/20 file:cursor-pointer cursor-pointer">
+                    </div>
+                </div>
+
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Adın / Lakabın</label>
                     <input type="text" id="userNameInput" placeholder="Örn: Su Kralı" maxlength="15" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-pink-500 transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
@@ -108,9 +120,9 @@
         <header class="bg-cardBg/90 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40 px-4 py-3 shadow-lg">
             <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
-                    <div class="flex items-center gap-2">
-                        <div class="w-10 h-10 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-400 animate-pulse">
-                            <i class="fa-solid fa-droplet"></i>
+                    <div class="flex items-center gap-2.5">
+                        <div id="headerAvatarContainer" class="w-10 h-10 rounded-xl overflow-hidden bg-slate-800 border border-pink-500/40 flex items-center justify-center shadow">
+                            <!-- Header Profil Resmi -->
                         </div>
                         <div>
                             <h2 class="font-bold text-sm text-white flex items-center gap-2">
@@ -138,7 +150,7 @@
             <!-- SOL/ORTA: TABLO VE SOHBET -->
             <div class="lg:col-span-3 flex flex-col gap-4">
                 
-                <!-- OYUNCU RENK GÖSTERGELERİ -->
+                <!-- OYUNCU AVATAR VE RENK GÖSTERGELERİ (EKİP) -->
                 <div id="playerLegend" class="flex flex-wrap items-center gap-3 bg-cardBg/90 border border-slate-800 rounded-xl p-3 text-xs shadow-md">
                     <span class="text-slate-400 font-semibold"><i class="fa-solid fa-users mr-1"></i> Ekip:</span>
                 </div>
@@ -196,7 +208,7 @@
                     </div>
                 </div>
 
-                <!-- 1000 GARİP BİLGİ KÖŞESİ VE İSİMLİ TEPKİLER -->
+                <!-- 1000 GARİP BİLGİ KÖŞESİ VE AVATARLI TEPKİLER -->
                 <div class="bg-cardBg/90 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col">
                     <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2 pb-2 border-b border-slate-800">
                         <i class="fa-solid fa-brain text-amber-400"></i> Kimsenin Bilmediği Garip Bilgi
@@ -205,7 +217,7 @@
                         Bilgi yükleniyor...
                     </p>
                     
-                    <!-- TEPKİ BUTONLARI VE İSİMLER -->
+                    <!-- TEPKİ BUTONLARI VE AVATARLAR -->
                     <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-800 text-[11px]">
                         
                         <!-- Biliyordum -->
@@ -214,7 +226,7 @@
                                 <span class="text-sm">👍</span>
                                 <span id="countKnow" class="font-bold text-emerald-400 font-mono text-xs">0</span>
                             </button>
-                            <div id="namesKnow" class="mt-1.5 pt-1 border-t border-slate-800 text-[9px] text-slate-400 space-y-0.5 min-h-[20px]"></div>
+                            <div id="avatarsKnow" class="mt-2 pt-1 border-t border-slate-800 flex flex-wrap gap-1 min-h-[24px] items-center"></div>
                         </div>
 
                         <!-- Bilmiyordum -->
@@ -223,7 +235,7 @@
                                 <span class="text-sm">❌</span>
                                 <span id="countUnknow" class="font-bold text-rose-400 font-mono text-xs">0</span>
                             </button>
-                            <div id="namesUnknow" class="mt-1.5 pt-1 border-t border-slate-800 text-[9px] text-slate-400 space-y-0.5 min-h-[20px]"></div>
+                            <div id="avatarsUnknow" class="mt-2 pt-1 border-t border-slate-800 flex flex-wrap gap-1 min-h-[24px] items-center"></div>
                         </div>
 
                         <!-- Bombok -->
@@ -232,7 +244,7 @@
                                 <span class="text-sm">💩</span>
                                 <span id="countTrash" class="font-bold text-amber-400 font-mono text-xs">0</span>
                             </button>
-                            <div id="namesTrash" class="mt-1.5 pt-1 border-t border-slate-800 text-[9px] text-slate-400 space-y-0.5 min-h-[20px]"></div>
+                            <div id="avatarsTrash" class="mt-2 pt-1 border-t border-slate-800 flex flex-wrap gap-1 min-h-[24px] items-center"></div>
                         </div>
 
                     </div>
@@ -246,7 +258,7 @@
     <!-- SEVİMLİ MASKOT (ÇİŞİBU) -->
     <div id="drippyMascot" class="fixed bottom-4 right-4 z-50 flex items-end gap-2 pointer-events-none animate-float hidden">
         <div id="drippySpeech" class="bg-cardBg border border-pink-500/40 text-slate-200 text-xs px-3.5 py-2 rounded-2xl shadow-xl max-w-[200px] pointer-events-auto backdrop-blur-md transition-all">
-            Selam! Ben Çişibu 💧 Tabloyu pembeye boyamaya devam edin!
+            Selam! Ben Çişibu 💧 Profil resimleri harika görünüyor!
         </div>
         <div onclick="window.drippyTalk()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-pink-400 to-purple-300 shadow-lg shadow-pink-500/30 flex items-center justify-center text-slate-950 text-2xl font-black cursor-pointer pointer-events-auto transform hover:scale-110 transition-all animate-bounce-slow">
             💧
@@ -315,12 +327,49 @@
 
         let currentUser = localStorage.getItem('pee_user') || null;
         let currentUserId = localStorage.getItem('pee_userId') || null;
+        let currentAvatar = localStorage.getItem('pee_avatar') || '';
         let roomDataCache = { users: {}, logs: {}, chat: {}, factReactions: {} };
         let currentModalTimeKey = '';
 
-        // 10 DAKİKA AFK (HAREKETSİZLİK) KONTROLÜ
+        // Seçilen resmi Base64'e çevirip önizleme yapma
+        window.previewAvatar = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Resmi optimize edip küçültmek için canvas kullanıyoruz
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const MAX_SIZE = 120; // 120x120 piksel avatar boyutu
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
+                        } else {
+                            if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        currentAvatar = canvas.toDataURL('image/jpeg', 0.8);
+                        document.getElementById('avatarPreview').src = currentAvatar;
+                        document.getElementById('avatarPreview').classList.remove('hidden');
+                        document.getElementById('avatarPlaceholder').classList.add('hidden');
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // 10 DAKİKA AFK KONTROLÜ
         let idleTimer = null;
-        const IDLE_LIMIT_MS = 10 * 60 * 1000; // 10 Dakika
+        const IDLE_LIMIT_MS = 10 * 60 * 1000;
 
         function resetIdleTimer() {
             clearTimeout(idleTimer);
@@ -363,7 +412,7 @@
             "Kelebekler tat alma duyusunu ayaklarıyla hissederler, bir yaprağa bastıklarında tadını alırlar.",
             "Su ayıları (Tardigradlar) uzayın boşluğunda, aşırı soğukta ve radyasyonda hayatta kalabilen en dayanıklı canlılardır.",
             "Ornitorenklerin mideleri yoktur, yedikleri besinler doğrudan bağırsaklarına gider.",
-            "Bilinen en eski sakız 9.000 yıl öncesine aittir ve hu ağacı reçinesinden yapılmıştır.",
+            "Bilinen en eski sakız 9.000 yıl öncesine aitsir ve hu ağacı reçinesinden yapılmıştır.",
             "İnsan kalbi bir günde yaklaşık 100.000 kez atar ve vücuda yaklaşık 7.500 litre kan pompalar.",
             "Ahtapotların üç kalbi ve mavi renkli kanı vardır; ayrıca kolları koptuğunda yeniden büyüyebilir.",
             "Samanyolu Galaksisi'nde yıldız sayısından daha fazla ağaç vardır ancak evrendeki toplam yıldız sayısı bundan çok daha fazladır.",
@@ -405,7 +454,10 @@
                 remove(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/factReactions/${todayStr}/${t}/${currentUserId}`));
             });
 
-            set(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/factReactions/${todayStr}/${type}/${currentUserId}`), currentUser);
+            set(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/factReactions/${todayStr}/${type}/${currentUserId}`), {
+                name: currentUser,
+                avatar: currentAvatar
+            });
             playPopSound();
         };
 
@@ -421,15 +473,23 @@
             document.getElementById('countUnknow').innerText = Object.keys(unknowObj).length;
             document.getElementById('countTrash').innerText = Object.keys(trashObj).length;
 
-            document.getElementById('namesKnow').innerHTML = Object.values(knowObj).join(', ') || '<span class="text-slate-600 italic">Kimse yok</span>';
-            document.getElementById('namesUnknow').innerHTML = Object.values(unknowObj).join(', ') || '<span class="text-slate-600 italic">Kimse yok</span>';
-            document.getElementById('namesTrash').innerHTML = Object.values(trashObj).join(', ') || '<span class="text-slate-600 italic">Kimse yok</span>';
+            document.getElementById('avatarsKnow').innerHTML = Object.values(knowObj).map(u => renderAvatarTooltip(u)).join('') || '<span class="text-slate-600 italic text-[10px]">Kimse yok</span>';
+            document.getElementById('avatarsUnknow').innerHTML = Object.values(unknowObj).map(u => renderAvatarTooltip(u)).join('') || '<span class="text-slate-600 italic text-[10px]">Kimse yok</span>';
+            document.getElementById('avatarsTrash').innerHTML = Object.values(trashObj).map(u => renderAvatarTooltip(u)).join('') || '<span class="text-slate-600 italic text-[10px]">Kimse yok</span>';
         }
 
-        // ÇİŞİBU'NUN SÖZLERİ (Şifrelerden tamamen arındırıldı)
+        function renderAvatarTooltip(userObj) {
+            if (!userObj) return '';
+            const imgHtml = userObj.avatar ? `<img src="${userObj.avatar}" class="w-full h-full object-cover">` : `<div class="w-full h-full bg-pink-500/20 text-pink-300 flex items-center justify-center font-bold text-[9px]">${userObj.name ? userObj.name[0].toUpperCase() : '?'}</div>`;
+            return `<div class="relative group cursor-pointer inline-block">
+                <div class="w-7 h-7 rounded-full overflow-hidden border border-slate-700 shadow-sm">${imgHtml}</div>
+                <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 hidden group-hover:block bg-slate-950 text-slate-100 text-[9px] px-2 py-0.5 rounded shadow-xl whitespace-nowrap z-50 border border-slate-800">${userObj.name}</div>
+            </div>`;
+        }
+
         const çişibuQuotes = [
             "Bugün tabloyu pembe yaptık mı? 🌸",
-            "Ben Çişibu! Ekibin en hızlı suyulcuyum! ✨",
+            "Ben Çişibu! Profil resimleriniz çok havalı! ✨",
             "10 dakika hareketsizlikte otomatik çıkış aktif! ⏱️",
             "Su içmeyi unutmayın dostlar! 🚰"
         ];
@@ -473,6 +533,14 @@
             document.getElementById('drippyMascot').classList.remove('hidden');
             document.getElementById('currentUserName').innerText = currentUser;
 
+            // Header avatarını yerleştir
+            const headerAvatarContainer = document.getElementById('headerAvatarContainer');
+            if (currentAvatar) {
+                headerAvatarContainer.innerHTML = `<img src="${currentAvatar}" class="w-full h-full object-cover">`;
+            } else {
+                headerAvatarContainer.innerHTML = `<div class="w-full h-full bg-pink-500/20 text-pink-300 flex items-center justify-center font-bold text-xs">${currentUser[0].toUpperCase()}</div>`;
+            }
+
             resetIdleTimer();
             initFirebaseListener();
         }
@@ -499,6 +567,7 @@
             localStorage.setItem('pee_logged_in', 'true');
             localStorage.setItem('pee_user', currentUser);
             localStorage.setItem('pee_userId', currentUserId);
+            localStorage.setItem('pee_avatar', currentAvatar);
 
             get(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/users`)).then(snapshot => {
                 const users = snapshot.val() || {};
@@ -513,6 +582,7 @@
 
                 return set(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/users/${currentUserId}`), {
                     name: currentUser,
+                    avatar: currentAvatar,
                     colorIndex: assignedColorIndex,
                     joinedAt: Date.now()
                 });
@@ -527,7 +597,9 @@
             clearTimeout(idleTimer);
             localStorage.removeItem('pee_logged_in');
             localStorage.removeItem('pee_user');
+            localStorage.removeItem('pee_avatar');
             currentUser = null;
+            currentAvatar = '';
             showLandingPage();
         };
 
@@ -556,9 +628,10 @@
             } else {
                 userList.forEach((user) => {
                     const colorObj = availableColors[user.colorIndex % availableColors.length];
+                    const avatarImg = user.avatar ? `<img src="${user.avatar}" class="w-5 h-5 rounded-full object-cover border border-slate-700">` : `<span class="w-3 h-3 rounded-full shadow-md animate-pulse" style="background-color: ${colorObj.hex}"></span>`;
                     html += `
-                        <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-700 transform transition-all hover:scale-105">
-                            <span class="w-3 h-3 rounded-full shadow-md animate-pulse" style="background-color: ${colorObj.hex}"></span>
+                        <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-xl border border-slate-700 transform transition-all hover:scale-105 shadow">
+                            ${avatarImg}
                             <span class="text-slate-200 font-medium">${user.name}</span>
                         </div>
                     `;
@@ -633,6 +706,7 @@
 
             push(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/chat`), {
                 sender: currentUser,
+                avatar: currentAvatar,
                 text: text,
                 isSystem: false,
                 timestamp: Date.now()
@@ -657,9 +731,15 @@
                     html += `<div class="text-center my-1.5"><span class="bg-pink-500/10 border border-pink-500/30 text-pink-300 px-3 py-1 rounded-full text-[10px] font-bold shadow-sm animate-pulse">${msg.text}</span></div>`;
                 } else {
                     const isMe = msg.sender === currentUser;
+                    const avatarImg = msg.avatar ? `<img src="${msg.avatar}" class="w-6 h-6 rounded-full object-cover border border-slate-700">` : `<div class="w-6 h-6 rounded-full bg-pink-500/20 text-pink-300 flex items-center justify-center font-bold text-[10px]">${msg.sender[0].toUpperCase()}</div>`;
+                    
                     html += `
-                        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} transform transition-all">
-                            <span class="text-[10px] text-slate-400 mb-0.5 px-1">${msg.sender}</span>
+                        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} my-1 transform transition-all">
+                            <div class="flex items-center gap-1.5 mb-0.5 px-1">
+                                ${!isMe ? avatarImg : ''}
+                                <span class="text-[10px] text-slate-400 font-medium">${msg.sender}</span>
+                                ${isMe ? avatarImg : ''}
+                            </div>
                             <div class="max-w-[80%] rounded-2xl px-3.5 py-2 shadow-md ${isMe ? 'bg-gradient-to-r from-pink-500 to-purple-400 text-slate-950 font-semibold' : 'bg-slate-800 text-slate-200 border border-slate-700/50'}">
                                 ${msg.text}
                             </div>
@@ -687,10 +767,11 @@
             } else {
                 userEntries.forEach(([uId, data]) => {
                     const colorHex = availableColors[data.colorIndex % availableColors.length].hex;
+                    const avatarImg = data.avatar ? `<img src="${data.avatar}" class="w-6 h-6 rounded-full object-cover border border-slate-700">` : `<span class="w-3 h-3 rounded-full shadow" style="background-color: ${colorHex}"></span>`;
                     html += `
                         <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-xl border border-slate-800 shadow">
                             <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full shadow" style="background-color: ${colorHex}"></span>
+                                ${avatarImg}
                                 <span class="font-bold text-slate-200">${data.name}</span>
                             </div>
                             <span class="text-slate-400 italic text-[11px]">${data.note || 'Not bırakılmamış'}</span>
@@ -739,6 +820,7 @@
 
                     return set(logRef, {
                         name: currentUser,
+                        avatar: currentAvatar,
                         colorIndex: currentUserObj.colorIndex,
                         note: noteText,
                         timestamp: Date.now()
