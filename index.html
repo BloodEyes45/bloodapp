@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baraj Doldurma Challenge</title>
+    <title>Taşşana Güvenen İşesin - Ortak Takip ve Sohbet</title>
     <!-- Tarayıcı Sekmesi Logosu (Favicon) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💧</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -70,7 +70,7 @@
     <div class="fixed top-0 left-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
     <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
 
-    <!-- GİRİŞ EKRANI (ŞİFRE, İSİM VE PROFİL FOTOĞRAFI) -->
+    <!-- GİRİŞ EKRANI (KAYITLI PROFİL / YENİ GİRİŞ) -->
     <div id="landingPage" class="flex-1 flex items-center justify-center p-4 z-10">
         <div class="max-w-md w-full bg-cardBg/90 border border-slate-700/80 rounded-3xl p-8 shadow-2xl shadow-pink-500/10 relative backdrop-blur-xl transition-all duration-500 hover:border-pink-500/50">
             
@@ -82,7 +82,21 @@
                 <p class="text-slate-400 text-xs">Gizli Ortak Akış, Canlı Sohbet ve Takip Sistemi</p>
             </div>
 
-            <div class="space-y-4">
+            <!-- EĞER DAHA ÖNCE KAYITLI PROFİL VARSA GÖSTERİlecek KISIM -->
+            <div id="savedProfileCard" class="hidden mb-6 bg-slate-900/90 border border-slate-700 p-4 rounded-2xl flex items-center justify-between shadow-lg">
+                <div class="flex items-center gap-3">
+                    <div id="savedAvatarBox" class="w-12 h-12 rounded-full overflow-hidden border-2 border-pink-500 flex items-center justify-center bg-slate-800"></div>
+                    <div>
+                        <div class="text-xs text-slate-400">Kayıtlı Profil</div>
+                        <div id="savedUserNameText" class="text-sm font-bold text-pink-300">---</div>
+                    </div>
+                </div>
+                <button onclick="window.clearSavedProfile()" class="text-[11px] text-rose-400 hover:text-rose-300 bg-rose-500/10 px-2.5 py-1.5 rounded-lg border border-rose-500/20 cursor-pointer transition-colors">
+                    Profili Değiştir
+                </button>
+            </div>
+
+            <div class="space-y-4" id="loginFormContainer">
                 <!-- PROFİL FOTOĞRAFI SEÇME ALANI -->
                 <div class="flex items-center gap-4 bg-slate-900/80 p-3 rounded-2xl border border-slate-800">
                     <div class="relative w-14 h-14 rounded-full overflow-hidden bg-slate-800 border-2 border-pink-500/50 flex items-center justify-center shrink-0 shadow-md">
@@ -99,7 +113,9 @@
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Adın / Lakabın</label>
                     <input type="text" id="userNameInput" placeholder="Örn: Su Kralı" maxlength="15" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-pink-500 transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
                 </div>
+            </div>
 
+            <div class="space-y-4 mt-4">
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Oda Parolası</label>
                     <input type="password" id="roomPasswordInput" placeholder="Parolayı gir..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-pink-500 transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
@@ -258,7 +274,7 @@
     <!-- SEVİMLİ MASKOT (ÇİŞİBU) -->
     <div id="drippyMascot" class="fixed bottom-4 right-4 z-50 flex items-end gap-2 pointer-events-none animate-float hidden">
         <div id="drippySpeech" class="bg-cardBg border border-pink-500/40 text-slate-200 text-xs px-3.5 py-2 rounded-2xl shadow-xl max-w-[200px] pointer-events-auto backdrop-blur-md transition-all">
-            Selam! Ben Çişibu 💧 Profil resimleri harika görünüyor!
+            Selam! Ben Çişibu 💧 Profil bilgilerin artık hafızada!
         </div>
         <div onclick="window.drippyTalk()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-pink-400 to-purple-300 shadow-lg shadow-pink-500/30 flex items-center justify-center text-slate-950 text-2xl font-black cursor-pointer pointer-events-auto transform hover:scale-110 transition-all animate-bounce-slow">
             💧
@@ -331,18 +347,58 @@
         let roomDataCache = { users: {}, logs: {}, chat: {}, factReactions: {} };
         let currentModalTimeKey = '';
 
-        // Seçilen resmi Base64'e çevirip önizleme yapma
+        // Sayfa açıldığında hafızada kayıtlı kullanıcı var mı kontrol et
+        window.addEventListener('DOMContentLoaded', () => {
+            setInterval(updateClock, 1000);
+            updateClock();
+            loadDailyFact();
+
+            const savedUser = localStorage.getItem('pee_user');
+            const savedAvatar = localStorage.getItem('pee_avatar');
+
+            if (savedUser) {
+                document.getElementById('savedProfileCard').classList.remove('hidden');
+                document.getElementById('loginFormContainer').classList.add('hidden');
+                document.getElementById('savedUserNameText').innerText = savedUser;
+
+                const savedAvatarBox = document.getElementById('savedAvatarBox');
+                if (savedAvatar) {
+                    savedAvatarBox.innerHTML = `<img src="${savedAvatar}" class="w-full h-full object-cover">`;
+                } else {
+                    savedAvatarBox.innerHTML = `<div class="w-full h-full bg-pink-500/20 text-pink-300 flex items-center justify-center font-bold text-xs">${savedUser[0].toUpperCase()}</div>`;
+                }
+            }
+
+            if (localStorage.getItem('pee_logged_in') === 'true' && currentUser && currentUserId) {
+                enterAppScreen();
+            } else {
+                showLandingPage();
+            }
+        });
+
+        window.clearSavedProfile = function() {
+            localStorage.removeItem('pee_user');
+            localStorage.removeItem('pee_avatar');
+            localStorage.removeItem('pee_userId');
+            currentUser = null;
+            currentAvatar = '';
+            currentUserId = null;
+
+            document.getElementById('savedProfileCard').classList.add('hidden');
+            document.getElementById('loginFormContainer').classList.remove('hidden');
+            document.getElementById('userNameInput').value = '';
+        };
+
         window.previewAvatar = function(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    // Resmi optimize edip küçültmek için canvas kullanıyoruz
                     const img = new Image();
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        const MAX_SIZE = 120; // 120x120 piksel avatar boyutu
+                        const MAX_SIZE = 120;
                         let width = img.width;
                         let height = img.height;
 
@@ -367,7 +423,6 @@
             }
         };
 
-        // 10 DAKİKA AFK KONTROLÜ
         let idleTimer = null;
         const IDLE_LIMIT_MS = 10 * 60 * 1000;
 
@@ -412,7 +467,7 @@
             "Kelebekler tat alma duyusunu ayaklarıyla hissederler, bir yaprağa bastıklarında tadını alırlar.",
             "Su ayıları (Tardigradlar) uzayın boşluğunda, aşırı soğukta ve radyasyonda hayatta kalabilen en dayanıklı canlılardır.",
             "Ornitorenklerin mideleri yoktur, yedikleri besinler doğrudan bağırsaklarına gider.",
-            "Bilinen en eski sakız 9.000 yıl öncesine aitsir ve hu ağacı reçinesinden yapılmıştır.",
+            "Bilinen en eski sakız 9.000 yıl öncesine aittir ve hu ağacı reçinesinden yapılmıştır.",
             "İnsan kalbi bir günde yaklaşık 100.000 kez atar ve vücuda yaklaşık 7.500 litre kan pompalar.",
             "Ahtapotların üç kalbi ve mavi renkli kanı vardır; ayrıca kolları koptuğunda yeniden büyüyebilir.",
             "Samanyolu Galaksisi'nde yıldız sayısından daha fazla ağaç vardır ancak evrendeki toplam yıldız sayısı bundan çok daha fazladır.",
@@ -489,7 +544,7 @@
 
         const çişibuQuotes = [
             "Bugün tabloyu pembe yaptık mı? 🌸",
-            "Ben Çişibu! Profil resimleriniz çok havalı! ✨",
+            "Ben Çişibu! Profil bilgileriniz artık hep hafızada! ✨",
             "10 dakika hareketsizlikte otomatik çıkış aktif! ⏱️",
             "Su içmeyi unutmayın dostlar! 🚰"
         ];
@@ -501,18 +556,6 @@
             speech.style.transform = 'scale(1.08)';
             setTimeout(() => { speech.style.transform = 'scale(1)'; }, 200);
         };
-
-        window.addEventListener('DOMContentLoaded', () => {
-            setInterval(updateClock, 1000);
-            updateClock();
-            loadDailyFact();
-
-            if (localStorage.getItem('pee_logged_in') === 'true' && currentUser && currentUserId) {
-                enterAppScreen();
-            } else {
-                showLandingPage();
-            }
-        });
 
         function updateClock() {
             const now = new Date();
@@ -533,7 +576,6 @@
             document.getElementById('drippyMascot').classList.remove('hidden');
             document.getElementById('currentUserName').innerText = currentUser;
 
-            // Header avatarını yerleştir
             const headerAvatarContainer = document.getElementById('headerAvatarContainer');
             if (currentAvatar) {
                 headerAvatarContainer.innerHTML = `<img src="${currentAvatar}" class="w-full h-full object-cover">`;
@@ -546,7 +588,8 @@
         }
 
         window.enterRoomWithPassword = function() {
-            const nameInput = document.getElementById('userNameInput').value.trim();
+            const savedUser = localStorage.getItem('pee_user');
+            const nameInput = savedUser || document.getElementById('userNameInput').value.trim();
             const passInput = document.getElementById('roomPasswordInput').value.trim();
 
             if (!nameInput) {
@@ -561,7 +604,10 @@
 
             currentUser = nameInput;
             if (!currentUserId) {
-                currentUserId = 'user_' + Math.random().toString(36).substring(2, 9);
+                currentUserId = localStorage.getItem('pee_userId') || ('user_' + Math.random().toString(36).substring(2, 9));
+            }
+            if (currentAvatar === '' && localStorage.getItem('pee_avatar')) {
+                currentAvatar = localStorage.getItem('pee_avatar');
             }
 
             localStorage.setItem('pee_logged_in', 'true');
@@ -596,10 +642,6 @@
         window.leaveRoom = function() {
             clearTimeout(idleTimer);
             localStorage.removeItem('pee_logged_in');
-            localStorage.removeItem('pee_user');
-            localStorage.removeItem('pee_avatar');
-            currentUser = null;
-            currentAvatar = '';
             showLandingPage();
         };
 
