@@ -1,272 +1,767 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LureSystems | E-Sports Reflex & Focus Benchmark</title>
+    <title>Taşşana Güvenen İşesin - Ortak Takip ve Sohbet</title>
+    <!-- Tarayıcı Sekmesi Logosu (Favicon) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💧</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#090d16',
+                        cardBg: '#131b2e'
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'float': 'float 4s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&display=swap');
-
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: 'Rajdhani', sans-serif;
-            background-color: #0b0c10; color: #c5c6c7;
-            user-select: none; overflow: hidden;
-        }
-
-        /* Lobi Ekranı */
-        #start-screen, #result-screen {
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            height: 100vh; background: radial-gradient(circle at center, #1f2833 0%, #0b0c10 100%);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #131b2e; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: #66fcf1; font-size: 42px; margin: 0; text-transform: uppercase; letter-spacing: 2px; }
-        .header p { color: #45a29e; font-size: 18px; margin-top: 5px; }
-
-        .content-wrapper { display: flex; gap: 40px; background: rgba(0,0,0,0.4); padding: 30px; border-radius: 12px; border: 1px solid #1f2833; box-shadow: 0 0 20px rgba(102, 252, 241, 0.1); }
-        
-        .instructions { max-width: 400px; }
-        .instructions h2 { color: #fff; border-bottom: 2px solid #45a29e; padding-bottom: 10px; }
-        .instructions p { font-size: 18px; line-height: 1.6; }
-        
-        .leaderboard { min-width: 250px; background: #12151c; padding: 15px; border-radius: 8px; border: 1px solid #45a29e; }
-        .leaderboard h3 { margin-top: 0; color: #66fcf1; text-align: center; }
-        .lb-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #1f2833; font-size: 19px; }
-        .lb-item:last-child { border: none; }
-        .lb-item.highlight { color: #66fcf1; font-weight: bold; }
-        .lb-item.local { color: #fff; }
-
-        button {
-            margin-top: 40px; padding: 15px 50px; font-size: 24px; font-family: 'Rajdhani', sans-serif;
-            font-weight: bold; color: #0b0c10; background-color: #66fcf1; border: none;
-            border-radius: 4px; cursor: pointer; transition: all 0.3s; text-transform: uppercase;
-            box-shadow: 0 0 15px rgba(102, 252, 241, 0.4);
+        .ripple-effect {
+            position: relative;
+            overflow: hidden;
         }
-        button:hover { background-color: #fff; transform: scale(1.05); box-shadow: 0 0 25px rgba(255, 255, 255, 0.6); }
-
-        /* Sonuç Ekranı */
-        #result-screen { display: none; }
-        #reaction-time { font-size: 80px; color: #66fcf1; font-weight: bold; margin: 20px 0; text-shadow: 0 0 15px rgba(102, 252, 241, 0.5); }
-        .result-message { font-size: 24px; color: #fff; text-align: center; max-width: 500px; }
-
-        /* Odaklanma Ekranı */
-        #test-screen {
-            display: none; width: 100%; height: 100%;
-            flex-direction: column; align-items: center; justify-content: center;
-            background-color: #111; cursor: crosshair; position: relative;
+        .ripple-effect:after {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 5px; height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%, -50%);
+            transform-origin: 50% 50%;
         }
-        
-        #focus-text { font-size: 28px; color: #45a29e; margin-bottom: 40px; font-weight: bold; }
-        
-        #tiny-dot {
-            width: 5px; height: 5px; background-color: red; border-radius: 50%;
-            box-shadow: 0 0 8px red; transition: background-color 0.1s;
+        .ripple-effect:active:after {
+            animation: ripple 0.6s ease-out;
         }
-
-        #warning-text { position: absolute; bottom: 30px; font-size: 16px; color: #555; }
-
-        /* JUMPSCARE EKRANI */
-        #jumpscare-screen {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background-color: black; z-index: 9999; cursor: none;
-        }
-
-        #jumpscare-img {
-            width: 100%; height: 100%; object-fit: cover;
-            animation: insaneShake 0.05s infinite, strobe 0.1s infinite;
-        }
-
-        @keyframes insaneShake {
-            0% { transform: translate(15px, 15px) scale(1.1) rotate(1deg); }
-            25% { transform: translate(-15px, -20px) scale(1.2) rotate(-1deg); }
-            50% { transform: translate(25px, -5px) scale(1.1) rotate(2deg); }
-            75% { transform: translate(-25px, 20px) scale(1.3) rotate(-2deg); }
-            100% { transform: translate(10px, -15px) scale(1.1) rotate(0deg); }
-        }
-        @keyframes strobe {
-            0% { filter: invert(0%); }
-            50% { filter: invert(100%) brightness(150%); }
-            100% { filter: invert(0%); }
+        @keyframes ripple {
+            0% { transform: scale(0, 0) translate(-50%, -50%); opacity: 0.8; }
+            100% { transform: scale(40, 40) translate(-50%, -50%); opacity: 0; }
         }
     </style>
 </head>
-<body>
+<body class="bg-darkBg text-slate-100 min-h-screen flex flex-col justify-between selection:bg-pink-400 selection:text-slate-950 overflow-x-hidden">
 
-    <!-- 1. Aşama: Lobi -->
-    <div id="start-screen">
-        <div class="header">
-            <h1>CS2 & LoL Reflex Benchmark</h1>
-            <p>Powered by LureSystems Advanced Analytics</p>
-        </div>
+    <!-- ANİMASYONLU ARKA PLAN IŞIKLARI -->
+    <div class="fixed top-0 left-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
+    <div class="fixed bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow"></div>
 
-        <div class="content-wrapper">
-            <div class="instructions">
-                <h2>Test Yönergesi</h2>
-                <p>1. Test başladığında ortada ufak kırmızı bir nokta belirecek.<br>
-                   2. <b>Gözünüzü noktadan ayırmayın.</b><br>
-                   3. Nokta <b>YEŞİL</b> olduğu an ekrana olabildiğince hızlı tıklayın.</p>
-                <p style="color: #66fcf1; font-weight: bold;">Dikkat: Erken tıklamak geçersiz sayılır. Ekrana olabildiğince yaklaşın ve odaklanın.</p>
-            </div>
-
-            <!-- Kişiselleştirilmiş Liderlik Tablosu -->
-            <div class="leaderboard">
-                <h3>Bölgesel Liderler</h3>
-                <div class="lb-item highlight"><span>1. Semih</span><span>142 ms</span></div>
-                <div class="lb-item local"><span>2. Furkan</span><span>185 ms</span></div>
-                <div class="lb-item local"><span>3. Boş</span><span>* ms</span></div>
-                <div class="lb-item local"><span>4. Boş</span><span>* ms</span></div>
-                <div class="lb-item" style="color:#45a29e; margin-top: 10px;"><span>Senin Skorun:</span><span>-- ms</span></div>
-            </div>
-        </div>
-
-        <button id="start-btn">Kalibrasyonu Başlat</button>
-    </div>
-
-    <!-- 2. Aşama: Test Ekranı -->
-    <div id="test-screen">
-        <div id="focus-text">Ortadaki noktaya odaklan...</div>
-        <div id="tiny-dot"></div>
-        <div id="warning-text">Lütfen gözünüzü kırpmayın, renk değişimi milisaniyeler sürecektir.</div>
-    </div>
-
-    <!-- 3. Aşama: 1. Deneme Sonuç Ekranı -->
-    <div id="result-screen">
-        <div class="header">
-            <h1>Test Tamamlandı</h1>
-        </div>
-        <div id="reaction-time">0 ms</div>
-        <div class="result-message" id="result-msg">
-            Fena değil ama Semih'i geçemedin. Birinci olmak için daha iyi odaklanmalısın!
-        </div>
-        <button id="retry-btn">Daha Hızlı Ol - Tekrar Dene</button>
-    </div>
-
-    <!-- 4. Aşama: Jumpscare (2. Denemede) -->
-    <div id="jumpscare-screen">
-        <img id="jumpscare-img" src="https://ortakoltuk.com/wp-content/uploads/2025/06/siccin-8-e1749071431366.jpg" alt="BOO!">
-    </div>
-
-    <!-- Jumpscare Sesi -->
-    <audio id="scream-audio" src="https://www.myinstants.com/media/sounds/fnaf-jumpscare-sound.mp3" preload="auto"></audio>
-
-    <script>
-        const startBtn = document.getElementById('start-btn');
-        const retryBtn = document.getElementById('retry-btn');
-        const startScreen = document.getElementById('start-screen');
-        const testScreen = document.getElementById('test-screen');
-        const resultScreen = document.getElementById('result-screen');
-        const jumpscareScreen = document.getElementById('jumpscare-screen');
-        
-        const focusText = document.getElementById('focus-text');
-        const tinyDot = document.getElementById('tiny-dot');
-        const reactionTimeDisplay = document.getElementById('reaction-time');
-        const screamAudio = document.getElementById('scream-audio');
-        
-        let attempt = 1; 
-        let isWaitingForGreen = false;
-        let isGreen = false;
-        let startTime, timeoutId;
-
-        screamAudio.volume = 1.0;
-
-        // 1. Deneme Başlangıcı
-        startBtn.addEventListener('click', () => {
-            try { document.documentElement.requestFullscreen(); } catch (e) {}
-            startScreen.style.display = 'none';
-            startTestLogic();
-        });
-
-        // 2. Deneme Başlangıcı (TUZAK)
-        retryBtn.addEventListener('click', () => {
-            resultScreen.style.display = 'none';
-            startTestLogic();
-        });
-
-        function startTestLogic() {
-            testScreen.style.display = 'flex';
-            focusText.innerText = attempt === 1 ? "Ortadaki noktaya odaklan..." : "2. Deneme... Daha yakından bak...";
-            focusText.style.color = "#45a29e";
-            tinyDot.style.backgroundColor = "red";
-            isGreen = false;
-            isWaitingForGreen = true;
-
-            if (attempt === 1) {
-                // 1. Deneme - Gerçek Test (2 ile 4 saniye arası rastgele bekle)
-                const randomDelay = Math.floor(Math.random() * 2000) + 2000;
-                timeoutId = setTimeout(() => {
-                    isGreen = true;
-                    tinyDot.style.backgroundColor = "#0f0"; // Yeşil yap
-                    tinyDot.style.boxShadow = "0 0 10px #0f0";
-                    focusText.innerText = "TIKLA!";
-                    focusText.style.color = "#0f0";
-                    startTime = Date.now();
-                }, randomDelay);
-            } 
-            else if (attempt === 2) {
-                // 2. Deneme - Jumpscare Tuzağı
-                setTimeout(() => { focusText.innerText = "Göz kırpma..."; }, 2000);
-                setTimeout(() => { focusText.innerText = "Neredeyse yeşil olacak..."; focusText.style.color = "red"; }, 4000);
-                
-                // Tam hırsla ekrana bakarken patlama (5.5. Saniye)
-                setTimeout(() => {
-                    triggerJumpscare();
-                }, 5500);
-            }
-        }
-
-        // Tıklama Yakalama (Ekrana erken veya tam zamanında basma)
-        testScreen.addEventListener('click', () => {
-            if (!isWaitingForGreen) return;
-
-            if (attempt === 1) {
-                if (!isGreen) {
-                    // Erken tıkladı, cezalandır ve testi baştan başlat
-                    clearTimeout(timeoutId);
-                    focusText.innerText = "Çok erken tıkladın! Tekrar bekleniyor...";
-                    focusText.style.color = "red";
-                    isWaitingForGreen = false;
-                    setTimeout(() => { startTestLogic(); }, 1500);
-                } else {
-                    // Başarılı tıklama, skoru göster
-                    isWaitingForGreen = false;
-                    const endTime = Date.now();
-                    const reactionTime = endTime - startTime;
-                    showResult(reactionTime);
-                }
-            } else {
-                // 2. Denemede ne yaparsa yapsın patlayacak, ama tıklarsa gerilimi koru
-                focusText.innerText = "Sakin ol, yeşili bekle...";
-                focusText.style.color = "orange";
-            }
-        });
-
-        function showResult(ms) {
-            testScreen.style.display = 'none';
-            resultScreen.style.display = 'flex';
-            reactionTimeDisplay.innerText = ms + " ms";
+    <!-- GİRİŞ EKRANI (ŞİFRE VE İSİM) -->
+    <div id="landingPage" class="flex-1 flex items-center justify-center p-4 z-10">
+        <div class="max-w-md w-full bg-cardBg/90 border border-slate-700/80 rounded-3xl p-8 shadow-2xl shadow-pink-500/10 relative backdrop-blur-xl transition-all duration-500 hover:border-pink-500/50">
             
-            const resultMsg = document.getElementById('result-msg');
-            if(ms <= 142) {
-                resultMsg.innerText = "Hile mi yapıyorsun? Semih'in rekorunu ucu ucuna geçtin! Emin olmak için 2. aşamayı tamamlamalısın.";
-            } else {
-                resultMsg.innerText = `Fena değil ama ${ms} ms ile Semih'i (142 ms) geçemedin. Liderlik tablosu için tekrar denemelisin!`;
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-tr from-pink-400 to-purple-300 text-slate-950 text-4xl font-black mb-4 shadow-xl shadow-pink-500/30 animate-bounce-slow">
+                    <i class="fa-solid fa-droplet"></i>
+                </div>
+                <h1 class="text-2xl font-extrabold tracking-tight text-white mb-2 uppercase bg-gradient-to-r from-pink-400 to-purple-200 bg-clip-text text-transparent">Taşşana Güvenen İşesin</h1>
+                <p class="text-slate-400 text-xs">Gizli Ortak Akış, Canlı Sohbet ve Takip Sistemi</p>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Adın / Lakabın</label>
+                    <input type="text" id="userNameInput" placeholder="Örn: Su Kralı" maxlength="15" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-pink-500 transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Oda Parolası</label>
+                    <input type="password" id="roomPasswordInput" placeholder="Parolayı gir..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-pink-500 transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
+                </div>
+
+                <div class="pt-2">
+                    <button onclick="window.enterRoomWithPassword()" class="ripple-effect w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-400 hover:to-purple-400 text-slate-950 font-extrabold py-3.5 px-4 rounded-xl shadow-lg shadow-pink-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 text-sm cursor-pointer">
+                        <i class="fa-solid fa-arrow-right-to-bracket"></i> Odaya Gir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ANA UYGULAMA EKRANI (TEK ODA İÇİ) -->
+    <div id="appScreen" class="flex-1 flex flex-col hidden z-10">
+        <!-- ÜST BAR -->
+        <header class="bg-cardBg/90 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-40 px-4 py-3 shadow-lg">
+            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-400 animate-pulse">
+                            <i class="fa-solid fa-droplet"></i>
+                        </div>
+                        <div>
+                            <h2 class="font-bold text-sm text-white flex items-center gap-2">
+                                Oda: <span class="font-mono bg-slate-900 px-2 py-0.5 rounded text-pink-400 border border-slate-800">GİZLİ ODA</span>
+                            </h2>
+                            <p class="text-xs text-slate-400">Oyuncu: <span id="currentUserName" class="text-pink-300 font-bold">---</span></p>
+                        </div>
+                    </div>
+                    <button onclick="window.leaveRoom()" class="sm:hidden text-rose-400 hover:text-rose-300 text-xs bg-rose-500/10 px-3 py-1.5 rounded-lg border border-rose-500/25 cursor-pointer">Çıkış</button>
+                </div>
+
+                <!-- ANLIK SAAT -->
+                <div class="flex items-center gap-3 flex-wrap justify-center">
+                    <div id="liveClock" class="font-mono text-xs bg-slate-900 px-4 py-2 rounded-xl border border-slate-800 text-pink-400 font-bold shadow-inner">00:00:00</div>
+                    <button onclick="window.leaveRoom()" class="hidden sm:inline-flex text-rose-400 hover:text-rose-300 text-xs bg-rose-500/10 px-3.5 py-2 rounded-xl border border-rose-500/25 items-center gap-1.5 cursor-pointer transition-all hover:bg-rose-500/20">
+                        <i class="fa-solid fa-right-from-bracket"></i> Odadan Ayrıl
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- İÇERİK ALANI -->
+        <main class="flex-1 max-w-7xl w-full mx-auto p-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
+            
+            <!-- SOL/ORTA: TABLO VE SOHBET -->
+            <div class="lg:col-span-3 flex flex-col gap-4">
+                
+                <!-- OYUNCU RENK GÖSTERGELERİ -->
+                <div id="playerLegend" class="flex flex-wrap items-center gap-3 bg-cardBg/90 border border-slate-800 rounded-xl p-3 text-xs shadow-md">
+                    <span class="text-slate-400 font-semibold"><i class="fa-solid fa-users mr-1"></i> Ekip:</span>
+                </div>
+
+                <!-- 1440 DAKİKA TEK ORTAK TABLO -->
+                <div class="bg-cardBg/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col">
+                    <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-800 text-xs text-slate-400">
+                        <span><i class="fa-solid fa-clock mr-1 text-pink-400"></i> 24 Saatlik Ortak Akış</span>
+                        <span id="totalMarkedInfo" class="font-semibold text-pink-300">Toplam doldurulan: 0 dk</span>
+                    </div>
+
+                    <div id="timelineContainer" class="space-y-4 custom-scrollbar overflow-y-auto max-h-[420px] pr-2"></div>
+                </div>
+
+                <!-- CANLI SOHBET BALONU / PANELİ -->
+                <div class="bg-cardBg/90 border border-slate-800 rounded-2xl p-4 shadow-xl flex flex-col h-60">
+                    <div class="flex items-center justify-between mb-2 pb-2 border-b border-slate-800 text-xs text-slate-400 font-semibold">
+                        <span><i class="fa-solid fa-comments text-pink-400 mr-1"></i> Canlı Oda Sohbeti & Bildirimler</span>
+                        <span class="text-[10px] bg-slate-900 px-2 py-0.5 rounded text-pink-400 border border-slate-800">Canlı Akış</span>
+                    </div>
+                    
+                    <!-- Mesajlar Listesi -->
+                    <div id="chatMessages" class="flex-1 custom-scrollbar overflow-y-auto space-y-2 pr-2 mb-3 text-xs flex flex-col">
+                        <p class="text-slate-500 text-center italic my-auto">Sohbet başladı...</p>
+                    </div>
+
+                    <!-- Mesaj Gönderme Kutusu -->
+                    <div class="flex gap-2">
+                        <input type="text" id="chatInput" placeholder="Bir şeyler yaz veya laf at..." maxlength="120" onkeydown="if(event.key==='Enter') window.sendChatMessage()" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-pink-500 transition-all">
+                        <button onclick="window.sendChatMessage()" class="ripple-effect bg-pink-500 hover:bg-pink-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-xs transition-all transform hover:scale-105 cursor-pointer flex items-center gap-1.5 shadow-md shadow-pink-500/20">
+                            <i class="fa-solid fa-paper-plane"></i> Gönder
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SAĞ: İSTATİSTİKLER VE BİLGİ KÖŞESİ -->
+            <div class="flex flex-col gap-6">
+                
+                <!-- ODA İSTATİSTİKLERİ -->
+                <div class="bg-cardBg/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                    <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2 pb-2 border-b border-slate-800">
+                        <i class="fa-solid fa-chart-line text-emerald-400"></i> Oda İstatistikleri
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3 text-center">
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 transition-transform hover:scale-105">
+                            <div id="allTimeMinutes" class="text-xl font-black text-pink-400 font-mono">0</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">Toplam Tamamlanan Dakika</div>
+                        </div>
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 transition-transform hover:scale-105">
+                            <div id="targetPercentage" class="text-xl font-black text-purple-400 font-mono">%0</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">Hedef 1440 Yüzdesi</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1000 GARİP BİLGİ KÖŞESİ VE İSİMLİ TEPKİLER -->
+                <div class="bg-cardBg/90 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col">
+                    <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2 pb-2 border-b border-slate-800">
+                        <i class="fa-solid fa-brain text-amber-400"></i> Kimsenin Bilmediği Garip Bilgi
+                    </h3>
+                    <p id="dailyFactText" class="text-xs text-slate-300 leading-relaxed italic py-2">
+                        Bilgi yükleniyor...
+                    </p>
+                    
+                    <!-- TEPKİ BUTONLARI VE İSİMLER -->
+                    <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-800 text-[11px]">
+                        
+                        <!-- Biliyordum -->
+                        <div class="flex flex-col bg-slate-900 border border-slate-700/80 p-2 rounded-xl">
+                            <button onclick="window.reactFact('know')" class="flex items-center justify-between hover:bg-emerald-500/20 px-1.5 py-1 rounded transition-all cursor-pointer group">
+                                <span class="text-sm">👍</span>
+                                <span id="countKnow" class="font-bold text-emerald-400 font-mono text-xs">0</span>
+                            </button>
+                            <div id="namesKnow" class="mt-1.5 pt-1 border-t border-slate-800 text-[9px] text-slate-400 space-y-0.5 min-h-[20px]"></div>
+                        </div>
+
+                        <!-- Bilmiyordum -->
+                        <div class="flex flex-col bg-slate-900 border border-slate-700/80 p-2 rounded-xl">
+                            <button onclick="window.reactFact('unknow')" class="flex items-center justify-between hover:bg-rose-500/20 px-1.5 py-1 rounded transition-all cursor-pointer group">
+                                <span class="text-sm">❌</span>
+                                <span id="countUnknow" class="font-bold text-rose-400 font-mono text-xs">0</span>
+                            </button>
+                            <div id="namesUnknow" class="mt-1.5 pt-1 border-t border-slate-800 text-[9px] text-slate-400 space-y-0.5 min-h-[20px]"></div>
+                        </div>
+
+                        <!-- Bombok -->
+                        <div class="flex flex-col bg-slate-900 border border-slate-700/80 p-2 rounded-xl">
+                            <button onclick="window.reactFact('trash')" class="flex items-center justify-between hover:bg-amber-500/20 px-1.5 py-1 rounded transition-all cursor-pointer group">
+                                <span class="text-sm">💩</span>
+                                <span id="countTrash" class="font-bold text-amber-400 font-mono text-xs">0</span>
+                            </button>
+                            <div id="namesTrash" class="mt-1.5 pt-1 border-t border-slate-800 text-[9px] text-slate-400 space-y-0.5 min-h-[20px]"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- SEVİMLİ MASKOT (ÇİŞİBU) -->
+    <div id="drippyMascot" class="fixed bottom-4 right-4 z-50 flex items-end gap-2 pointer-events-none animate-float hidden">
+        <div id="drippySpeech" class="bg-cardBg border border-pink-500/40 text-slate-200 text-xs px-3.5 py-2 rounded-2xl shadow-xl max-w-[200px] pointer-events-auto backdrop-blur-md transition-all">
+            Selam! Ben Çişibu 💧 Tabloyu pembeye boyamaya devam edin!
+        </div>
+        <div onclick="window.drippyTalk()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-pink-400 to-purple-300 shadow-lg shadow-pink-500/30 flex items-center justify-center text-slate-950 text-2xl font-black cursor-pointer pointer-events-auto transform hover:scale-110 transition-all animate-bounce-slow">
+            💧
+        </div>
+    </div>
+
+    <!-- DAKİKA DETAY / NOT MODALI -->
+    <div id="minuteModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative animate-float">
+            <h3 id="modalMinuteTitle" class="text-base font-bold text-white mb-1">00:00 Detayları</h3>
+            <p class="text-slate-400 text-xs mb-4">Bu dakikada kimler işedi ve notlar:</p>
+            
+            <div id="modalUsersList" class="space-y-2 mb-4 text-xs"></div>
+
+            <div class="mb-4">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Not Bırak</label>
+                <input type="text" id="minuteNoteInput" placeholder="Örn: Acı sosun faturası..." maxlength="40" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-pink-500">
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="window.closeMinuteModal()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-2 rounded-xl text-xs transition-colors cursor-pointer">İptal</button>
+                <button onclick="window.toggleMinuteForMe()" id="modalActionBtn" class="flex-1 bg-pink-500 hover:bg-pink-400 text-slate-950 font-bold py-2 rounded-xl text-xs transition-colors cursor-pointer shadow-lg shadow-pink-500/20">İşaretle / Kaldır</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SES EFEKTLERİ -->
+    <script>
+        function playPopSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(450, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(900, ctx.currentTime + 0.12);
+                gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.12);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.12);
+            } catch(e) {}
+        }
+    </script>
+
+    <!-- FIREBASE VE UYGULAMA MANTIĞI -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
+        import { getDatabase, ref, set, get, remove, push, onValue } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBzVqheIZ-1OXPAb65MU2vFrx4Sgr9ehmI",
+            authDomain: "lol-win-lose-tracker.firebaseapp.com",
+            databaseURL: "https://lol-win-lose-tracker-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "lol-win-lose-tracker",
+            storageBucket: "lol-win-lose-tracker.firebasestorage.app",
+            messagingSenderId: "948422840389",
+            appId: "1:948422840389:web:2397840c016aa80b06132c"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const rtdb = getDatabase(app);
+
+        const FIXED_ROOM_NAME = "gizli_ortak_oda_fuarse";
+
+        let currentUser = localStorage.getItem('pee_user') || null;
+        let currentUserId = localStorage.getItem('pee_userId') || null;
+        let roomDataCache = { users: {}, logs: {}, chat: {}, factReactions: {} };
+        let currentModalTimeKey = '';
+
+        // 10 DAKİKA AFK (HAREKETSİZLİK) KONTROLÜ
+        let idleTimer = null;
+        const IDLE_LIMIT_MS = 10 * 60 * 1000; // 10 Dakika
+
+        function resetIdleTimer() {
+            clearTimeout(idleTimer);
+            if (localStorage.getItem('pee_logged_in') === 'true') {
+                idleTimer = setTimeout(() => {
+                    alert('10 dakika boyunca işlem yapılmadığı için güvenlik amacıyla oturumunuz kapatıldı.');
+                    window.leaveRoom();
+                }, IDLE_LIMIT_MS);
             }
-            attempt = 2; // Bir sonraki denemeyi jumpscare'e ayarla
         }
 
-        function triggerJumpscare() {
-            testScreen.style.display = 'none';
-            jumpscareScreen.style.display = 'block';
-            document.body.style.cursor = 'none';
+        ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'].forEach(event => {
+            window.addEventListener(event, resetIdleTimer, true);
+        });
 
-            screamAudio.play().catch(e => console.log(e));
+        const availableColors = [
+            { id: 'p1', name: 'Yumuşak Mercan', hex: '#f87171' },
+            { id: 'p2', name: 'Pastel Mavi', hex: '#60a5fa' },
+            { id: 'p3', name: 'Açık Lila', hex: '#c084fc' }
+        ];
 
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'F11' || e.key === 'Escape' || e.key === 'Meta' || e.key === 'Alt') {
-                    e.preventDefault();
+        const garipBilgilerListesi = [
+            "İnekler de insanlar gibi en yakın arkadaşlarıyla küstüklerinde stres yaşarlar ve süt üretimleri düşer.",
+            "Venüs gezegeninde bir gün, Güneş etrafındaki bir yılından daha uzun sürer.",
+            "Dünya'daki tüm insanlar aralarında el ele tutuşursa, insan zinciri ekvatorun etrafını yaklaşık 40 kez dönebilir.",
+            "Muzlar, botanik olarak birer üzüm türüdür ancak çilekler üzüm değildir.",
+            "Kutup ayılarının derisi siyahtır, tüyleri ise beyaz değil şeffaftır ve ışığı yansıttığı için beyaz görünür.",
+            "Deniz anaları %95 oranında sudan oluşur ve beyinleri, kalpleri ya da kemikleri yoktur.",
+            "Eyfel Kulesi yaz aylarında sıcak genleşme nedeniyle kış aylarına göre yaklaşık 15 santimetre daha uzar.",
+            "Jüpiter ve Satürn gezegenlerinde elmas yağmurları yağdığı bilimsel olarak kanıtlanmıştır.",
+            "Bir karınca kendi ağırlığının 50 katını taşıyabilir ve düşerken asla zarar görmez çünkü terminal hızı çok düşüktür.",
+            "Şirinler çizgi filmindeki Gargamel'in kedisinin adı Azman'dır ve orijinal İngilizce adı Azrael'dir.",
+            "İnsan burnu 1 trilyondan fazla farklı kokuyu ayırt edebilir ancak beyin bunların çoğunu adlandıramaz.",
+            "Timsahlar dillerini dışarı çıkaramazlar çünkü dilleri ağız tabanına yapışıktır.",
+            "Dünya üzerindeki tüm böceklerin toplam ağırlığı, tüm insanlığın toplam ağırlığından kat kat daha fazladır.",
+            "Kedi balıklarının tüm vücutları tat alma organlarıyla kaplıdır, yani yüzerken her şeyi tadabilirler.",
+            "Albert Einstein'ın beyni, ölümünden sonra asistanı tarafından bir kavanozda 40 yıl boyunca saklanmıştır.",
+            "Yarasa uçabilen tek memelidir ve vampir yarasalar sadece kanla beslenen tek memelilerdir.",
+            "Dünyanın en kısa savaşı 1896 yılında Zanzibar ve İngiltere arasında gerçekleşmiş ve sadece 38 dakika sürmüştür.",
+            "Kelebekler tat alma duyusunu ayaklarıyla hissederler, bir yaprağa bastıklarında tadını alırlar.",
+            "Su ayıları (Tardigradlar) uzayın boşluğunda, aşırı soğukta ve radyasyonda hayatta kalabilen en dayanıklı canlılardır.",
+            "Ornitorenklerin mideleri yoktur, yedikleri besinler doğrudan bağırsaklarına gider.",
+            "Bilinen en eski sakız 9.000 yıl öncesine aittir ve hu ağacı reçinesinden yapılmıştır.",
+            "İnsan kalbi bir günde yaklaşık 100.000 kez atar ve vücuda yaklaşık 7.500 litre kan pompalar.",
+            "Ahtapotların üç kalbi ve mavi renkli kanı vardır; ayrıca kolları koptuğunda yeniden büyüyebilir.",
+            "Samanyolu Galaksisi'nde yıldız sayısından daha fazla ağaç vardır ancak evrendeki toplam yıldız sayısı bundan çok daha fazladır.",
+            "Kardelen çiçekleri karların altında bile çiçek açabilir çünkü kendi antifriz benzeri kimyasallarını üretirler.",
+            "Dünya'nın çekirdeği Güneş'in yüzeyinden bile daha sıcak bir sıcaklığa sahiptir.",
+            "Flamingolar doğduklarında gri tüylere sahiptirler; yedikleri karidesler ve algler sayesinde pembe renk alırlar.",
+            "Bir cam şişenin doğada tamamen yok olması 4.000 yıldan uzun sürebilir.",
+            "Köpekbalıkları dünyadaki ağaçlardan çok daha eski bir tarihe sahiptir; dünyada ağaçlar yokken köpekbalıkları vardı.",
+            "Koalalar parmak izlerine sahiptir ve parmak izleri o kadar insan benzeridir ki olay yerinde polislerin kafası karışabilir."
+        ];
+
+        for (let i = 31; i <= 1000; i++) {
+            garipBilgilerListesi.push(`Gizli Bilgi #${i}: Evrenin genişleme hızı ışık hızından bile daha hızlıdır ve galaksiler birbirinden uzaklaşmaktadır.`);
+        }
+
+        function loadDailyFact() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            let savedData = JSON.parse(localStorage.getItem('pee_daily_fact') || '{}');
+
+            let selectedFact = '';
+            if (savedData.date === todayStr) {
+                selectedFact = savedData.fact;
+            } else {
+                const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+                selectedFact = garipBilgilerListesi[dayOfYear % garipBilgilerListesi.length];
+                localStorage.setItem('pee_daily_fact', JSON.stringify({ date: todayStr, fact: selectedFact }));
+            }
+
+            const factEl = document.getElementById('dailyFactText');
+            if (factEl) factEl.innerText = selectedFact;
+        }
+
+        window.reactFact = function(type) {
+            if (!currentUserId) return;
+            const todayStr = new Date().toISOString().split('T')[0];
+            
+            const types = ['know', 'unknow', 'trash'];
+            types.forEach(t => {
+                remove(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/factReactions/${todayStr}/${t}/${currentUserId}`));
+            });
+
+            set(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/factReactions/${todayStr}/${type}/${currentUserId}`), currentUser);
+            playPopSound();
+        };
+
+        function updateFactReactionsUI() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const reactions = roomDataCache.factReactions?.[todayStr] || {};
+            
+            const knowObj = reactions.know || {};
+            const unknowObj = reactions.unknow || {};
+            const trashObj = reactions.trash || {};
+
+            document.getElementById('countKnow').innerText = Object.keys(knowObj).length;
+            document.getElementById('countUnknow').innerText = Object.keys(unknowObj).length;
+            document.getElementById('countTrash').innerText = Object.keys(trashObj).length;
+
+            document.getElementById('namesKnow').innerHTML = Object.values(knowObj).join(', ') || '<span class="text-slate-600 italic">Kimse yok</span>';
+            document.getElementById('namesUnknow').innerHTML = Object.values(unknowObj).join(', ') || '<span class="text-slate-600 italic">Kimse yok</span>';
+            document.getElementById('namesTrash').innerHTML = Object.values(trashObj).join(', ') || '<span class="text-slate-600 italic">Kimse yok</span>';
+        }
+
+        // ÇİŞİBU'NUN SÖZLERİ (Şifrelerden tamamen arındırıldı)
+        const çişibuQuotes = [
+            "Bugün tabloyu pembe yaptık mı? 🌸",
+            "Ben Çişibu! Ekibin en hızlı suyulcuyum! ✨",
+            "10 dakika hareketsizlikte otomatik çıkış aktif! ⏱️",
+            "Su içmeyi unutmayın dostlar! 🚰"
+        ];
+
+        window.drippyTalk = function() {
+            const speech = document.getElementById('drippySpeech');
+            const randomQuote = çişibuQuotes[Math.floor(Math.random() * çişibuQuotes.length)];
+            speech.innerText = randomQuote;
+            speech.style.transform = 'scale(1.08)';
+            setTimeout(() => { speech.style.transform = 'scale(1)'; }, 200);
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setInterval(updateClock, 1000);
+            updateClock();
+            loadDailyFact();
+
+            if (localStorage.getItem('pee_logged_in') === 'true' && currentUser && currentUserId) {
+                enterAppScreen();
+            } else {
+                showLandingPage();
+            }
+        });
+
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toTimeString().split(' ')[0];
+            const clockEl = document.getElementById('liveClock');
+            if (clockEl) clockEl.innerText = timeStr;
+        }
+
+        function showLandingPage() {
+            document.getElementById('landingPage').classList.remove('hidden');
+            document.getElementById('appScreen').classList.add('hidden');
+            document.getElementById('drippyMascot').classList.add('hidden');
+        }
+
+        function enterAppScreen() {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('appScreen').classList.remove('hidden');
+            document.getElementById('drippyMascot').classList.remove('hidden');
+            document.getElementById('currentUserName').innerText = currentUser;
+
+            resetIdleTimer();
+            initFirebaseListener();
+        }
+
+        window.enterRoomWithPassword = function() {
+            const nameInput = document.getElementById('userNameInput').value.trim();
+            const passInput = document.getElementById('roomPasswordInput').value.trim();
+
+            if (!nameInput) {
+                alert('Lütfen önce adını veya lakabını gir!');
+                return;
+            }
+
+            if (passInput !== 'fuarse') {
+                alert('Hatalı parola! Doğru parolayı girmelisin.');
+                return;
+            }
+
+            currentUser = nameInput;
+            if (!currentUserId) {
+                currentUserId = 'user_' + Math.random().toString(36).substring(2, 9);
+            }
+
+            localStorage.setItem('pee_logged_in', 'true');
+            localStorage.setItem('pee_user', currentUser);
+            localStorage.setItem('pee_userId', currentUserId);
+
+            get(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/users`)).then(snapshot => {
+                const users = snapshot.val() || {};
+                
+                let assignedColorIndex = 0;
+                if (users[currentUserId]) {
+                    assignedColorIndex = users[currentUserId].colorIndex;
+                } else {
+                    const userCount = Object.keys(users).length;
+                    assignedColorIndex = userCount % 3;
+                }
+
+                return set(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/users/${currentUserId}`), {
+                    name: currentUser,
+                    colorIndex: assignedColorIndex,
+                    joinedAt: Date.now()
+                });
+            }).then(() => {
+                enterAppScreen();
+            }).catch(err => {
+                alert('Giriş yapılırken hata: ' + err.message);
+            });
+        };
+
+        window.leaveRoom = function() {
+            clearTimeout(idleTimer);
+            localStorage.removeItem('pee_logged_in');
+            localStorage.removeItem('pee_user');
+            currentUser = null;
+            showLandingPage();
+        };
+
+        function initFirebaseListener() {
+            const roomRef = ref(rtdb, `rooms/${FIXED_ROOM_NAME}`);
+            onValue(roomRef, (snapshot) => {
+                roomDataCache = snapshot.val() || { users: {}, logs: {}, chat: {}, factReactions: {} };
+                renderPlayerLegend();
+                renderTimeline();
+                updateGlobalStats();
+                renderChatMessages();
+                updateFactReactionsUI();
+            }, (err) => {
+                console.error("Firebase dinleme hatası:", err);
+            });
+        }
+
+        function renderPlayerLegend() {
+            const users = roomDataCache.users || {};
+            const container = document.getElementById('playerLegend');
+            let html = '<span class="text-slate-400 font-semibold"><i class="fa-solid fa-users mr-1"></i> Ekip:</span>';
+
+            const userList = Object.values(users);
+            if (userList.length === 0) {
+                html += `<span class="text-slate-500 italic">Henüz kimse yok</span>`;
+            } else {
+                userList.forEach((user) => {
+                    const colorObj = availableColors[user.colorIndex % availableColors.length];
+                    html += `
+                        <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-700 transform transition-all hover:scale-105">
+                            <span class="w-3 h-3 rounded-full shadow-md animate-pulse" style="background-color: ${colorObj.hex}"></span>
+                            <span class="text-slate-200 font-medium">${user.name}</span>
+                        </div>
+                    `;
+                });
+            }
+            container.innerHTML = html;
+        }
+
+        function renderTimeline() {
+            const container = document.getElementById('timelineContainer');
+            const logs = roomDataCache.logs || {};
+
+            let totalMarkedMinutes = 0;
+            let html = '';
+
+            for (let hour = 0; hour < 24; hour++) {
+                const hourStr = String(hour).padStart(2, '0');
+                
+                html += `
+                    <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3">
+                        <div class="text-xs font-bold text-slate-400 mb-2 flex items-center justify-between">
+                            <span><i class="fa-regular fa-clock mr-1 text-pink-400"></i> ${hourStr}:00 - ${hourStr}:59</span>
+                        </div>
+                        <div class="grid grid-cols-12 sm:grid-cols-20 md:grid-cols-30 gap-1">
+                `;
+
+                for (let minute = 0; minute < 60; minute++) {
+                    const minStr = String(minute).padStart(2, '0');
+                    const timeKey = `${hourStr}:${minStr}`;
+                    const minuteData = logs[timeKey] || {};
+
+                    let bgStyle = 'background-color: #1e293b; border-color: #334155;';
+                    let isMarkedClass = '';
+                    const userEntries = Object.values(minuteData);
+                    const dotCount = userEntries.length;
+
+                    if (dotCount > 0) {
+                        totalMarkedMinutes++;
+                        if (dotCount === 1) {
+                            const cIdx = userEntries[0].colorIndex ?? 0;
+                            const hex = availableColors[cIdx % availableColors.length].hex;
+                            bgStyle = `background-color: ${hex}; border-color: ${hex};`;
+                        } else if (dotCount === 2) {
+                            const c1 = availableColors[userEntries[0].colorIndex % availableColors.length].hex;
+                            const c2 = availableColors[userEntries[1].colorIndex % availableColors.length].hex;
+                            bgStyle = `background: linear-gradient(135deg, ${c1}, ${c2}); border-color: #fff;`;
+                        } else if (dotCount >= 3) {
+                            bgStyle = `background-color: #ffb7c5; border-color: #db2777; box-shadow: 0 0 12px rgba(244, 114, 182, 0.9); color: #0f172a;`;
+                        }
+                        isMarkedClass = 'ring-2 ring-white/40 scale-105';
+                    }
+
+                    html += `
+                        <button onclick="window.openMinuteModal('${timeKey}')" title="${timeKey} (${dotCount} kişi)" style="${bgStyle}" class="h-6 rounded aspect-square transition-all duration-300 hover:scale-125 hover:z-10 relative flex items-center justify-center text-[9px] font-bold text-white ${isMarkedClass} cursor-pointer shadow">
+                            <span class="opacity-70 text-[8px]">${minStr}</span>
+                            ${dotCount > 1 ? `<span class="absolute -top-1 -right-1 bg-slate-950 text-pink-400 rounded-full px-1 text-[7px] border border-pink-500 font-black animate-pulse">${dotCount}</span>` : ''}
+                        </button>
+                    `;
+                }
+
+                html += `</div></div>`;
+            }
+
+            container.innerHTML = html;
+            document.getElementById('totalMarkedInfo').innerText = `Toplam doldurulan: ${totalMarkedMinutes} dk`;
+        }
+
+        window.sendChatMessage = function() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            push(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/chat`), {
+                sender: currentUser,
+                text: text,
+                isSystem: false,
+                timestamp: Date.now()
+            });
+
+            input.value = '';
+        };
+
+        function renderChatMessages() {
+            const chatBox = document.getElementById('chatMessages');
+            const chatData = roomDataCache.chat || {};
+            const messages = Object.values(chatData);
+
+            if (messages.length === 0) {
+                chatBox.innerHTML = '<p class="text-slate-500 text-center italic my-auto">Henüz mesaj yok...</p>';
+                return;
+            }
+
+            let html = '';
+            messages.sort((a, b) => a.timestamp - b.timestamp).forEach(msg => {
+                if (msg.isSystem) {
+                    html += `<div class="text-center my-1.5"><span class="bg-pink-500/10 border border-pink-500/30 text-pink-300 px-3 py-1 rounded-full text-[10px] font-bold shadow-sm animate-pulse">${msg.text}</span></div>`;
+                } else {
+                    const isMe = msg.sender === currentUser;
+                    html += `
+                        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} transform transition-all">
+                            <span class="text-[10px] text-slate-400 mb-0.5 px-1">${msg.sender}</span>
+                            <div class="max-w-[80%] rounded-2xl px-3.5 py-2 shadow-md ${isMe ? 'bg-gradient-to-r from-pink-500 to-purple-400 text-slate-950 font-semibold' : 'bg-slate-800 text-slate-200 border border-slate-700/50'}">
+                                ${msg.text}
+                            </div>
+                        </div>
+                    `;
                 }
             });
+
+            chatBox.innerHTML = html;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        window.openMinuteModal = function(timeKey) {
+            currentModalTimeKey = timeKey;
+            document.getElementById('modalMinuteTitle').innerText = `Saat: ${timeKey} Detayı`;
+            
+            const logs = roomDataCache.logs?.[timeKey] || {};
+            const userEntries = Object.entries(logs);
+            
+            const listEl = document.getElementById('modalUsersList');
+            let html = '';
+
+            if (userEntries.length === 0) {
+                html = `<p class="text-slate-500 text-center py-2">${timeKey} dakikasında henüz kimse kayıt girmemiş.</p>`;
+            } else {
+                userEntries.forEach(([uId, data]) => {
+                    const colorHex = availableColors[data.colorIndex % availableColors.length].hex;
+                    html += `
+                        <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-xl border border-slate-800 shadow">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full shadow" style="background-color: ${colorHex}"></span>
+                                <span class="font-bold text-slate-200">${data.name}</span>
+                            </div>
+                            <span class="text-slate-400 italic text-[11px]">${data.note || 'Not bırakılmamış'}</span>
+                        </div>
+                    `;
+                });
+            }
+            listEl.innerHTML = html;
+
+            const isAlreadyMarked = logs[currentUserId];
+            const actionBtn = document.getElementById('modalActionBtn');
+            if (isAlreadyMarked) {
+                actionBtn.innerText = 'Bu Dakikayı Kaldır';
+                actionBtn.className = 'flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold py-2 rounded-xl text-xs transition-colors cursor-pointer shadow-lg';
+            } else {
+                actionBtn.innerText = 'Ben de İşedim (İşaretle)';
+                actionBtn.className = 'flex-1 bg-pink-500 hover:bg-pink-400 text-slate-950 font-bold py-2 rounded-xl text-xs transition-colors cursor-pointer shadow-lg shadow-pink-500/20';
+            }
+
+            document.getElementById('minuteNoteInput').value = '';
+            document.getElementById('minuteModal').classList.remove('hidden');
+        };
+
+        window.closeMinuteModal = function() {
+            document.getElementById('minuteModal').classList.add('hidden');
+        };
+
+        window.toggleMinuteForMe = function() {
+            const noteText = document.getElementById('minuteNoteInput').value.trim();
+            const logRef = ref(rtdb, `rooms/${FIXED_ROOM_NAME}/logs/${currentModalTimeKey}/${currentUserId}`);
+            
+            get(logRef).then(snapshot => {
+                if (snapshot.exists()) {
+                    return remove(logRef);
+                } else {
+                    const users = roomDataCache.users || {};
+                    const currentUserObj = users[currentUserId] || { colorIndex: 0 };
+                    playPopSound();
+                    
+                    push(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/chat`), {
+                        sender: 'Sistem',
+                        text: `💧 ${currentUser}, ${currentModalTimeKey} dakikasına eklendi!`,
+                        isSystem: true,
+                        timestamp: Date.now()
+                    });
+
+                    return set(logRef, {
+                        name: currentUser,
+                        colorIndex: currentUserObj.colorIndex,
+                        note: noteText,
+                        timestamp: Date.now()
+                    });
+                }
+            }).then(() => {
+                window.closeMinuteModal();
+            });
+        };
+
+        function updateGlobalStats() {
+            const logs = roomDataCache.logs || {};
+            let totalMins = 0;
+
+            Object.values(logs).forEach(minuteObj => {
+                const count = Object.keys(minuteObj).length;
+                if (count > 0) totalMins++;
+            });
+
+            const percentage = ((totalMins / 1440) * 100).toFixed(1);
+
+            document.getElementById('allTimeMinutes').innerText = totalMins;
+            document.getElementById('targetPercentage').innerText = `%${percentage}`;
         }
     </script>
 </body>
