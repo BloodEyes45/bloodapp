@@ -79,7 +79,7 @@
                     <i class="fa-solid fa-droplet"></i>
                 </div>
                 <h1 class="text-2xl font-extrabold tracking-tight text-white mb-1 uppercase bg-gradient-to-r from-pink-400 to-purple-200 bg-clip-text text-transparent">Baraj Doldurma Challenge</h1>
-                <p class="text-slate-400 text-xs">SADECE İŞEYENLER GÖRÜR</p>
+                <p class="text-slate-400 text-xs">SADECE İŞEYENLER GÖRÜR!!!</p>
             </div>
 
             <!-- KAYITLI PROFİL KARTI -->
@@ -92,7 +92,7 @@
                     </div>
                 </div>
                 <button onclick="window.clearSavedProfile()" class="text-[11px] text-rose-400 hover:text-rose-300 bg-rose-500/10 px-2.5 py-1.5 rounded-lg border border-rose-500/20 cursor-pointer transition-colors">
-                    Profili Değiştir
+                    Sıfırla
                 </button>
             </div>
 
@@ -109,12 +109,15 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Adın / Lakabın</label>
-                    <input type="text" id="userNameInput" placeholder="Örn: Su Kralı" maxlength="15" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-pink-500 transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Adın / Lakabın (Aynı zamanda ID'n olacak)</label>
+                    <input type="text" id="userNameInput" placeholder="Örn: Semih" maxlength="15" oninput="document.getElementById('userIdInput').value = this.value.trim().toLowerCase()" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-pink-500 transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
                 </div>
             </div>
 
             <div class="space-y-4 mt-4">
+                <!-- Gizli veya otomatik senkronize olan ID alanı -->
+                <input type="hidden" id="userIdInput">
+
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Oda Parolası</label>
                     <input type="password" id="roomPasswordInput" placeholder="Parolayı gir..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-pink-500 transition-all duration-300 focus:ring-2 focus:ring-pink-500/20">
@@ -248,7 +251,7 @@
     <!-- ÇİŞİBU MASKOTU -->
     <div id="drippyMascot" class="fixed bottom-4 right-4 z-50 flex items-end gap-2 pointer-events-none animate-float hidden">
         <div id="drippySpeech" class="bg-cardBg border border-pink-500/40 text-slate-200 text-xs px-3.5 py-2 rounded-2xl shadow-xl max-w-[200px] pointer-events-auto backdrop-blur-md transition-all">
-            Selam! Ben Çişibu 💧 Çifte kayıt sorununu tarihe gömdük!
+            Selam! Ben Çişibu 💧 Artık ID'n direkt ismin oldu!
         </div>
         <div onclick="window.drippyTalk()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-pink-400 to-purple-300 shadow-lg shadow-pink-500/30 flex items-center justify-center text-slate-950 text-2xl font-black cursor-pointer pointer-events-auto transform hover:scale-110 transition-all animate-bounce-slow">
             💧
@@ -312,14 +315,8 @@
 
         const FIXED_ROOM_NAME = "gizli_ortak_oda_fuarse";
 
-        // Sabit Kullanıcı ID Üretimi (Aynı tarayıcıda asla çift profil oluşmaz)
-        let currentUserId = localStorage.getItem('pee_userId');
-        if (!currentUserId) {
-            currentUserId = 'user_' + Math.random().toString(36).substring(2, 9);
-            localStorage.setItem('pee_userId', currentUserId);
-        }
-
         let currentUser = localStorage.getItem('pee_user') || null;
+        let currentUserId = localStorage.getItem('pee_userId') || null;
         let currentAvatar = localStorage.getItem('pee_avatar') || '';
         let roomDataCache = { users: {}, logs: {}, chat: {}, factReactions: {} };
         let currentModalTimeKey = '';
@@ -354,9 +351,11 @@
 
         window.clearSavedProfile = function() {
             localStorage.removeItem('pee_user');
+            localStorage.removeItem('pee_userId');
             localStorage.removeItem('pee_avatar');
             localStorage.removeItem('pee_logged_in');
             currentUser = null;
+            currentUserId = null;
             currentAvatar = '';
 
             document.getElementById('savedProfileCard').classList.add('hidden');
@@ -519,7 +518,7 @@
 
         const çişibuQuotes = [
             "Bugün tabloyu pembe yaptık mı? 🌸",
-            "Ben Çişibu! Çifte kayıt sorunu tamamen çözüldü! ✨",
+            "Ben Çişibu! İsimleriniz artık ID'niz oldu! ✨",
             "10 dakika hareketsizlikte otomatik çıkış aktif! ⏱️",
             "Su içmeyi unutmayın dostlar! 🚰"
         ];
@@ -529,7 +528,7 @@
             const randomQuote = çişibuQuotes[Math.floor(Math.random() * çişibuQuotes.length)];
             speech.innerText = randomQuote;
             speech.style.transform = 'scale(1.08)';
-            setTimeout(() => { speech.style.transform = 'scale(1);'; }, 200);
+            setTimeout(() => { speech.style.transform = 'scale(1)'; }, 200);
         };
 
         function updateClock() {
@@ -577,6 +576,9 @@
                 return;
             }
 
+            // İSMİN KÜÇÜK HARF HALİNİ ID OLARAK ALIYORUZ (Böylece büyük/küçük fark etmeden aynı kişi olur)
+            currentUserId = nameInput.trim().toLowerCase();
+
             currentUser = nameInput;
             if (currentAvatar === '' && localStorage.getItem('pee_avatar')) {
                 currentAvatar = localStorage.getItem('pee_avatar');
@@ -584,6 +586,7 @@
 
             localStorage.setItem('pee_logged_in', 'true');
             localStorage.setItem('pee_user', currentUser);
+            localStorage.setItem('pee_userId', currentUserId);
             localStorage.setItem('pee_avatar', currentAvatar);
 
             get(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/users`)).then(snapshot => {
@@ -597,7 +600,6 @@
                     assignedColorIndex = userCount % 3;
                 }
 
-                // Aynı ID ile tekil olarak kaydet (çifte kaydı önler)
                 return set(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/users/${currentUserId}`), {
                     name: currentUser,
                     avatar: currentAvatar,
