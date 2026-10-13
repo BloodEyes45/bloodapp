@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baraj Doldurma Challenge</title>
+    <title>Taşşana Güvenen İşesin - Ortak Takip ve Sohbet</title>
     <!-- Tarayıcı Sekmesi Logosu (Favicon) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💧</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -78,8 +78,8 @@
                 <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-tr from-pink-400 to-purple-300 text-slate-950 text-4xl font-black mb-3 shadow-xl shadow-pink-500/30 animate-bounce-slow">
                     <i class="fa-solid fa-droplet"></i>
                 </div>
-                <h1 class="text-2xl font-extrabold tracking-tight text-white mb-1 uppercase bg-gradient-to-r from-pink-400 to-purple-200 bg-clip-text text-transparent">Baraj Doldurma Challenge</h1>
-                <p class="text-slate-400 text-xs">SADECE İŞEYENLER GÖRÜR !.!</p>
+                <h1 class="text-2xl font-extrabold tracking-tight text-white mb-1 uppercase bg-gradient-to-r from-pink-400 to-purple-200 bg-clip-text text-transparent">Taşşana Güvenen İşesin</h1>
+                <p class="text-slate-400 text-xs">Gizli Ortak Akış, Canlı Sohbet ve Takip Sistemi</p>
             </div>
 
             <!-- KAYITLI PROFİL KARTI -->
@@ -248,7 +248,7 @@
     <!-- ÇİŞİBU MASKOTU -->
     <div id="drippyMascot" class="fixed bottom-4 right-4 z-50 flex items-end gap-2 pointer-events-none animate-float hidden">
         <div id="drippySpeech" class="bg-cardBg border border-pink-500/40 text-slate-200 text-xs px-3.5 py-2 rounded-2xl shadow-xl max-w-[200px] pointer-events-auto backdrop-blur-md transition-all">
-            Selam! Ben Çişibu 💧 İsim eşitlemesi artık kusursuz!
+            Selam! Ben Çişibu 💧 Tüm sorunlar çözüldü!
         </div>
         <div onclick="window.drippyTalk()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-pink-400 to-purple-300 shadow-lg shadow-pink-500/30 flex items-center justify-center text-slate-950 text-2xl font-black cursor-pointer pointer-events-auto transform hover:scale-110 transition-all animate-bounce-slow">
             💧
@@ -321,7 +321,6 @@
         window.addEventListener('DOMContentLoaded', () => {
             setInterval(updateClock, 1000);
             updateClock();
-            loadDailyFact();
 
             const savedUser = localStorage.getItem('pee_user');
             const savedAvatar = localStorage.getItem('pee_avatar');
@@ -347,10 +346,6 @@
         });
 
         window.clearSavedProfile = function() {
-            // Eski hatalı ID kalıntısını Firebase'den de temizle
-            if (currentUserId) {
-                remove(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/users/${currentUserId}`));
-            }
             localStorage.removeItem('pee_user');
             localStorage.removeItem('pee_userId');
             localStorage.removeItem('pee_avatar');
@@ -418,8 +413,20 @@
         const availableColors = [
             { id: 'p1', name: 'Yumuşak Mercan', hex: '#f87171' },
             { id: 'p2', name: 'Pastel Mavi', hex: '#60a5fa' },
-            { id: 'p3', name: 'Açık Lila', hex: '#c084fc' }
+            { id: 'p3', name: 'Açık Lila', hex: '#c084fc' },
+            { id: 'p4', name: 'Zümrüt Yeşil', hex: '#34d399' },
+            { id: 'p5', name: 'Kehribar Sarı', hex: '#fbbf24' },
+            { id: 'p6', name: 'Gül Kurusu', hex: '#f472b6' }
         ];
+
+        // İsme özel sabit renk indeksi üreteci (Asla çakışmaz)
+        function getColorIndexByName(name) {
+            let hash = 0;
+            for (let i = 0; i < name.length; i++) {
+                hash = name.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            return Math.abs(hash) % availableColors.length;
+        }
 
         const garipBilgilerListesi = [
             "İnekler de insanlar gibi en yakın arkadaşlarıyla küstüklerinde stres yaşarlar ve süt üretimleri düşer.",
@@ -458,21 +465,23 @@
             garipBilgilerListesi.push(`Gizli Bilgi #${i}: Evrenin genişleme hızı ışık hızından bile daha hızlıdır ve galaksiler birbirinden uzaklaşmaktadır.`);
         }
 
-        function loadDailyFact() {
+        // Günlük Garip Bilgiyi Firebase Üzerinden Yönetme (Her gün otomatik değişir ve sıfırlanır)
+        function checkAndSyncDailyFact(roomFactData) {
             const todayStr = new Date().toISOString().split('T')[0];
-            let savedData = JSON.parse(localStorage.getItem('pee_daily_fact') || '{}');
-
-            let selectedFact = '';
-            if (savedData.date === todayStr) {
-                selectedFact = savedData.fact;
-            } else {
-                const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-                selectedFact = garipBilgilerListesi[dayOfYear % garipBilgilerListesi.length];
-                localStorage.setItem('pee_daily_fact', JSON.stringify({ date: todayStr, fact: selectedFact }));
-            }
-
             const factEl = document.getElementById('dailyFactText');
-            if (factEl) factEl.innerText = selectedFact;
+
+            if (roomFactData && roomFactData.date === todayStr) {
+                if (factEl) factEl.innerText = roomFactData.fact;
+            } else {
+                // Bugün için henüz bilgi atanmamışsa veya gün değişmişse yeni bir bilgi seç ve Firebase'e yaz
+                const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+                const newFact = garipBilgilerListesi[dayOfYear % garipBilgilerListesi.length];
+                
+                set(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/dailyFact`), {
+                    date: todayStr,
+                    fact: newFact
+                });
+            }
         }
 
         window.reactFact = function(type) {
@@ -519,7 +528,7 @@
 
         const çişibuQuotes = [
             "Bugün tabloyu pembe yaptık mı? 🌸",
-            "Ben Çişibu! İsimler eşlendi, çift kayıtlar temizlendi! ✨",
+            "Ben Çişibu! Ekip listesi kalıcı, renkler sabit! ✨",
             "10 dakika hareketsizlikte otomatik çıkış aktif! ⏱️",
             "Su içmeyi unutmayın dostlar! 🚰"
         ];
@@ -577,15 +586,7 @@
                 return;
             }
 
-            // KESİN ÇÖZÜM: ID'yi doğrudan ismin küçük harfli haline sabitliyoruz
-            const cleanId = nameInput.trim().toLowerCase();
-
-            // Eğer daha önce farklı bir rastgele ID ile kaydedildiyse eski kaydı Firebase'den uçur
-            if (currentUserId && currentUserId !== cleanId) {
-                remove(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/users/${currentUserId}`));
-            }
-
-            currentUserId = cleanId;
+            currentUserId = nameInput.trim().toLowerCase();
             currentUser = nameInput;
             if (currentAvatar === '' && localStorage.getItem('pee_avatar')) {
                 currentAvatar = localStorage.getItem('pee_avatar');
@@ -596,23 +597,14 @@
             localStorage.setItem('pee_userId', currentUserId);
             localStorage.setItem('pee_avatar', currentAvatar);
 
-            get(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/users`)).then(snapshot => {
-                const users = snapshot.val() || {};
-                
-                let assignedColorIndex = 0;
-                if (users[currentUserId]) {
-                    assignedColorIndex = users[currentUserId].colorIndex;
-                } else {
-                    const userCount = Object.keys(users).length;
-                    assignedColorIndex = userCount % 3;
-                }
+            const assignedColorIndex = getColorIndexByName(currentUserId);
 
-                return set(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/users/${currentUserId}`), {
-                    name: currentUser,
-                    avatar: currentAvatar,
-                    colorIndex: assignedColorIndex,
-                    joinedAt: Date.now()
-                });
+            // Kullanıcıyı kalıcı olarak Firebase'e kaydediyoruz (silinmez, odada kalır)
+            set(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/users/${currentUserId}`), {
+                name: currentUser,
+                avatar: currentAvatar,
+                colorIndex: assignedColorIndex,
+                joinedAt: Date.now()
             }).then(() => {
                 enterAppScreen();
             }).catch(err => {
@@ -630,12 +622,13 @@
         function initFirebaseListener() {
             const roomRef = ref(rtdb, `rooms/${FIXED_ROOM_NAME}`);
             onValue(roomRef, (snapshot) => {
-                roomDataCache = snapshot.val() || { users: {}, logs: {}, chat: {}, factReactions: {} };
+                roomDataCache = snapshot.val() || { users: {}, logs: {}, chat: {}, factReactions: {}, dailyFact: {} };
                 renderPlayerLegend();
                 renderTimeline();
                 updateGlobalStats();
                 renderChatMessages();
                 updateFactReactionsUI();
+                checkAndSyncDailyFact(roomDataCache.dailyFact);
             }, (err) => {
                 console.error("Firebase dinleme hatası:", err);
             });
@@ -651,7 +644,7 @@
                 html += `<span class="text-slate-500 italic">Henüz kimse yok</span>`;
             } else {
                 userList.forEach((user) => {
-                    const colorObj = availableColors[user.colorIndex % availableColors.length];
+                    const colorObj = availableColors[getColorIndexByName(user.name.toLowerCase()) % availableColors.length];
                     const avatarImg = user.avatar ? `<img src="${user.avatar}" class="w-5 h-5 rounded-full object-cover border border-slate-700">` : `<span class="w-3 h-3 rounded-full shadow-md animate-pulse" style="background-color: ${colorObj.hex}"></span>`;
                     html += `
                         <div class="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-xl border border-slate-700 transform transition-all hover:scale-105 shadow">
@@ -695,12 +688,15 @@
                     if (dotCount > 0) {
                         totalMarkedMinutes++;
                         if (dotCount === 1) {
-                            const cIdx = userEntries[0].colorIndex ?? 0;
+                            const uName = userEntries[0].name || '';
+                            const cIdx = getColorIndexByName(uName.toLowerCase());
                             const hex = availableColors[cIdx % availableColors.length].hex;
                             bgStyle = `background-color: ${hex}; border-color: ${hex};`;
                         } else if (dotCount === 2) {
-                            const c1 = availableColors[userEntries[0].colorIndex % availableColors.length].hex;
-                            const c2 = availableColors[userEntries[1].colorIndex % availableColors.length].hex;
+                            const u1Name = userEntries[0].name || '';
+                            const u2Name = userEntries[1].name || '';
+                            const c1 = availableColors[getColorIndexByName(u1Name.toLowerCase()) % availableColors.length].hex;
+                            const c2 = availableColors[getColorIndexByName(u2Name.toLowerCase()) % availableColors.length].hex;
                             bgStyle = `background: linear-gradient(135deg, ${c1}, ${c2}); border-color: #fff;`;
                         } else if (dotCount >= 3) {
                             bgStyle = `background-color: #ffb7c5; border-color: #db2777; box-shadow: 0 0 12px rgba(244, 114, 182, 0.9); color: #0f172a;`;
@@ -790,7 +786,7 @@
                 html = `<p class="text-slate-500 text-center py-2">${timeKey} dakikasında henüz kimse kayıt girmemiş.</p>`;
             } else {
                 userEntries.forEach(([uId, data]) => {
-                    const colorHex = availableColors[data.colorIndex % availableColors.length].hex;
+                    const colorHex = availableColors[getColorIndexByName(data.name.toLowerCase()) % availableColors.length].hex;
                     const avatarImg = data.avatar ? `<img src="${data.avatar}" class="w-6 h-6 rounded-full object-cover border border-slate-700">` : `<span class="w-3 h-3 rounded-full shadow" style="background-color: ${colorHex}"></span>`;
                     html += `
                         <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-xl border border-slate-800 shadow">
@@ -831,8 +827,7 @@
                 if (snapshot.exists()) {
                     return remove(logRef);
                 } else {
-                    const users = roomDataCache.users || {};
-                    const currentUserObj = users[currentUserId] || { colorIndex: 0 };
+                    const assignedColorIndex = getColorIndexByName(currentUserId);
                     playPopSound();
                     
                     push(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/chat`), {
@@ -845,7 +840,7 @@
                     return set(logRef, {
                         name: currentUser,
                         avatar: currentAvatar,
-                        colorIndex: currentUserObj.colorIndex,
+                        colorIndex: assignedColorIndex,
                         note: noteText,
                         timestamp: Date.now()
                     });
