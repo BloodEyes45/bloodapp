@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Baraj Doldurma Challenge</title>
+    <title>Baraj Doldurma Challenge - Ortak Takip ve Sohbet</title>
     <!-- Tarayıcı Sekmesi Logosu (Favicon) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💧</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -79,7 +79,7 @@
                     <i class="fa-solid fa-droplet"></i>
                 </div>
                 <h1 class="text-2xl font-extrabold tracking-tight text-white mb-1 uppercase bg-gradient-to-r from-pink-400 to-purple-200 bg-clip-text text-transparent">Baraj Doldurma Challenge</h1>
-                <p class="text-slate-400 text-xs">SADECE İŞEYENLER GÖRÜR ...</p>
+                <p class="text-slate-400 text-xs">Gizli Ortak Akış, Canlı Sohbet ve Takip Sistemi</p>
             </div>
 
             <!-- KAYITLI PROFİL KARTI -->
@@ -139,7 +139,7 @@
                         <div id="headerAvatarContainer" class="w-10 h-10 rounded-xl overflow-hidden bg-slate-800 border border-pink-500/40 flex items-center justify-center shadow"></div>
                         <div>
                             <h2 class="font-bold text-sm text-white flex items-center gap-2">
-                                Oda: <span class="font-mono bg-slate-900 px-2 py-0.5 rounded text-pink-400 border border-slate-800">GİZLİ ODA</span>
+                                Oda: <span class="font-mono bg-slate-900 px-2 py-0.5 rounded text-pink-400 border border-slate-800">BARAJ</span>
                             </h2>
                             <p class="text-xs text-slate-400">Oyuncu: <span id="currentUserName" class="text-pink-300 font-bold">---</span></p>
                         </div>
@@ -192,23 +192,23 @@
             <div class="flex flex-col gap-6">
                 <div class="bg-cardBg/90 border border-slate-800 rounded-2xl p-5 shadow-xl">
                     <h3 class="text-sm font-bold text-white mb-3 flex items-center gap-2 pb-2 border-b border-slate-800">
-                        <i class="fa-solid fa-chart-line text-emerald-400"></i> Oda İstatistikleri
+                        <i class="fa-solid fa-chart-line text-emerald-400"></i> Baraj İstatistikleri
                     </h3>
                     <div class="grid grid-cols-2 gap-3 text-center">
                         <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 transition-transform hover:scale-105">
                             <div id="allTimeMinutes" class="text-xl font-black text-pink-400 font-mono">0</div>
-                            <div class="text-[10px] text-slate-400 mt-0.5">Toplam Tamamlanan Dakika</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">Toplam Doluluk (dk)</div>
                         </div>
                         <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 transition-transform hover:scale-105">
                             <div id="targetPercentage" class="text-xl font-black text-purple-400 font-mono">%0</div>
-                            <div class="text-[10px] text-slate-400 mt-0.5">Hedef 1440 Yüzdesi</div>
+                            <div class="text-[10px] text-slate-400 mt-0.5">Baraj Doluluk Oranı</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-cardBg/90 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col">
                     <h3 class="text-sm font-bold text-white mb-2 flex items-center gap-2 pb-2 border-b border-slate-800">
-                        <i class="fa-solid fa-brain text-amber-400"></i> Kimsenin Bilmediği Garip Bilgi
+                        <i class="fa-solid fa-brain text-amber-400"></i> Günün Garip Bilgisi
                     </h3>
                     <p id="dailyFactText" class="text-xs text-slate-300 leading-relaxed italic py-2">
                         Bilgi yükleniyor...
@@ -248,7 +248,7 @@
     <!-- ÇİŞİBU MASKOTU -->
     <div id="drippyMascot" class="fixed bottom-4 right-4 z-50 flex items-end gap-2 pointer-events-none animate-float hidden">
         <div id="drippySpeech" class="bg-cardBg border border-pink-500/40 text-slate-200 text-xs px-3.5 py-2 rounded-2xl shadow-xl max-w-[200px] pointer-events-auto backdrop-blur-md transition-all">
-            Selam! Ben Çişibu 💧 Tüm sorunlar çözüldü!
+            Selam! Ben Çişibu 💧 Baraj Doldurma Challenge aktif!
         </div>
         <div onclick="window.drippyTalk()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-pink-400 to-purple-300 shadow-lg shadow-pink-500/30 flex items-center justify-center text-slate-950 text-2xl font-black cursor-pointer pointer-events-auto transform hover:scale-110 transition-all animate-bounce-slow">
             💧
@@ -259,7 +259,7 @@
     <div id="minuteModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardBg border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative animate-float">
             <h3 id="modalMinuteTitle" class="text-base font-bold text-white mb-1">00:00 Detayları</h3>
-            <p class="text-slate-400 text-xs mb-4">Bu dakikada kimler işedi ve notlar:</p>
+            <p class="text-slate-400 text-xs mb-4">Bu dakikada baraja kim su doldurdu ve notlar:</p>
             <div id="modalUsersList" class="space-y-2 mb-4 text-xs"></div>
             <div class="mb-4">
                 <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">Not Bırak</label>
@@ -310,12 +310,12 @@
         const app = initializeApp(firebaseConfig);
         const rtdb = getDatabase(app);
 
-        const FIXED_ROOM_NAME = "gizli_ortak_oda_fuarse";
+        const FIXED_ROOM_NAME = "baraj_doldurma_challenge_oda";
 
         let currentUser = localStorage.getItem('pee_user') || null;
         let currentUserId = localStorage.getItem('pee_userId') || null;
         let currentAvatar = localStorage.getItem('pee_avatar') || '';
-        let roomDataCache = { users: {}, logs: {}, chat: {}, factReactions: {} };
+        let roomDataCache = { users: {}, logs: {}, chat: {}, factReactions: {}, dailyFact: {} };
         let currentModalTimeKey = '';
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -419,7 +419,6 @@
             { id: 'p6', name: 'Gül Kurusu', hex: '#f472b6' }
         ];
 
-        // İsme özel sabit renk indeksi üreteci (Asla çakışmaz)
         function getColorIndexByName(name) {
             let hash = 0;
             for (let i = 0; i < name.length; i++) {
@@ -428,7 +427,7 @@
             return Math.abs(hash) % availableColors.length;
         }
 
-        const garipBilgilerListesi = [
+        const gercektenFarkliGaripBilgiler = [
             "İnekler de insanlar gibi en yakın arkadaşlarıyla küstüklerinde stres yaşarlar ve süt üretimleri düşer.",
             "Venüs gezegeninde bir gün, Güneş etrafındaki bir yılından daha uzun sürer.",
             "Dünya'daki tüm insanlar aralarında el ele tutuşursa, insan zinciri ekvatorun etrafını yaklaşık 40 kez dönebilir.",
@@ -452,30 +451,35 @@
             "Bilinen en eski sakız 9.000 yıl öncesine aittir ve hu ağacı reçinesinden yapılmıştır.",
             "İnsan kalbi bir günde yaklaşık 100.000 kez atar ve vücuda yaklaşık 7.500 litre kan pompalar.",
             "Ahtapotların üç kalbi ve mavi renkli kanı vardır; ayrıca kolları koptuğunda yeniden büyüyebilir.",
-            "Samanyolu Galaksisi'nde yıldız sayısından daha fazla ağaç vardır ancak evrendeki toplam yıldız sayısı bundan çok daha fazladır.",
             "Kardelen çiçekleri karların altında bile çiçek açabilir çünkü kendi antifriz benzeri kimyasallarını üretirler.",
             "Dünya'nın çekirdeği Güneş'in yüzeyinden bile daha sıcak bir sıcaklığa sahiptir.",
             "Flamingolar doğduklarında gri tüylere sahiptirler; yedikleri karidesler ve algler sayesinde pembe renk alırlar.",
             "Bir cam şişenin doğada tamamen yok olması 4.000 yıldan uzun sürebilir.",
             "Köpekbalıkları dünyadaki ağaçlardan çok daha eski bir tarihe sahiptir; dünyada ağaçlar yokken köpekbalıkları vardı.",
-            "Koalalar parmak izlerine sahiptir ve parmak izleri o kadar insan benzeridir ki olay yerinde polislerin kafası karışabilir."
+            "Koalalar parmak izlerine sahiptir ve parmak izleri o kadar insan benzeridir ki olay yerinde polislerin kafası karışabilir.",
+            "Kediler tatlıların tadını alamazlar çünkü dillerinde tatlı reseptörlerini kodlayan gen eksiktir.",
+            "Bir insan yaşamı boyunca ortalama 3 ayını tuvalette geçirir.",
+            "Yeryüzündeki tüm karıncaların toplam ağırlığı insan neslinin toplam ağırlığına eşittir.",
+            "Salyangozlar 3 yıl boyunca kesintisiz uyuyabilirler.",
+            "Denizatı çiftleri ömür boyu birbirlerine sadık kalırlar ve yüzerken birbirlerinin kuyruklarından tutarlar.",
+            "Salatalığın %95.3'ü sudan ibarettir."
         ];
 
-        for (let i = 31; i <= 1000; i++) {
-            garipBilgilerListesi.push(`Gizli Bilgi #${i}: Evrenin genişleme hızı ışık hızından bile daha hızlıdır ve galaksiler birbirinden uzaklaşmaktadır.`);
-        }
-
-        // Günlük Garip Bilgiyi Firebase Üzerinden Yönetme (Her gün otomatik değişir ve sıfırlanır)
         function checkAndSyncDailyFact(roomFactData) {
             const todayStr = new Date().toISOString().split('T')[0];
             const factEl = document.getElementById('dailyFactText');
 
-            if (roomFactData && roomFactData.date === todayStr) {
+            // Eğer veritabanındaki kayıt bugüne aitse ve geçerliyse direkt bas
+            if (roomFactData && roomFactData.date === todayStr && roomFactData.fact) {
                 if (factEl) factEl.innerText = roomFactData.fact;
             } else {
-                // Bugün için henüz bilgi atanmamışsa veya gün değişmişse yeni bir bilgi seç ve Firebase'e yaz
-                const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
-                const newFact = garipBilgilerListesi[dayOfYear % garipBilgilerListesi.length];
+                // Gün değiştiğinde veya ilk kurulumda bugünün tarihine özel farklı bir bilgi seç
+                let hash = 0;
+                for (let i = 0; i < todayStr.length; i++) {
+                    hash = todayStr.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                const index = Math.abs(hash) % gercektenFarkliGaripBilgiler.length;
+                const newFact = gercektenFarkliGaripBilgiler[index];
                 
                 set(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/dailyFact`), {
                     date: todayStr,
@@ -527,8 +531,8 @@
         }
 
         const çişibuQuotes = [
-            "Bugün tabloyu pembe yaptık mı? 🌸",
-            "Ben Çişibu! Ekip listesi kalıcı, renkler sabit! ✨",
+            "Bugün barajı ne kadar doldurduk? 🌊",
+            "Ben Çişibu! Her gün yeni bir garip bilgi! ✨",
             "10 dakika hareketsizlikte otomatik çıkış aktif! ⏱️",
             "Su içmeyi unutmayın dostlar! 🚰"
         ];
@@ -599,7 +603,6 @@
 
             const assignedColorIndex = getColorIndexByName(currentUserId);
 
-            // Kullanıcıyı kalıcı olarak Firebase'e kaydediyoruz (silinmez, odada kalır)
             set(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/users/${currentUserId}`), {
                 name: currentUser,
                 avatar: currentAvatar,
@@ -783,7 +786,7 @@
             let html = '';
 
             if (userEntries.length === 0) {
-                html = `<p class="text-slate-500 text-center py-2">${timeKey} dakikasında henüz kimse kayıt girmemiş.</p>`;
+                html = `<p class="text-slate-500 text-center py-2">${timeKey} dakikasında baraja henüz su girmemiş.</p>`;
             } else {
                 userEntries.forEach(([uId, data]) => {
                     const colorHex = availableColors[getColorIndexByName(data.name.toLowerCase()) % availableColors.length].hex;
@@ -807,7 +810,7 @@
                 actionBtn.innerText = 'Bu Dakikayı Kaldır';
                 actionBtn.className = 'flex-1 bg-rose-600 hover:bg-rose-500 text-white font-bold py-2 rounded-xl text-xs transition-colors cursor-pointer shadow-lg';
             } else {
-                actionBtn.innerText = 'Ben de İşedim (İşaretle)';
+                actionBtn.innerText = 'Baraja Su Akıt (İşaretle)';
                 actionBtn.className = 'flex-1 bg-pink-500 hover:bg-pink-400 text-slate-950 font-bold py-2 rounded-xl text-xs transition-colors cursor-pointer shadow-lg shadow-pink-500/20';
             }
 
@@ -832,7 +835,7 @@
                     
                     push(ref(rtdb, `rooms/${FIXED_ROOM_NAME}/chat`), {
                         sender: 'Sistem',
-                        text: `💧 ${currentUser}, ${currentModalTimeKey} dakikasına eklendi!`,
+                        text: `💧 ${currentUser}, ${currentModalTimeKey} dakikasında baraja su akıttı!`,
                         isSystem: true,
                         timestamp: Date.now()
                     });
