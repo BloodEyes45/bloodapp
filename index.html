@@ -248,7 +248,7 @@
     <!-- ÇİŞİBU MASKOTU -->
     <div id="drippyMascot" class="fixed bottom-4 right-4 z-50 flex items-end gap-2 pointer-events-none animate-float hidden">
         <div id="drippySpeech" class="bg-cardBg border border-pink-500/40 text-slate-200 text-xs px-3.5 py-2 rounded-2xl shadow-xl max-w-[200px] pointer-events-auto backdrop-blur-md transition-all">
-            Selam! Ben Çişibu 💧 Baraj Doldurma Challenge aktif!
+            Selam! Ben Çişibu 💧 Verileriniz güvende!
         </div>
         <div onclick="window.drippyTalk()" class="w-14 h-14 rounded-full bg-gradient-to-tr from-pink-400 to-purple-300 shadow-lg shadow-pink-500/30 flex items-center justify-center text-slate-950 text-2xl font-black cursor-pointer pointer-events-auto transform hover:scale-110 transition-all animate-bounce-slow">
             💧
@@ -310,7 +310,8 @@
         const app = initializeApp(firebaseConfig);
         const rtdb = getDatabase(app);
 
-        const FIXED_ROOM_NAME = "baraj_doldurma_challenge_oda";
+        // ESKİ ORİJİNAL ODA ADINA GERİ DÖNÜLDÜ (Böylece eski veriler anında geri gelir)
+        const FIXED_ROOM_NAME = "gizli_ortak_oda_fuarse";
 
         let currentUser = localStorage.getItem('pee_user') || null;
         let currentUserId = localStorage.getItem('pee_userId') || null;
@@ -469,11 +470,9 @@
             const todayStr = new Date().toISOString().split('T')[0];
             const factEl = document.getElementById('dailyFactText');
 
-            // Eğer veritabanındaki kayıt bugüne aitse ve geçerliyse direkt bas
             if (roomFactData && roomFactData.date === todayStr && roomFactData.fact) {
                 if (factEl) factEl.innerText = roomFactData.fact;
             } else {
-                // Gün değiştiğinde veya ilk kurulumda bugünün tarihine özel farklı bir bilgi seç
                 let hash = 0;
                 for (let i = 0; i < todayStr.length; i++) {
                     hash = todayStr.charCodeAt(i) + ((hash << 5) - hash);
